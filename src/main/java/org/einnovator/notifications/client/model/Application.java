@@ -1,0 +1,56 @@
+package org.einnovator.notifications.client.model;
+
+import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Application extends ObjectBase {
+
+	private String instanceId;
+	
+	public Application() {
+		super();
+	}
+
+	public Application(String type, String id, String name) {
+		super(type, id, name);
+	}
+
+	public Application(String id, String name) {
+		super(null, id, name);
+	}
+
+	public String getInstanceId() {
+		return instanceId;
+	}
+
+	public void setInstanceId(String instanceId) {
+		this.instanceId = instanceId;
+	}
+
+	public Application name(String name, boolean force) {
+		if (force || StringUtils.isEmpty(this.getName())) {
+			this.setName(name);
+		}
+		if (StringUtils.isEmpty(this.getId())) {
+			setId(this.getName());
+		}
+		return this;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " [" 
+				+ (getType() != null ? "type=" + getType() + ", " : "")
+				+ (getId() != null ? "id=" + getId() + ", " : "")
+				+ (getName() != null ? "name=" + getName() : "")
+				+ (instanceId != null ? "instanceId=" + getInstanceId() : "")
+				+ (getUri() != null ? "uri=" + getUri() : "")
+				+ (getImgUri() != null ? "imgUri=" + getImgUri() : "")
+				+ (getDetails() != null ? "details=" + getDetails() : "")
+				+ "]";
+	}
+
+
+}
