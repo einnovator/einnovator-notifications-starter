@@ -1,5 +1,7 @@
 package org.einnovator.notifications.client.model;
 
+import java.util.List;
+
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -8,6 +10,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Application extends ObjectBase {
 
 	private String instanceId;
+	
+	private List<NotificationType> notificationTypes;
+	 
 	
 	public Application() {
 		super();
@@ -21,12 +26,25 @@ public class Application extends ObjectBase {
 		super(null, id, name);
 	}
 
+	public Application(String id, String name, List<NotificationType> notificationTypes) {
+		super(null, id, name);
+		this.notificationTypes = notificationTypes;
+	}
+
 	public String getInstanceId() {
 		return instanceId;
 	}
 
 	public void setInstanceId(String instanceId) {
 		this.instanceId = instanceId;
+	}
+
+	public List<NotificationType> getNotificationTypes() {
+		return notificationTypes;
+	}
+
+	public void setNotificationTypes(List<NotificationType> notificationTypes) {
+		this.notificationTypes = notificationTypes;
 	}
 
 	public Application name(String name, boolean force) {
