@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.einnovator.notifications.client.config.NotificationsConfiguration;
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.Application;
 import org.einnovator.notifications.client.model.ErrorReport;

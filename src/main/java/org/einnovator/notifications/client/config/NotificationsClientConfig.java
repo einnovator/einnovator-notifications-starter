@@ -1,4 +1,4 @@
-package org.einnovator.notifications.client;
+package org.einnovator.notifications.client.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.ThemeResolver;
 import org.springframework.web.servlet.theme.CookieThemeResolver;
+import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.AmqpConfig;
 import org.einnovator.notifications.client.manager.PreferencesManager;
 import org.einnovator.notifications.client.manager.PreferencesManagerImpl;

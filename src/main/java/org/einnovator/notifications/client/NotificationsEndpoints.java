@@ -1,5 +1,7 @@
 package org.einnovator.notifications.client;
 
+import org.einnovator.notifications.client.config.NotificationsConfiguration;
+
 public class NotificationsEndpoints {
 
 	public static String event(NotificationsConfiguration config) {
@@ -35,6 +37,6 @@ public class NotificationsEndpoints {
 	}
 
 	public static String api(NotificationsConfiguration config) {
-		return config.getUri() + "/api";
+		return config.getServer() + "/api";
 	}
 }

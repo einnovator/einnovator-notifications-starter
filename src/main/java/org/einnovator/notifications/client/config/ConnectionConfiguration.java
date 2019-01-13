@@ -1,4 +1,4 @@
-package org.einnovator.notifications.client;
+package org.einnovator.notifications.client.config;
 
 public class ConnectionConfiguration {
 
