@@ -7,16 +7,20 @@ import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.Application;
+import org.einnovator.notifications.client.model.ErrorReport;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
-import org.einnovator.notifications.client.model.NotificationFilter;
-import org.einnovator.notifications.client.model.NotificationOptions;
+import org.einnovator.notifications.client.model.Preference;
 import org.einnovator.notifications.client.model.Source;
 import org.einnovator.notifications.client.model.Target;
+import org.einnovator.notifications.client.modelx.NotificationFilter;
+import org.einnovator.notifications.client.modelx.NotificationOptions;
 import org.einnovator.util.MappingUtils;
 import org.einnovator.util.PageOptions;
 import org.einnovator.util.PageUtil;
@@ -40,7 +44,7 @@ import org.springframework.web.client.RestClientException;
 
 public class NotificationsClient implements NotificationOperationsHttp, NotificationOperationsAmqp {
 
-	private Logger logger = Logger.getLogger(this.getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 
 	public static final String TYPE_ID_SEPARATOR = ":";
 
@@ -107,6 +111,12 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		});
 	}
 	
+	
+	public void reportError(ErrorReport error) {
+		
+	}
+
+
 	public void register(Application app) {
 		register(app, restTemplate);
 	}
@@ -176,7 +186,32 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
 		exchange(request, Void.class);
 	}
-	
+
+	public Map<String, Preference> getPreferences() {
+		return getPreferences(null);
+	}
+
+	public Map<String, Preference> getPreferences(String username) {
+		URI uri = makeURI(NotificationsEndpoints.preferences(config));
+		if (username!=null) {
+			Map<String, String> params = new LinkedHashMap<>();
+			params.put("username", username);
+			uri = appendQueryParameters(uri, MappingUtils.toMapFormatted(params));			
+		}
+
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		@SuppressWarnings("rawtypes")
+		ResponseEntity<Map> result = restTemplate.exchange(request, Map.class);
+		Map<String, Preference> map = new LinkedHashMap<>();
+		@SuppressWarnings("unchecked")
+		Set<Map.Entry<?, ?>> ee = result.getBody().entrySet();		
+		for (Map.Entry<?, ?> e: ee) {
+			Preference pref = MappingUtils.convert(e.getValue(), Preference.class);
+			map.put(e.getKey().toString(), pref);
+		}
+		return map;
+	}
+
 	public static String makeNotificationTypeId(Source source, Action action) {
 		return makeNotificationTypeId(source.getType(), action.getType());
 	}

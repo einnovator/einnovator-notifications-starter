@@ -1,9 +1,15 @@
 package org.einnovator.notifications.client.model;
 
+import java.security.Principal;
+
+import org.einnovator.util.SecurityUtil;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PrincipalX extends ObjectBase {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class PrincipalX extends ObjectBase2 {
 
 	public static final String PRINCIPAL_TYPE_USER = "User";
 	public static final String PRINCIPAL_TYPE_ORG = "Organization";
@@ -19,6 +25,7 @@ public class PrincipalX extends ObjectBase {
 		super(type, id, name);
 	}
 
+	
 	@Override
 	public String toString() {
 		return "PrincipalX ["
@@ -29,4 +36,12 @@ public class PrincipalX extends ObjectBase {
 				+ (getDetails() != null ? "uri=" + getDetails() : "")				
 				+ "]";
 	}
+	
+	
+	public static PrincipalX makeUserPrincipal() {
+		Principal principal = SecurityUtil.getPrincipal();
+		String username = principal!=null ? principal.getName() : null;
+		return new PrincipalX(PrincipalX.PRINCIPAL_TYPE_USER, username, username);
+	}
+
 }

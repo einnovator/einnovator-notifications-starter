@@ -18,7 +18,7 @@ public class TargetBuilder {
 	
 	private String uri;
 	
-	private String imgUri;
+	private String img;
 
 	private Map<String, Object> details;
 	
@@ -59,8 +59,8 @@ public class TargetBuilder {
 		return this;
 	}
 	
-	public TargetBuilder imgUri(String imgUri) {
-		this.imgUri = imgUri;
+	public TargetBuilder img(String img) {
+		this.img = img;
 		return this;
 	}
 	
@@ -90,7 +90,7 @@ public class TargetBuilder {
 		target.setEmail(email);
 		target.setMediums(mediums);
 		target.setUri(uri);
-		target.setImgUri(imgUri);		
+		target.setImg(img);		
 		target.setDetails(details);
 		return target;
 	}

@@ -3,10 +3,12 @@ package org.einnovator.notifications.client.model;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Target extends ObjectBase {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class Target extends ObjectBase2 {
 
 	public static final String TARGET_TYPE_USER = "User";
 	public static final String TARGET_TYPE_GROUP = "Group";

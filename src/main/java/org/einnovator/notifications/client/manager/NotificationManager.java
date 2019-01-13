@@ -11,8 +11,8 @@ import org.einnovator.notifications.client.amqp.NotificationListener;
 import org.einnovator.notifications.client.model.Application;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
-import org.einnovator.notifications.client.model.NotificationFilter;
-import org.einnovator.notifications.client.model.NotificationOptions;
+import org.einnovator.notifications.client.modelx.NotificationFilter;
+import org.einnovator.notifications.client.modelx.NotificationOptions;
 
 public interface NotificationManager extends NotificationListener {
 

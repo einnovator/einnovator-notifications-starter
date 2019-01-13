@@ -1,4 +1,4 @@
-package org.einnovator.notifications.client.model;
+package org.einnovator.notifications.client.modelx;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

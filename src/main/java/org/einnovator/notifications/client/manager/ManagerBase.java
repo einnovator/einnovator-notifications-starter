@@ -1,69 +1,39 @@
 package org.einnovator.notifications.client.manager;
 
-import java.security.Principal;
-
+import org.einnovator.util.SecurityUtil;
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 public class ManagerBase {
 
-	public String getPrincipalName() {
-		Principal principal = getPrincipal();
-		return principal!=null ? principal.getName() : null;
-	}
-
-	public Principal getPrincipal() {
-		Authentication authentication = getAuthentication();
-		if (authentication != null) {
-			if (authentication instanceof Principal) {
-				return authentication;
-			}
-			if (authentication.getPrincipal() instanceof Principal) {
-				return (Principal) authentication.getPrincipal();
-			}
-		}
-		return null;
-	}
-
-	public Authentication getAuthentication() {
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (context != null) {
-			return context.getAuthentication();
-		}
-		return null;
-	}
-
-
-	@SuppressWarnings("unchecked")
 	protected <T> T getCacheValueForPrincipal(Class<T> type, Cache cache, Object... keys) {
-		if (cache==null) {
+		return getCacheValueForUser(SecurityUtil.getPrincipalName(), type, cache, keys);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T> T getCacheValueForUser(String username, Class<T> type, Cache cache, Object... keys) {
+		if (cache==null || username==null) {
 			return null;
 		}
-		Principal principal = getPrincipal();
-		if (principal==null) {
-			return null;
-		}
-		String key = makeKeyForPrincipal(keys);
-		ValueWrapper value = cache.get(principal.getName() + key);
+		String key = makeKeyForUser(username, keys);
+		ValueWrapper value = cache.get(key);
 		if (value!=null) {
 			return (T)value.get();
 		}
 		return null;
 	}
 
+		
 	protected <T> T putCacheValueForPrincipal(T value, Cache cache, Object... keys) {
-		if (cache==null) {
+		return putCacheValueForUser(SecurityUtil.getPrincipalName(), value, cache, keys);
+	}
+	
+	protected <T> T putCacheValueForUser(String username, T value, Cache cache, Object... keys) {
+		if (cache==null || username==null) {
 			return value;
 		}
-		Principal principal = getPrincipal();
-		if (principal==null) {
-			return value;
-		}
-		String key = makeKeyForPrincipal(keys);
-		cache.put(principal.getName() + key, value);
+		String key = makeKeyForUser(username, keys);
+		cache.put(key, value);
 		return value;
 	}
 
@@ -95,14 +65,17 @@ public class ManagerBase {
 	}
 
 	protected String makeKeyForPrincipal(Object... keys) {
-		Principal principal = getPrincipal();
-		if (principal==null) {
+		return makeKeyForUser(SecurityUtil.getPrincipalName(), keys);
+	}
+		
+
+	protected String makeKeyForUser(String username, Object... keys) {
+		if (username==null) {
 			return null;
 		}
 		String key = makeKey(keys);
-		return key!=null ? principal.getName() + ":" + key : principal.getName();
+		return key!=null ? username + ":" + key : username;		
 	}
-		
 
 	protected String makeKey(Object... keys) {
 		StringBuilder sb = new StringBuilder();

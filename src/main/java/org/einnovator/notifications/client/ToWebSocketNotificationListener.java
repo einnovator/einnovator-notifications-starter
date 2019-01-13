@@ -1,6 +1,7 @@
 package org.einnovator.notifications.client;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
@@ -9,7 +10,7 @@ import org.einnovator.notifications.client.model.Notification;
 
 public class ToWebSocketNotificationListener implements NotificationListener {
 
-	private Logger logger = Logger.getLogger(this.getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 	
 	
 	@Autowired

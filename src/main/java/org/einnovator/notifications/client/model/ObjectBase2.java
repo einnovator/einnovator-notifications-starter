@@ -2,8 +2,11 @@ package org.einnovator.notifications.client.model;
 
 import java.util.Map;
 
+import org.einnovator.util.model.ObjectBase;
+import org.einnovator.util.model.ToStringCreator;
 
-public class ObjectBase {
+
+public class ObjectBase2 extends ObjectBase {
 
 	protected String type;
 	
@@ -13,44 +16,44 @@ public class ObjectBase {
 
 	protected String uri;
 
-	protected String imgUri;
+	protected String img;
 	
 	protected Map<String, Object> details;
 
 
-	public ObjectBase(String type, String id, String name, String uri, String imgUri,  Map<String, Object> details) {
+	public ObjectBase2(String type, String id, String name, String uri, String img,  Map<String, Object> details) {
 		this.type = type;
 		this.id = id;
 		this.name = name;
 		this.uri = uri;
-		this.imgUri = imgUri;
+		this.img = img;
 		this.details = details;
 	}
 	
-	public ObjectBase(String type, String id, String name, Map<String, Object> details) {
+	public ObjectBase2(String type, String id, String name, Map<String, Object> details) {
 		this.type = type;
 		this.id = id;
 		this.name = name;
 		this.details = details;
 	}
 
-	public ObjectBase(String type, String id, Map<String, Object> details) {
+	public ObjectBase2(String type, String id, Map<String, Object> details) {
 		this.type = type;
 		this.id = id;
 		this.details = details;
 	}
 
-	public ObjectBase(String type, String id, String name) {
+	public ObjectBase2(String type, String id, String name) {
 		this.type = type;
 		this.id = id;
 		this.name = name;
 	}
 	
-	public ObjectBase(ObjectBase obj) {
-		this(obj.getType(), obj.getId(), obj.getName(), obj.getUri(), obj.getImgUri(), obj.getDetails());
+	public ObjectBase2(ObjectBase2 obj) {
+		this(obj.getType(), obj.getId(), obj.getName(), obj.getUri(), obj.getImg(), obj.getDetails());
 	}
 	
-	public ObjectBase() {
+	public ObjectBase2() {
 	}
 
 	public String getType() {
@@ -93,24 +96,26 @@ public class ObjectBase {
 		this.details = details;
 	}
 	
-	public String getImgUri() {
-		return imgUri;
+	public String getImg() {
+		return img;
 	}
 
-	public void setImgUri(String imgUri) {
-		this.imgUri = imgUri;
+	public void setImg(String img) {
+		this.img = img;
 	}
 
-	@Override
-	public String toString() {
-		return "ObjectBase ["
-				+ (type != null ? "type=" + type + ", " : "") 
-				+ (id != null ? "id=" + id + ", " : "")
-				+ (name != null ? "name=" + name : "") 
-				+ (uri != null ? "uri=" + uri : "") 
-				+ (imgUri != null ? "imgUri=" + imgUri : "") 
-				+ (details != null ? "details=" + details : "") 
-				+ "]";
+	public ToStringCreator toString0(ToStringCreator creator) {
+		return creator
+				.append("type", type)
+				.append("id", id)
+				.append("name", name)
+				.append("uri", uri)
+				.append("img", img)
+				.append("details", details)
+				.append("type", type)
+				.append("type", type)
+				;
 	}
+
 	
 }

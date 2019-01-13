@@ -1,9 +1,11 @@
 package org.einnovator.notifications.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Action extends ObjectBase {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class Action extends ObjectBase2 {
 
 	// CRUD
 	public static final String ACTION_TYPE_CREATE = "Create";

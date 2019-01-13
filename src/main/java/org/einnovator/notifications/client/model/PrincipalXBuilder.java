@@ -12,7 +12,7 @@ public class PrincipalXBuilder {
 	
 	private String uri;
 	
-	private String imgUri;
+	private String img;
 
 	private Map<String, Object> details;
 	
@@ -34,8 +34,8 @@ public class PrincipalXBuilder {
 		return this;
 	}
 	
-	public PrincipalXBuilder imgUri(String imgUri) {
-		this.imgUri = imgUri;
+	public PrincipalXBuilder img(String img) {
+		this.img = img;
 		return this;
 	}
 	
@@ -55,7 +55,7 @@ public class PrincipalXBuilder {
 		principal.setName(name);
 		principal.setType(type);
 		principal.setUri(uri);
-		principal.setImgUri(imgUri);				
+		principal.setImg(img);				
 		principal.setDetails(details);		
 		return principal;
 	}

@@ -1,12 +1,13 @@
-package org.einnovator.notifications.client;
+package org.einnovator.notifications.client.web;
 
 import java.security.Principal;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.manager.NotificationManager;
 import org.einnovator.notifications.client.model.Notification;
-import org.einnovator.notifications.client.model.NotificationFilter;
-import org.einnovator.notifications.client.model.NotificationOptions;
+import org.einnovator.notifications.client.modelx.NotificationFilter;
+import org.einnovator.notifications.client.modelx.NotificationOptions;
 import org.einnovator.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 public class NotificationRestController {
 
-	private Logger logger = Logger.getLogger(this.getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 	
 	@Autowired
 	private NotificationManager manager;

@@ -4,11 +4,13 @@ import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.einnovator.util.TextTemplates;
 import org.einnovator.util.ResourceUtils;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Template {
 
 	private String name;

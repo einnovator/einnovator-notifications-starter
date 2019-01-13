@@ -12,7 +12,7 @@ public class ActionBuilder {
 	
 	private String uri;
 
-	private String imgUri;
+	private String img;
 	
 	private Map<String, Object> details;
 	
@@ -39,8 +39,8 @@ public class ActionBuilder {
 		return this;
 	}
 	
-	public ActionBuilder imgUri(String imgUri) {
-		this.imgUri = imgUri;
+	public ActionBuilder img(String img) {
+		this.img = img;
 		return this;
 	}
 	
@@ -55,7 +55,7 @@ public class ActionBuilder {
 		action.setName(name);
 		action.setType(type);
 		action.setUri(uri);
-		action.setImgUri(imgUri);
+		action.setImg(img);
 		action.setDetails(details);		
 		return action;
 	}

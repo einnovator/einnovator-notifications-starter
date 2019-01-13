@@ -2,7 +2,8 @@ package org.einnovator.notifications.client.amqp;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.amqp.AmqpConnectException;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Binding;
@@ -30,7 +31,7 @@ import org.einnovator.notifications.client.NotificationsConfiguration;
 @EnableConfigurationProperties({RabbitProperties.class})
 public class AmqpConfig {
 	
-	private Logger logger = Logger.getLogger(this.getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 
 	@Autowired
 	private NotificationsConfiguration config;

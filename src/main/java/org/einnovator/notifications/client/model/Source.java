@@ -2,10 +2,12 @@ package org.einnovator.notifications.client.model;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Source extends ObjectBase {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class Source extends ObjectBase2 {
 
 	public static final String SOURCE_TYPE_USER = "User";
 

@@ -1,7 +1,9 @@
 package org.einnovator.notifications.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -10,10 +12,13 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.ThemeResolver;
+import org.springframework.web.servlet.theme.CookieThemeResolver;
 import org.einnovator.notifications.client.amqp.AmqpConfig;
 import org.einnovator.notifications.client.manager.PreferencesManager;
 import org.einnovator.notifications.client.manager.PreferencesManagerImpl;
+import org.einnovator.notifications.client.web.PreferenceThemeResolver;
 import org.einnovator.notifications.client.web.PreferencesRestController;
 
 
@@ -64,12 +69,31 @@ public class NotificationsClientConfig {
 	}
 	
 	@Bean
-	public PreferencesManager preferencesManager() {
-		return new PreferencesManagerImpl();
+	public PreferencesManager preferencesManager(CacheManager cacheManager) {
+		return new PreferencesManagerImpl(cacheManager);
 	}
 	
 	@Bean
 	public PreferencesRestController preferencesRestController() {
 		return new PreferencesRestController();
 	}
+
+	
+	@Value("${theme.name:}")
+	private String defaultTheme;
+	
+
+	@Bean
+	public ThemeResolver themeResolver() {
+		return new PreferenceThemeResolver(fallbackThemeResolver(), defaultTheme);
+	}
+
+	public CookieThemeResolver fallbackThemeResolver() {
+		CookieThemeResolver themeResolver = new CookieThemeResolver();
+		if (StringUtils.hasText(defaultTheme)) {
+			themeResolver.setDefaultThemeName(defaultTheme);
+		}
+		return themeResolver;
+	}
+	
 }

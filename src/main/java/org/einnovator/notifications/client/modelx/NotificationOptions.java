@@ -1,7 +1,7 @@
-package org.einnovator.notifications.client.model;
+package org.einnovator.notifications.client.modelx;
 
 import org.einnovator.util.model.ObjectBase;
-import org.springframework.core.style.ToStringCreator;
+import org.einnovator.util.model.ToStringCreator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

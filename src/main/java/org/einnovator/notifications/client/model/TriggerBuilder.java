@@ -12,7 +12,7 @@ public class TriggerBuilder {
 		
 	private String uri;
 	
-	private String imgUri;
+	private String img;
 
 	private Map<String, Object> details;
 	
@@ -39,8 +39,8 @@ public class TriggerBuilder {
 		return this;
 	}
 	
-	public TriggerBuilder imgUri(String imgUri) {
-		this.imgUri = imgUri;
+	public TriggerBuilder img(String img) {
+		this.img = img;
 		return this;
 	}
 	
@@ -56,7 +56,7 @@ public class TriggerBuilder {
 		trigger.setName(name);
 		trigger.setType(type);
 		trigger.setUri(uri);
-		trigger.setImgUri(imgUri);		
+		trigger.setImg(img);		
 		trigger.setDetails(details);
 		return trigger;
 	}

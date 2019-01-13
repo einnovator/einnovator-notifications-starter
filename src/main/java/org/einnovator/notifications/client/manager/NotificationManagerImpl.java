@@ -1,14 +1,16 @@
 package org.einnovator.notifications.client.manager;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.NotificationListener;
 import org.einnovator.notifications.client.model.Application;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
-import org.einnovator.notifications.client.model.NotificationFilter;
-import org.einnovator.notifications.client.model.NotificationOptions;
 import org.einnovator.notifications.client.model.Target;
+import org.einnovator.notifications.client.modelx.NotificationFilter;
+import org.einnovator.notifications.client.modelx.NotificationOptions;
+import org.einnovator.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -28,7 +30,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	public static final String CACHE_NOTIFICATION = "Notification";
 	public static final String CACHE_NOTIFICATION_COUNT = "Notification:count";
 
-	private Logger logger = Logger.getLogger(this.getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
@@ -132,7 +134,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	@Override
 	@SuppressWarnings("unchecked")
 	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable) {
-		String username = filter!=null && filter.getUsername()!=null ? filter.getUsername() : getPrincipalName();
+		String username = filter!=null && filter.getUsername()!=null ? filter.getUsername() : SecurityUtil.getPrincipalName();
 		Page<Notification> notifications = null;
 		if (isKey(true, filter, pageable)) {
 			notifications = getCacheValue(Page.class, getNotificationCache(), username);
@@ -179,7 +181,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 
 	@Override
 	public Long countNotifications(NotificationFilter filter) {
-		String username = filter!=null && filter.getUsername()!=null ? filter.getUsername() : getPrincipalName();
+		String username = filter!=null && filter.getUsername()!=null ? filter.getUsername() : SecurityUtil.getPrincipalName();
 		Long count = getCacheValue(Long.class, getNotificationCountCache(), username);
 		if (count!=null) {
 			return count;
@@ -202,7 +204,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	
 	@Override
 	public void deleteNotification(String id, NotificationOptions options) {
-		String username = options!=null && options.getUsername()!=null ? options.getUsername() : getPrincipalName();
+		String username = options!=null && options.getUsername()!=null ? options.getUsername() : SecurityUtil.getPrincipalName();
 		try {
 			client.deleteNotification(id, options);
 			evictCachesForUser(username);				

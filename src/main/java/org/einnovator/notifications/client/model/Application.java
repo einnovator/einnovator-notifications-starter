@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Application extends ObjectBase {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class Application extends ObjectBase2 {
 
 	private String instanceId;
 	
@@ -65,7 +67,7 @@ public class Application extends ObjectBase {
 				+ (getName() != null ? "name=" + getName() : "")
 				+ (instanceId != null ? "instanceId=" + getInstanceId() : "")
 				+ (getUri() != null ? "uri=" + getUri() : "")
-				+ (getImgUri() != null ? "imgUri=" + getImgUri() : "")
+				+ (getImg() != null ? "img=" + getImg() : "")
 				+ (getDetails() != null ? "details=" + getDetails() : "")
 				+ "]";
 	}

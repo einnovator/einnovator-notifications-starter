@@ -6,7 +6,8 @@ import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
@@ -28,7 +29,7 @@ import com.rabbitmq.client.Channel;
 
 public class NotificationListenerContainer implements ChannelAwareMessageListener {
 
-	private Logger logger = Logger.getLogger(this.getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 
 	@Autowired
 	private ApplicationContext context;
@@ -103,10 +104,11 @@ public class NotificationListenerContainer implements ChannelAwareMessageListene
 				}
 			} catch (Exception e) {
 				logger.error("onNotification: " + e + " : " + notification);
+				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	public static boolean checkDelivery(Notification notification, Object listener) {
 		if (listener instanceof NotificationListenerAdapter) {
 			return true;
@@ -116,6 +118,11 @@ public class NotificationListenerContainer implements ChannelAwareMessageListene
 			Method method = null;
 			if (listener instanceof NotificationListener) {
 				method = listener.getClass().getMethod("onNotification", new Class[] {Notification.class});		
+				NotificationSelector selector = AnnotationUtils.findAnnotation(listener.getClass(), NotificationSelector.class);
+				NotificationSelector methodSelector = AnnotationUtils.findAnnotation(method, NotificationSelector.class);
+				if (selector==null && methodSelector==null) {
+					return true;
+				}
 				return checkDelivery(notification, listener.getClass(), method, true);
 			}
 		} catch (NoSuchMethodException | SecurityException e) {
@@ -184,7 +191,7 @@ public class NotificationListenerContainer implements ChannelAwareMessageListene
 		if (sourceSelector!=null) {
 			String sourceType = sourceSelector.value();
 			if (StringUtils.hasText(sourceType)) {
-				if (!sourceType.equalsIgnoreCase(notification.getSource().getType())) {
+				if (notification.getSource()==null || !sourceType.equalsIgnoreCase(notification.getSource().getType())) {
 					return false;
 				}
 			}
@@ -197,7 +204,7 @@ public class NotificationListenerContainer implements ChannelAwareMessageListene
 			String actionType = actionSelector.value();
 			if (StringUtils.hasText(actionType)) {
 				Action action = notification.getAction();
-				if (action==null || !actionType.equalsIgnoreCase(notification.getAction().getType())) {
+				if (action==null || !actionType.equalsIgnoreCase(action.getType())) {
 					return false;
 				}
 			}
@@ -212,7 +219,7 @@ public class NotificationListenerContainer implements ChannelAwareMessageListene
 		if (sourceSelector!=null) {
 			String sourceType = sourceSelector.value();
 			if (StringUtils.hasText(sourceType)) {
-				if (!sourceType.equalsIgnoreCase(notification.getSource().getType())) {
+				if (notification.getSource()==null || !sourceType.equalsIgnoreCase(notification.getSource().getType())) {
 					return false;
 				}
 			}
@@ -221,7 +228,7 @@ public class NotificationListenerContainer implements ChannelAwareMessageListene
 		if (actionSelector!=null) {
 			String actionType = actionSelector.value();
 			if (StringUtils.hasText(actionType)) {
-				if (!actionType.equalsIgnoreCase(notification.getAction().getType())) {
+				if (notification.getAction()==null || !actionType.equalsIgnoreCase(notification.getAction().getType())) {
 					return false;
 				}
 			}
@@ -236,7 +243,9 @@ public class NotificationListenerContainer implements ChannelAwareMessageListene
 		try {
 			Object payload = converter.fromMessage(message);
 			Notification notification = mapper.convertValue(payload, Notification.class);
-			onNotification(notification);			
+
+			onNotification(notification);				
+			
 		} catch (RuntimeException e) {
 			logger.error("onMessage: " + e + " " + message);
 		}

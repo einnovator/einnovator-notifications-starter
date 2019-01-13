@@ -1,9 +1,11 @@
 package org.einnovator.notifications.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Trigger extends ObjectBase {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class Trigger extends ObjectBase2 {
 
 	public static final String TRIGGER_TYPE_ACCEPT = "Accept";
 	public static final String TRIGGER_TYPE_REJECT = "Reject";

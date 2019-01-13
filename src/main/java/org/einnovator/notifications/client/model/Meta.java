@@ -2,9 +2,11 @@ package org.einnovator.notifications.client.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Meta {
 
 	public static final Integer PRIORITY_NORMAL = 0;

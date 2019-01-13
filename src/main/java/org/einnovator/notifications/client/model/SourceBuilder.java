@@ -12,7 +12,7 @@ public class SourceBuilder {
 	
 	private String uri;
 	
-	private String imgUri;
+	private String img;
 
 	private Map<String, Object> details;
 	
@@ -39,8 +39,8 @@ public class SourceBuilder {
 		return this;
 	}
 	
-	public SourceBuilder imgUri(String imgUri) {
-		this.imgUri = imgUri;
+	public SourceBuilder img(String img) {
+		this.img = img;
 		return this;
 	}
 	
@@ -55,7 +55,7 @@ public class SourceBuilder {
 		source.setName(name);
 		source.setType(type);
 		source.setUri(uri);
-		source.setImgUri(imgUri);
+		source.setImg(img);
 		source.setDetails(details);
 		return source;
 	}

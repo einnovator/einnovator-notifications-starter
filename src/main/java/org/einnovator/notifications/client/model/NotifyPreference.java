@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class NotifyPreference extends Preference {
 	
+	public static final String CATEGORY_NOTIFY = "Notify";
+
 	public static final String PREFERENCE_NAME_PREFIX = "notify.";
 	
 	private String notificationTypeId;
@@ -34,10 +36,16 @@ public class NotifyPreference extends Preference {
 	public NotifyPreference() {
 	}
 
+	
 	public NotifyPreference(String notificationTypeId) {
 		this.notificationTypeId = notificationTypeId;
 	}
 
+	@Override
+	public String getCategory() {
+		return CATEGORY_NOTIFY;
+	}
+	
 	public String getNotificationTypeId() {
 		return notificationTypeId;
 	}
@@ -114,6 +122,13 @@ public class NotifyPreference extends Preference {
 		return PREFERENCE_NAME_PREFIX + notificationTypeId;
 	}
 	
-	
+	@Override
+	void setName(String name) {
+	}
 
+	@Override
+	void setCategory(String category) {
+	}
+	
+	
 }

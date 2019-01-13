@@ -9,9 +9,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Notification extends ObjectBase {
+public class Notification extends ObjectBase2 {
 
 	private String app;
+	
+	private Preference preference;
 
 	private Source source;
 	
@@ -48,6 +50,7 @@ public class Notification extends ObjectBase {
 	
 	public Notification(Event event) {
 		this.app = event.getApp();
+		this.preference = event.getPreference();
 		this.source = event.getSource();
 		this.source2 = event.getSource2();
 		this.action = event.getAction();
@@ -65,6 +68,14 @@ public class Notification extends ObjectBase {
 
 	public void setApp(String app) {
 		this.app = app;
+	}
+
+	public Preference getPreference() {
+		return preference;
+	}
+
+	public void setPreference(Preference preference) {
+		this.preference = preference;
 	}
 
 	public Source getSource() {

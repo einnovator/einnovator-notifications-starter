@@ -3,15 +3,25 @@ package org.einnovator.notifications.client.model;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Event {
+
+	public static final String EVENT_TYPE_NOTIFICATION = "Notification";
+
+	public static final String EVENT_TYPE_PREFERENCE = "Preference";
 
 	@Deprecated
 	private String app;
 
 	private Application application;
+
+	private String type;
+
+	private Preference preference;
 
 	private Source source;
 	
@@ -40,7 +50,14 @@ public class Event {
 	public Event() {
 	}
 	
+	public Event(Preference preference, PrincipalX principal) {
+		this.type = EVENT_TYPE_PREFERENCE;
+		this.preference = preference;
+		this.principal = principal;
+	}
+
 	public Event(Source source,  Action action, PrincipalX principal, List<Target> targets) {
+		this.type = EVENT_TYPE_NOTIFICATION;
 		this.source = source;
 		this.action = action;
 		this.principal = principal;
@@ -69,6 +86,22 @@ public class Event {
 
 	public void setApp(String app) {
 		this.app = app;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Preference getPreference() {
+		return preference;
+	}
+
+	public void setPreference(Preference preference) {
+		this.preference = preference;
 	}
 
 	public Source getSource() {
@@ -172,6 +205,7 @@ public class Event {
 		return "Event ["
 				+ (app != null ? "app=" + app + ", " : "")				
 				+ (application != null ? "application=" + application + ", " : "")
+				+ (preference != null ? "preference=" + preference + ", " : "")
 				+ (source != null ? "source=" + source + ", " : "")
 				+ (source2 != null ? "source2=" + source2 + ", " : "")
 				+ (action != null ? "action=" + action + ", " : "")
