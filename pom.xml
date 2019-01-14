@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>einnovator-notifications-starter</name>
-	<description>Client Library and Spring Boot Starter for EInnovator Notification and Preferences Service</description>
+	<description>Client Library and Spring Boot Starter for EInnovator Notifications, Preferences, and Auditing Service</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -43,6 +43,7 @@
 			<groupId>org.einnovator</groupId>
 			<artifactId>einnovator-sso-starter</artifactId>
 			<version>${einnovator.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>

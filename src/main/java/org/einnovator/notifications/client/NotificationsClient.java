@@ -12,6 +12,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.config.NotificationsConfiguration;
+import org.einnovator.notifications.client.config.NotificationsEndpoints;
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.Application;
 import org.einnovator.notifications.client.model.ErrorReport;
@@ -134,8 +135,11 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 			params.putAll(MappingUtils.toMapFormatted(app));
 			uri = appendQueryParameters(uri, params);	
 		}
+		if (config.getTypes()!=null && app.getNotificationTypes()==null) {
+			app.setNotificationTypes(config.getTypes());			
+		}
 		RequestEntity<Application> request = RequestEntity.post(uri).body(app);
-		exchange(request, Void.class);
+		exchange(restTemplate, request, Void.class);
 	}
 
 	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable) {
@@ -269,7 +273,11 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 
 	
 	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType) throws RestClientException {
-		return restTemplate.exchange(request, responseType);
+		return exchange(restTemplate, request, responseType);
 	}
 
+	protected <T> ResponseEntity<T> exchange(OAuth2RestTemplate restTemplate, RequestEntity<?> request, Class<T> responseType) throws RestClientException {
+		return restTemplate.exchange(request, responseType);
+	}
+	
 }

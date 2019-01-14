@@ -8,13 +8,14 @@ import java.util.List;
 
 import org.einnovator.notifications.client.amqp.AmqpConfiguration;
 import org.einnovator.notifications.client.model.NotificationType;
+import org.einnovator.util.config.ConnectionConfiguration;
 import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
 
 @ConfigurationProperties("notifications")
 public class NotificationsConfiguration extends ObjectBase {
 
-	private String server = "http://localhost:9696";
+	private String server = "http://localhost:2010";
 
 	@NestedConfigurationProperty
 	private AmqpConfiguration amqp = new AmqpConfiguration();

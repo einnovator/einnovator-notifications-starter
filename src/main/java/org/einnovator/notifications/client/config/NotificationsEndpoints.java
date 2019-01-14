@@ -1,6 +1,4 @@
-package org.einnovator.notifications.client;
-
-import org.einnovator.notifications.client.config.NotificationsConfiguration;
+package org.einnovator.notifications.client.config;
 
 public class NotificationsEndpoints {
 

@@ -1,10 +1,10 @@
-package org.einnovator.notifications.client;
+package org.einnovator.notifications.client.manager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-
+import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.NotificationListener;
 import org.einnovator.notifications.client.model.Notification;
 

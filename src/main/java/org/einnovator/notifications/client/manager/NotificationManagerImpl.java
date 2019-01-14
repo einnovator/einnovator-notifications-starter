@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.NotificationListener;
+import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.Application;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
@@ -11,6 +12,7 @@ import org.einnovator.notifications.client.model.Target;
 import org.einnovator.notifications.client.modelx.NotificationFilter;
 import org.einnovator.notifications.client.modelx.NotificationOptions;
 import org.einnovator.util.SecurityUtil;
+import org.einnovator.util.event.LogoutApplicationEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -235,6 +237,15 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			logger.error("onNotification: " + e);
 		}
 		logger.debug("onNotification: " + notification);
+		if (notification.getAction()!=null) {
+			if (Action.ACTION_TYPE_LOGOUT.equalsIgnoreCase(notification.getAction().getType())) {
+				if (notification.getPrincipal()!=null && notification.getPrincipal().getId()!=null) {
+					logger.info("onNotification: logout:" + notification.getPrincipal().getId());
+					eventPublisher.publishEvent(new LogoutApplicationEvent(this, notification.getPrincipal().getId()));					
+					return;
+				}
+			}			
+		}
 		eventPublisher.publishEvent(new PayloadApplicationEvent<Notification>(this, notification));
 	}
 
