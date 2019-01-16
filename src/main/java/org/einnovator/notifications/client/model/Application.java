@@ -20,6 +20,10 @@ public class Application extends ObjectBase2 {
 		super();
 	}
 
+	public Application(Object obj) {
+		super(obj);
+	}
+
 	public Application(String type, String id, String name) {
 		super(type, id, name);
 	}

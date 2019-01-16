@@ -1,8 +1,6 @@
 package org.einnovator.notifications.client.manager;
 
 
-
-import java.security.Principal;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -10,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -25,8 +24,6 @@ import org.einnovator.notifications.client.model.Preference;
 import org.einnovator.notifications.client.model.PrincipalX;
 import org.einnovator.notifications.client.model.ValuePreference;
 import org.einnovator.util.SecurityUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class PreferencesManagerImpl extends ManagerBase implements PreferencesManager, NotificationListener {
 	
@@ -40,7 +37,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 	public static final String OP_LHSET = "lhset";
 
 
-	private final Log logger = LogFactory.getLog(getClass());
+	private Logger logger = Logger.getLogger(this.getClass());
 
 	@Autowired
 	private NotificationsClient client;
@@ -123,8 +120,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 	}
 	
 	public Object apply(ValuePreference pref) {
-		Principal principal = SecurityUtil.getPrincipal();
-		String username = principal!=null ? principal.getName() : null;
+		String username = SecurityUtil.getPrincipalName();
 		if (username==null) {
 			return null;
 		}

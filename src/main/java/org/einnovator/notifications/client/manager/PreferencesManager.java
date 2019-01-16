@@ -22,5 +22,5 @@ public interface PreferencesManager {
 	void clearCaches();
 	void evictCachesForUser(String userId);
 
-
 }
+

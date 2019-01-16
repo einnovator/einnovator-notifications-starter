@@ -20,6 +20,7 @@ public class ObjectBase2 extends ObjectBase {
 	
 	protected Map<String, Object> details;
 
+	
 
 	public ObjectBase2(String type, String id, String name, String uri, String img,  Map<String, Object> details) {
 		this.type = type;
@@ -52,7 +53,11 @@ public class ObjectBase2 extends ObjectBase {
 	public ObjectBase2(ObjectBase2 obj) {
 		this(obj.getType(), obj.getId(), obj.getName(), obj.getUri(), obj.getImg(), obj.getDetails());
 	}
-	
+
+	public ObjectBase2(Object obj) {
+		super(obj);
+	}
+
 	public ObjectBase2() {
 	}
 
