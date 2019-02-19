@@ -1,6 +1,8 @@
 package org.einnovator.notifications.client.config;
 
+import org.einnovator.notifications.client.NotificationEventPublisher;
 import org.einnovator.notifications.client.NotificationsClient;
+import org.einnovator.notifications.client.SimpleEventFactory;
 import org.einnovator.notifications.client.amqp.AmqpConfig;
 import org.einnovator.notifications.client.manager.NotificationManager;
 import org.einnovator.notifications.client.manager.NotificationManagerImpl;
@@ -79,5 +81,15 @@ public class NotificationsClientConfig {
 		}
 		return themeResolver;
 	}
-	
+
+	@Bean
+	public NotificationEventPublisher notificationEventPublisher() {
+		return new NotificationEventPublisher();
+	}
+
+	@Bean
+	public SimpleEventFactory simpleEventFactory() {
+		return new SimpleEventFactory();
+	}
+
 }

@@ -1,4 +1,4 @@
-package org.einnovator.notifications.client.manager;
+package org.einnovator.notifications.client.config;
 
 
 import org.springframework.context.annotation.Configuration;

@@ -70,15 +70,27 @@ public class TargetParser {
 		return target;
 	}
 
-	public static List<Target> makeTargets(String... destinations) {
+	public static List<Target> makeTargets(Object... destinations) {
 		List<Target> targets = new ArrayList<>();
-		for (String destination: destinations) {
-			String[] a = destination.split(",");
-			for (String destination2: a) {
-				Target target = makeTarget(destination2);
-				if (target!=null) {
-					targets.add(target);
+		for (Object destination: destinations) {
+			if (destination instanceof Target) {
+				targets.add((Target) destination);
+			} else if (destination.getClass().isArray()) {
+				Object[] objs = (Object[])destination;
+				for (Object obj: objs) {
+					List<Target> targets2 = makeTargets(obj);
+					if (targets2!=null) {
+						targets.addAll(targets2);
+					}					
 				}
+			} else if (destination instanceof String) {
+				String[] a = ((String)destination).split(",");
+				for (String destination2: a) {
+					Target target = makeTarget(destination2);
+					if (target!=null) {
+						targets.add(target);
+					}
+				}				
 			}
 		}
 		return targets;

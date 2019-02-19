@@ -33,12 +33,12 @@ public class ReportErrorController {
 	    	redirectAttributes.addFlashAttribute(Messages.ATTRIBUTE_ERROR, Messages.MSG_ERROR_FAIL);
 
 		}
-        return "redirect:" + getRedirectUri();
+        return "redirect:" + redirectUri();
     }
     
 
 	
-	protected String getRedirectUri() {
+	protected String redirectUri() {
 		return DEAULT_REDIRECT_URI;
 	}
 
