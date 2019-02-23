@@ -19,6 +19,7 @@ import org.einnovator.notifications.client.model.SourceBuilder;
 import org.einnovator.notifications.client.model.Target;
 import org.einnovator.notifications.client.model.TargetParser;
 import org.einnovator.util.MappingUtils;
+import org.einnovator.util.event.EventFactory;
 
 
 /**
@@ -31,7 +32,7 @@ public class SimpleEventFactory implements EventFactory {
 	 * @see org.einnovator.notifications.client.support.EventFactory#makeEvent(java.lang.Object, java.lang.String, java.lang.String, java.lang.Object[])
 	 */
 	@Override
-	public Event makeEvent(Object obj, String user, String actionType, Object... targets) {
+	public Event makeEvent(String principal, Object obj, String actionType, Object... targets) {
 		
 		Source source = makeEventSource(obj);
 		Source source2 = makeEventSource2(obj);
@@ -42,7 +43,7 @@ public class SimpleEventFactory implements EventFactory {
 				.name(actionType)
 				.build();
 		
-		PrincipalX principal = makeEventPrincipal(user);
+		PrincipalX principalx = makeEventPrincipal(principal);
 		
 		
 		Meta meta = new MetaBuilder().build();
@@ -54,7 +55,7 @@ public class SimpleEventFactory implements EventFactory {
 				.source2(source2)
 				.action(action)
 				.meta(meta)
-				.principal(principal)
+				.principal(principalx)
 				.meta(meta)
 				//.details(details)
 				.targets(targets2);

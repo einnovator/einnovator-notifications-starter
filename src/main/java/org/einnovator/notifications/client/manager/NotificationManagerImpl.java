@@ -21,9 +21,7 @@ import org.springframework.context.PayloadApplicationEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -112,26 +110,16 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 	
 	@Override
-	public boolean register(Application app, OAuth2ProtectedResourceDetails resource, OAuth2ClientContext oAuth2ClientContext) {
+	public boolean register(Application app, OAuth2RestTemplate template) {
 		try {
-			client.register(app, resource, oAuth2ClientContext);
+			client.register(app, template);
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("register: " + e + " " + app);
+			logger.error("register: Attempt to register application failed: " + e + " " + app);
 			return false;
 		}
 	}
 	
-	@Override
-	public boolean register(Application app, OAuth2RestTemplate restTemplate) {
-		try {
-			client.register(app, restTemplate);
-			return true;
-		} catch (RuntimeException e) {
-			logger.error("register: " + e + " " + app);
-			return false;
-		}		
-	}
 	
 	@Override
 	@SuppressWarnings("unchecked")

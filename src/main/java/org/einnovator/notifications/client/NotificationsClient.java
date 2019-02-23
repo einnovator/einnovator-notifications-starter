@@ -38,9 +38,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 
@@ -121,11 +119,6 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 
 	public void register(Application app) {
 		register(app, restTemplate);
-	}
-	
-	public void register(Application app, OAuth2ProtectedResourceDetails resource, OAuth2ClientContext oAuth2ClientContext) {
-		OAuth2RestTemplate template = new OAuth2RestTemplate(resource, oAuth2ClientContext);
-		register(app,  template);
 	}
 
 	public void register(Application app, OAuth2RestTemplate restTemplate) {
