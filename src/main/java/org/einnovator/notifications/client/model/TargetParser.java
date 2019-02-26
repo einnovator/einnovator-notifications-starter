@@ -73,6 +73,9 @@ public class TargetParser {
 	public static List<Target> makeTargets(Object... destinations) {
 		List<Target> targets = new ArrayList<>();
 		for (Object destination: destinations) {
+			if (destination==null) {
+				continue;
+			}
 			if (destination instanceof Target) {
 				targets.add((Target) destination);
 			} else if (destination.getClass().isArray()) {

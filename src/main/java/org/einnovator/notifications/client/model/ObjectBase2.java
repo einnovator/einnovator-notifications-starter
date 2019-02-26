@@ -5,7 +5,12 @@ import java.util.Map;
 import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class ObjectBase2 extends ObjectBase {
 
 	protected String type;

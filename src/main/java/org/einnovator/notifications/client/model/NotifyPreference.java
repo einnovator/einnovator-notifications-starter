@@ -1,8 +1,10 @@
 package org.einnovator.notifications.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class NotifyPreference extends Preference {
 	
 	public static final String CATEGORY_NOTIFY = "Notify";
