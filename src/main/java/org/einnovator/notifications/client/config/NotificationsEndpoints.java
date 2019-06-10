@@ -2,39 +2,39 @@ package org.einnovator.notifications.client.config;
 
 public class NotificationsEndpoints {
 
-	public static String event(NotificationsConfiguration config) {
+	public static String event(NotificationsClientConfiguration config) {
 		return api(config) + "/event";
 	}
 	
-	public static String register(NotificationsConfiguration config) {
+	public static String register(NotificationsClientConfiguration config) {
 		return api(config) + "/register";
 	}
 	
-	public static String notifications(NotificationsConfiguration config) {
+	public static String notifications(NotificationsClientConfiguration config) {
 		return api(config) + "/notification";
 	}
 	
-	public static String notification(String id, NotificationsConfiguration config) {
+	public static String notification(String id, NotificationsClientConfiguration config) {
 		return api(config) + "/notification/" + id;
 	}
 	
-	public static String count(NotificationsConfiguration config) {
+	public static String count(NotificationsClientConfiguration config) {
 		return api(config) + "/count";
 	}
 
-	public static String preferences(NotificationsConfiguration config) {
+	public static String preferences(NotificationsClientConfiguration config) {
 		return api(config) + "/preference";
 	}
 
-	public static String follow(NotificationsConfiguration config) {
+	public static String follow(NotificationsClientConfiguration config) {
 		return api(config) + "/follow";
 	}
 
-	public static String unfollow(NotificationsConfiguration config) {
+	public static String unfollow(NotificationsClientConfiguration config) {
 		return api(config) + "/unfollow";
 	}
 
-	public static String api(NotificationsConfiguration config) {
+	public static String api(NotificationsClientConfiguration config) {
 		return config.getServer() + "/api";
 	}
 }

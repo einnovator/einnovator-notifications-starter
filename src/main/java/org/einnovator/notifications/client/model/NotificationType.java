@@ -2,18 +2,19 @@ package org.einnovator.notifications.client.model;
 
 import java.util.List;
 
+import org.einnovator.util.model.ObjectBase;
+import org.einnovator.util.model.ToStringCreator;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class NotificationType {
+public class NotificationType extends ObjectBase {
 
 	private String app;
 	
-	private Application application;
-
-	private String id;
+	private String typeId;
 	
 	private String sourceType;
 	
@@ -52,20 +53,22 @@ public class NotificationType {
 		this.app = app;
 	}
 
-	public Application getApplication() {
-		return application;
+	/**
+	 * Get the value of property {@code typeId}.
+	 *
+	 * @return the typeId
+	 */
+	public String getTypeId() {
+		return typeId;
 	}
 
-	public void setApplication(Application application) {
-		this.application = application;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+	/**
+	 * Set the value of property {@code typeId}.
+	 *
+	 * @param typeId the typeId to set
+	 */
+	public void setTypeId(String typeId) {
+		this.typeId = typeId;
 	}
 
 	public String getSourceType() {
@@ -174,25 +177,26 @@ public class NotificationType {
 		this.triggers = triggers;
 	}
 
+	
 	@Override
-	public String toString() {
-		return "NotificationType [" + (app != null ? "app=" + app + ", " : "") 
-				+ (id != null ? "id=" + id + ", " : "")
-				+ (sourceType != null ? "sourceType=" + sourceType + ", " : "")
-				+ (actionType != null ? "actionType=" + actionType + ", " : "")
-				+ (triggers != null ? "triggers=" + triggers + ", " : "")
-				+ (priority != null ? "priority=" + priority + ", " : "")
-				+ (category != null ? "category=" + category + ", " : "")
-				+ (subcategory != null ? "subcategory=" + subcategory + ", " : "")
-				+ (description != null ? "description=" + description + ", " : "")
-				+ (categoryOrder != null ? "categoryOrder=" + categoryOrder + ", " : "")
-				+ (subcategoryOrder != null ? "subcategoryOrder=" + subcategoryOrder + ", " : "")
-				+ (template != null ? "template=" + template + ", " : "")
-				+ (mailTemplate != null ? "mailTemplate=" + mailTemplate + ", " : "")
-				+ (smsTemplate != null ? "smsTemplate=" + smsTemplate + ", " : "")
-				+ (order != null ? "order=" + order : "") + "]";
+	public ToStringCreator toString1(ToStringCreator creator) {
+		return super.toString1(creator)
+			.append("typeId", typeId)
+			.append("app", app)
+			.append("sourceType", sourceType)
+			.append("actionType", actionType)
+			.append("triggers", triggers)
+			.append("priority", priority)
+			.append("category", category)
+			.append("subcategory", subcategory)
+			.append("category", category)
+			.append("category", category)
+			.append("categoryOrder", categoryOrder)
+			.append("subcategoryOrder", subcategoryOrder)
+			.append("template", template)
+			.append("description", description)
+			;
 	}
-	
-	
+			
 	
 }

@@ -17,8 +17,6 @@ public class EventBuilder {
 
 	private Meta meta;
 	
-	private Map<String, Object> details;
-	
 	private List<Target> targets;
 	
 	private Map<String, Object> env;
@@ -72,12 +70,6 @@ public class EventBuilder {
 		return this;
 	}
 
-	public EventBuilder details(Map<String, Object> details) {
-		this.details = details;
-		return this;
-	}
-	
-	
 	public EventBuilder env(Map<String, Object> env) {
 		this.env = env;
 		return this;
@@ -111,7 +103,6 @@ public class EventBuilder {
 		event.setAction(action);
 		event.setPrincipal(principal);
 		event.setMeta(meta);
-		event.setDetails(details);
 		event.setTargets(targets);
 		event.setEnv(env);
 		event.setSubject(subject);

@@ -1,19 +1,15 @@
 package org.einnovator.notifications.client.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.einnovator.notifications.client.amqp.AmqpConfiguration;
-import org.einnovator.notifications.client.model.NotificationType;
+import org.einnovator.notifications.client.model.NotificationsRegistration;
 import org.einnovator.util.config.ConnectionConfiguration;
 import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 @ConfigurationProperties("notifications")
-public class NotificationsConfiguration extends ObjectBase {
+public class NotificationsClientConfiguration extends ObjectBase {
 
 	private String server = "http://localhost:2010";
 
@@ -27,9 +23,9 @@ public class NotificationsConfiguration extends ObjectBase {
 	private ConnectionConfiguration connection = new ConnectionConfiguration();
 	
 	@NestedConfigurationProperty
-	private List<NotificationType> types = new ArrayList<>();
+	private NotificationsRegistration registration = new NotificationsRegistration();
 	
-	public NotificationsConfiguration() {
+	public NotificationsClientConfiguration() {
 	}
 
 	public ConnectionConfiguration getConnection() {
@@ -56,35 +52,49 @@ public class NotificationsConfiguration extends ObjectBase {
 		this.amqp = amqp;
 	}
 
-	
 	/**
-	 * Get the value of property {@code types}.
+	 * Get the value of property {@code templates}.
 	 *
-	 * @return the types
+	 * @return the templates
 	 */
-	public List<NotificationType> getTypes() {
-		return types;
+	public TemplatesConfiguration getTemplates() {
+		return templates;
 	}
 
 	/**
-	 * Set the value of property {@code types}.
+	 * Set the value of property {@code templates}.
 	 *
-	 * @param types the types to set
+	 * @param templates the templates to set
 	 */
-	public void setTypes(List<NotificationType> types) {
-		this.types = types;
+	public void setTemplates(TemplatesConfiguration templates) {
+		this.templates = templates;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.einnovator.util.model.ObjectBase#toString(org.einnovator.util.model.ToStringCreator)
+	/**
+	 * Get the value of property {@code registration}.
+	 *
+	 * @return the registration
 	 */
+	public NotificationsRegistration getRegistration() {
+		return registration;
+	}
+
+	/**
+	 * Set the value of property {@code registration}.
+	 *
+	 * @param registration the registration to set
+	 */
+	public void setRegistration(NotificationsRegistration registration) {
+		this.registration = registration;
+	}
+
 	@Override
 	public ToStringCreator toString(ToStringCreator creator) {
 		return creator
 				.append("server", server)
 				.append("amqp", amqp)
 				.append("templates", templates)
-				.append("types", types)
+				.append("registration", registration)
 				;
 	}
 	

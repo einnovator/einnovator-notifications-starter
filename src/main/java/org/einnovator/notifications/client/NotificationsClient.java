@@ -11,13 +11,13 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.einnovator.notifications.client.config.NotificationsConfiguration;
+import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
 import org.einnovator.notifications.client.config.NotificationsEndpoints;
 import org.einnovator.notifications.client.model.Action;
-import org.einnovator.notifications.client.model.Application;
 import org.einnovator.notifications.client.model.ErrorReport;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
+import org.einnovator.notifications.client.model.NotificationsRegistration;
 import org.einnovator.notifications.client.model.Preference;
 import org.einnovator.notifications.client.model.Source;
 import org.einnovator.notifications.client.model.Target;
@@ -26,6 +26,8 @@ import org.einnovator.notifications.client.modelx.NotificationOptions;
 import org.einnovator.util.MappingUtils;
 import org.einnovator.util.PageOptions;
 import org.einnovator.util.PageUtil;
+import org.einnovator.util.model.Application;
+import org.einnovator.util.security.ClientTokenProvider;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessagePostProcessor;
@@ -49,7 +51,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	public static final String TYPE_ID_SEPARATOR = ":";
 
 	@Autowired
-	private NotificationsConfiguration config;
+	private NotificationsClientConfiguration config;
 
 
 	@Qualifier("notificationsRestTemplate")
@@ -59,16 +61,22 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	@Autowired
 	private RabbitTemplate amqpTemplate;
 
-	
+	@Autowired(required=false)
+	private ClientTokenProvider clientTokenProvider;
+
+	@Autowired(required=false)
+	private Application application;
+
+
 	@Autowired
 	public NotificationsClient() {
 	}
 
-	public NotificationsClient(NotificationsConfiguration config) {
+	public NotificationsClient(NotificationsClientConfiguration config) {
 		this.config = config;
 	}
 		
-	public NotificationsClient(OAuth2RestTemplate restTemplate, NotificationsConfiguration config) {
+	public NotificationsClient(OAuth2RestTemplate restTemplate, NotificationsClientConfiguration config) {
 		this.restTemplate = restTemplate;
 		this.config = config;
 	}
@@ -116,22 +124,44 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		
 	}
 
-
-	public void register(Application app) {
-		register(app, restTemplate);
+	public void register() {
+		NotificationsRegistration registration = config.getRegistration();
+		if (registration!=null) {
+			if (application!=null) {
+				registration.setApplication(application);
+			}
+			if (clientTokenProvider!=null) {
+				clientTokenProvider.setupToken();
+			}
+			register(registration, restTemplate);			
+		}
 	}
 
-	public void register(Application app, OAuth2RestTemplate restTemplate) {
+	public void register(Application application) {
+		if (clientTokenProvider!=null) {
+			clientTokenProvider.setupToken();
+		}
+		register(application, restTemplate);
+	}
+
+	public void register(Application application, OAuth2RestTemplate restTemplate) {
+		NotificationsRegistration registration = config.getRegistration();
+		if (registration!=null) {
+			registration.setApplication(application);
+			register(registration, restTemplate);			
+		}
+	}
+
+	public void register(NotificationsRegistration registration) {
+		if (clientTokenProvider!=null) {
+			clientTokenProvider.setupToken();
+		}
+		register(registration, restTemplate);
+	}
+
+	public void register(NotificationsRegistration registration, OAuth2RestTemplate restTemplate) {
 		URI uri = makeURI(NotificationsEndpoints.register(config));
-		if (app!=null) {
-			Map<String, String> params = new LinkedHashMap<>();
-			params.putAll(MappingUtils.toMapFormatted(app));
-			uri = appendQueryParameters(uri, params);	
-		}
-		if (config.getTypes()!=null && app.getNotificationTypes()==null) {
-			app.setNotificationTypes(config.getTypes());			
-		}
-		RequestEntity<Application> request = RequestEntity.post(uri).body(app);
+		RequestEntity<NotificationsRegistration> request = RequestEntity.post(uri).body(registration);
 		exchange(restTemplate, request, Void.class);
 	}
 

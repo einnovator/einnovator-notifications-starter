@@ -26,12 +26,12 @@ import org.springframework.web.servlet.theme.CookieThemeResolver;
 
 
 @Configuration
-@EnableConfigurationProperties(NotificationsConfiguration.class)
+@EnableConfigurationProperties(NotificationsClientConfiguration.class)
 @Import(AmqpConfig.class)
 public class NotificationsClientConfig {
 	
 	@Autowired
-	private NotificationsConfiguration config;
+	private NotificationsClientConfiguration config;
 	
 	@Autowired
 	private OAuth2ClientContext oauth2ClientContext;

@@ -1,18 +1,22 @@
 package org.einnovator.notifications.client.manager;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.NotificationListener;
+import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
 import org.einnovator.notifications.client.model.Action;
-import org.einnovator.notifications.client.model.Application;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
+import org.einnovator.notifications.client.model.NotificationsRegistration;
 import org.einnovator.notifications.client.model.Target;
 import org.einnovator.notifications.client.modelx.NotificationFilter;
 import org.einnovator.notifications.client.modelx.NotificationOptions;
 import org.einnovator.util.SecurityUtil;
 import org.einnovator.util.event.LogoutApplicationEvent;
+import org.einnovator.util.model.Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -39,7 +43,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	private NotificationsClient client;
 	
 	private CacheManager cacheManager;
-	
+
+	@Autowired
+	private NotificationsClientConfiguration config;
 	 
 	public NotificationManagerImpl(CacheManager cacheManager) {
 		this.cacheManager = cacheManager;
@@ -50,6 +56,15 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 		this.cacheManager = cacheManager;
 	}
 
+	@PostConstruct
+	public void initialize() {
+		if (config.getRegistration()!=null) {
+			if (config.getRegistration().isAuto()) {
+				register();
+			}
+		}
+	}
+	
 	@Override
 	public void publishEvent(Event event) {
 		try {
@@ -99,23 +114,56 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 
 	@Override
-	public boolean register(Application app) {
+	public boolean register() {
 		try {
-			client.register(app);			
+			client.register();			
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("register: " + e + " " + app);
+			logger.error("register: " + e);
+			return false;
+		}		
+	}
+
+	@Override
+	public boolean register(Application application) {
+		try {
+			client.register(application);			
+			return true;
+		} catch (RuntimeException e) {
+			logger.error("register: " + e + " " + application);
+			return false;
+		}
+	}
+
+	@Override
+	public boolean register(Application application, OAuth2RestTemplate template) {
+		try {
+			client.register(application, template);			
+			return true;
+		} catch (RuntimeException e) {
+			logger.error("register: " + e + " " + application);
+			return false;
+		}
+	}
+
+	@Override
+	public boolean register(NotificationsRegistration registration) {
+		try {
+			client.register(registration);			
+			return true;
+		} catch (RuntimeException e) {
+			logger.error("register: " + e + " " + registration);
 			return false;
 		}
 	}
 	
 	@Override
-	public boolean register(Application app, OAuth2RestTemplate template) {
+	public boolean register(NotificationsRegistration registration, OAuth2RestTemplate template) {
 		try {
-			client.register(app, template);
+			client.register(registration, template);
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("register: Attempt to register application failed: " + e + " " + app);
+			logger.error("register: Attempt to register application failed: " + e + " " + registration);
 			return false;
 		}
 	}

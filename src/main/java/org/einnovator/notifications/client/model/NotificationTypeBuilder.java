@@ -8,7 +8,7 @@ public class NotificationTypeBuilder {
 	
 	private String app;
 	
-	private String id;
+	private String typeId;
 	
 	private String sourceType;
 	
@@ -44,8 +44,8 @@ public class NotificationTypeBuilder {
 		return this;
 	}
 
-	public NotificationTypeBuilder id(String id) {
-		this.id = id;
+	public NotificationTypeBuilder typeId(String typeId) {
+		this.typeId = typeId;
 		return this;
 	}
 
@@ -125,7 +125,7 @@ public class NotificationTypeBuilder {
 	public NotificationType build() {
 		NotificationType type = new NotificationType();
 		type.setApp(app);
-		type.setId(id);
+		type.setTypeId(typeId);
 		type.setSourceType(sourceType);
 		type.setActionType(actionType);
 		type.setTriggers(triggers);

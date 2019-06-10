@@ -1,11 +1,12 @@
 package org.einnovator.notifications.client.manager;
 
 import org.einnovator.notifications.client.amqp.NotificationListener;
-import org.einnovator.notifications.client.model.Application;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
+import org.einnovator.notifications.client.model.NotificationsRegistration;
 import org.einnovator.notifications.client.modelx.NotificationFilter;
 import org.einnovator.notifications.client.modelx.NotificationOptions;
+import org.einnovator.util.model.Application;
 import org.springframework.cache.Cache;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,8 +14,11 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 
 public interface NotificationManager extends NotificationListener {
 
-	boolean register(Application app);
-	boolean register(Application app, OAuth2RestTemplate restTemplate);
+	boolean register();
+	boolean register(Application application);
+	boolean register(Application application, OAuth2RestTemplate restTemplate);
+	boolean register(NotificationsRegistration registration);
+	boolean register(NotificationsRegistration registration, OAuth2RestTemplate restTemplate);
 
 	void publishEvent(Event event);
 	void publishDirect(Notification notification);	

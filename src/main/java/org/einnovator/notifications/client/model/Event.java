@@ -3,23 +3,19 @@ package org.einnovator.notifications.client.model;
 import java.util.List;
 import java.util.Map;
 
+import org.einnovator.util.model.ObjectBase;
+import org.einnovator.util.model.ToStringCreator;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Event {
+public class Event extends ObjectBase {
 
-	public static final String EVENT_TYPE_NOTIFICATION = "Notification";
+	private EventType type;
 
-	public static final String EVENT_TYPE_PREFERENCE = "Preference";
-
-	@Deprecated
 	private String app;
-
-	private Application application;
-
-	private String type;
 
 	private Preference preference;
 
@@ -32,8 +28,6 @@ public class Event {
 	private PrincipalX principal;
 
 	private Meta meta;
-	
-	private Map<String, Object> details;
 	
 	private List<Target> targets;
 	
@@ -51,13 +45,13 @@ public class Event {
 	}
 	
 	public Event(Preference preference, PrincipalX principal) {
-		this.type = EVENT_TYPE_PREFERENCE;
+		this.type = EventType.PREFERENCE;
 		this.preference = preference;
 		this.principal = principal;
 	}
 
 	public Event(Source source,  Action action, PrincipalX principal, List<Target> targets) {
-		this.type = EVENT_TYPE_NOTIFICATION;
+		this.type = EventType.NOTIFICATION;
 		this.source = source;
 		this.action = action;
 		this.principal = principal;
@@ -72,14 +66,6 @@ public class Event {
 		this(source, action, principal, meta, details, null);
 	}
 	
-	public Application getApplication() {
-		return application;
-	}
-
-	public void setApplication(Application application) {
-		this.application = application;
-	}
-
 	public String getApp() {
 		return app;
 	}
@@ -88,11 +74,11 @@ public class Event {
 		this.app = app;
 	}
 
-	public String getType() {
+	public EventType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(EventType type) {
 		this.type = type;
 	}
 
@@ -151,14 +137,6 @@ public class Event {
 	public void setMeta(Meta meta) {
 		this.meta = meta;
 	}
-
-	public Map<String, Object> getDetails() {
-		return details;
-	}
-
-	public void setDetails(Map<String, Object> details) {
-		this.details = details;
-	}
 	
 	public Map<String, Object> getEnv() {
 		return env;
@@ -199,28 +177,26 @@ public class Event {
 	public void setSms(String sms) {
 		this.sms = sms;
 	}
-
-	@Override
-	public String toString() {
-		return "Event ["
-				+ (app != null ? "app=" + app + ", " : "")				
-				+ (application != null ? "application=" + application + ", " : "")
-				+ (preference != null ? "preference=" + preference + ", " : "")
-				+ (source != null ? "source=" + source + ", " : "")
-				+ (source2 != null ? "source2=" + source2 + ", " : "")
-				+ (action != null ? "action=" + action + ", " : "")
-				+ (principal != null ? "principal=" + principal + ", " : "")
-				+ (targets != null ? "targets=" + targets + ", " : "")
-				+ (meta != null ? "meta=" + meta : "")
-				+ (details != null ? "details=" + details : "")
-				+ (env != null ? "env=" + env + ", ": "")		
-				+ (subject != null ? "subject=" + subject  + ", " : "")
-				+ (html != null ? "html=" + html + ", " : "")
-				+ (content != null ? "content=" + content  + ", " : "")
-				+ (sms != null ? "sms=" + sms  : "")
-				+ "]";
-	}
 	
+	@Override
+	public ToStringCreator toString1(ToStringCreator creator) {
+		return super.toString1(creator)
+			.append("type", type)
+			.append("app", app)
+			.append("preference", preference)
+			.append("source", source)
+			.append("action", action)
+			.append("principal", principal)
+			.append("meta", meta)
+			.append("targets", targets)
+			.append("env", env)
+			.append("subject", subject)
+			.append("html", html)
+			.append("content", content)
+			.append("sms", sms)
+			;
+	}
+
 	
 	
 }

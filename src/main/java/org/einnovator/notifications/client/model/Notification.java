@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.einnovator.util.MappingUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -25,12 +27,12 @@ public class Notification extends ObjectBase2 {
 
 	private Meta meta;
 	
-	private Map<String, Object> details;
-	
 	private List<Target> targets;
 	
 	private String uri;
 			
+	private Long timestamp;
+	
 	private Date date;
 	
 	private String formattedDate;
@@ -47,21 +49,31 @@ public class Notification extends ObjectBase2 {
 	
 	public Notification() {
 	}
-	
-	public Notification(Event event) {
-		this.app = event.getApp();
-		this.preference = event.getPreference();
-		this.source = event.getSource();
-		this.source2 = event.getSource2();
-		this.action = event.getAction();
-		this.principal = event.getPrincipal();
-		this.targets = event.getTargets();
-		this.date = new Date();
-		this.details = event.getDetails();
-		this.meta = event.getMeta();
-		this.env = event.getEnv();
+
+	public Notification(Object obj) {
+		MappingUtils.updateObjectFrom(this, obj);
 	}
 	
+	/**
+	 * Get the value of property {@code timestamp}.
+	 *
+	 * @return the timestamp
+	 */
+	public Long getTimestamp() {
+		return timestamp;
+	}
+
+
+	/**
+	 * Set the value of property {@code timestamp}.
+	 *
+	 * @param timestamp the timestamp to set
+	 */
+	public void setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
+	}
+
+
 	public String getApp() {
 		return app;
 	}
