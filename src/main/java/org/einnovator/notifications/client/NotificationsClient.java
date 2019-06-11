@@ -133,28 +133,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 			if (clientTokenProvider!=null) {
 				clientTokenProvider.setupToken();
 			}
-			register(registration, restTemplate);			
+			register(registration);			
 		}
 	}
-
-	public void register(Application application) {
-		if (clientTokenProvider!=null) {
-			clientTokenProvider.setupToken();
-		}
-		register(application, restTemplate);
-	}
-
-	public void register(Application application, OAuth2RestTemplate restTemplate) {
-		NotificationsRegistration registration = config.getRegistration();
-		if (registration!=null) {
-			registration.setApplication(application);
-			register(registration, restTemplate);			
-		}
-	}
-
+	
 	public void register(NotificationsRegistration registration) {
+		OAuth2RestTemplate restTemplate = this.restTemplate;
 		if (clientTokenProvider!=null) {
 			clientTokenProvider.setupToken();
+			restTemplate = clientTokenProvider.makeOAuth2RestTemplate();
 		}
 		register(registration, restTemplate);
 	}

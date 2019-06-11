@@ -16,7 +16,6 @@ import org.einnovator.notifications.client.modelx.NotificationFilter;
 import org.einnovator.notifications.client.modelx.NotificationOptions;
 import org.einnovator.util.SecurityUtil;
 import org.einnovator.util.event.LogoutApplicationEvent;
-import org.einnovator.util.model.Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -122,28 +121,6 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			logger.error("register: " + e);
 			return false;
 		}		
-	}
-
-	@Override
-	public boolean register(Application application) {
-		try {
-			client.register(application);			
-			return true;
-		} catch (RuntimeException e) {
-			logger.error("register: " + e + " " + application);
-			return false;
-		}
-	}
-
-	@Override
-	public boolean register(Application application, OAuth2RestTemplate template) {
-		try {
-			client.register(application, template);			
-			return true;
-		} catch (RuntimeException e) {
-			logger.error("register: " + e + " " + application);
-			return false;
-		}
 	}
 
 	@Override
