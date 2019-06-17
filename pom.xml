@@ -126,6 +126,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<doctitle>
+					<![CDATA[Client Library and Spring Boot Starter for<br/>EInnovator Notifications Hub Service<br/>${project.name} ${project.version} API]]>
+					</doctitle>
+					<bottom>
+						 <![CDATA[Copyright 2005, <a href="http://home.einnovator.org">EInnovator, LTD.<a>]]> 
+					</bottom>
+				</configuration>				
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
