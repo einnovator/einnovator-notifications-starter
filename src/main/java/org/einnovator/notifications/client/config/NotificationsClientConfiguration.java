@@ -17,7 +17,7 @@ public class NotificationsClientConfiguration extends ObjectBase {
 	private AmqpConfiguration amqp = new AmqpConfiguration();
 
 	@NestedConfigurationProperty
-	private TemplatesConfiguration templates;
+	private TemplatesConfiguration templates = new TemplatesConfiguration();
 	
 	@NestedConfigurationProperty
 	private ConnectionConfiguration connection = new ConnectionConfiguration();

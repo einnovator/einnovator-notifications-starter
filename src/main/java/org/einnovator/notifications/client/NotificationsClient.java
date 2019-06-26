@@ -16,11 +16,14 @@ import org.einnovator.notifications.client.config.NotificationsEndpoints;
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.ErrorReport;
 import org.einnovator.notifications.client.model.Event;
+import org.einnovator.notifications.client.model.Medium;
 import org.einnovator.notifications.client.model.Notification;
+import org.einnovator.notifications.client.model.NotificationType;
 import org.einnovator.notifications.client.model.NotificationsRegistration;
 import org.einnovator.notifications.client.model.Preference;
 import org.einnovator.notifications.client.model.Source;
 import org.einnovator.notifications.client.model.Target;
+import org.einnovator.notifications.client.model.Template;
 import org.einnovator.notifications.client.modelx.NotificationFilter;
 import org.einnovator.notifications.client.modelx.NotificationOptions;
 import org.einnovator.util.MappingUtils;
@@ -127,9 +130,6 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	public void register() {
 		NotificationsRegistration registration = config.getRegistration();
 		if (registration!=null) {
-			if (application!=null) {
-				registration.setApplication(application);
-			}
 			if (clientTokenProvider!=null) {
 				clientTokenProvider.setupToken();
 			}
@@ -148,9 +148,49 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 
 	public void register(NotificationsRegistration registration, OAuth2RestTemplate restTemplate) {
 		URI uri = makeURI(NotificationsEndpoints.register(config));
+		preprocess(registration);
 		RequestEntity<NotificationsRegistration> request = RequestEntity.post(uri).body(registration);
 		exchange(restTemplate, request, Void.class);
 	}
+	
+	public NotificationsRegistration preprocess(NotificationsRegistration registration) {
+		if (registration.getApplication()==null) {
+			registration.setApplication(application);
+		}
+		if (registration.getTemplates()!=null) {
+			for (Template template: registration.getTemplates()) {
+				preprocess(template, null);
+			}
+		}
+		if (registration.getTypes()!=null) {
+			for (NotificationType type: registration.getTypes()) {
+				preprocess(type);
+			}
+		}
+		return registration;
+	}
+	
+	public Template preprocess(Template template, Medium medium) {
+		if (template!=null) {
+			if (template.getMedium()==null) {
+				template.setMedium(medium);
+			}
+			try {
+				template.loadContent(true, config.getTemplates());							
+			} catch (RuntimeException e) {
+				logger.error("preprocess:" + e + " " + template.getName() + " " + template.getUri() + " " + template.isAbsoluteUri() + " " + template.getBaseUri(config.getTemplates())) ;
+			}
+		}
+		return template;
+	}
+
+	public NotificationType preprocess(NotificationType type) {
+		preprocess(type.getTemplate(), Medium.APP);
+		preprocess(type.getMailTemplate(), Medium.EMAIL);
+		preprocess(type.getSmsTemplate(), Medium.SMS);
+		return type;
+	}
+
 
 	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable) {
 		URI uri = makeURI(NotificationsEndpoints.notifications(config));

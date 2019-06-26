@@ -21,6 +21,8 @@ public class NotificationsRegistration extends ObjectBase {
 	
 	private List<NotificationType> types;
 
+	private List<Template> templates;
+	
 	public NotificationsRegistration() {
 	}
 	
@@ -85,12 +87,32 @@ public class NotificationsRegistration extends ObjectBase {
 	}
 
 
+	/**
+	 * Get the value of property {@code templates}.
+	 *
+	 * @return the templates
+	 */
+	public List<Template> getTemplates() {
+		return templates;
+	}
+
+	/**
+	 * Set the value of property {@code templates}.
+	 *
+	 * @param templates the templates to set
+	 */
+	public void setTemplates(List<Template> templates) {
+		this.templates = templates;
+	}
+
+
 	@Override
 	public ToStringCreator toString1(ToStringCreator creator) {
 		return super.toString1(creator)
 			.append("auto", auto)
 			.append("application", application)
 			.append("types", types)
+			.append("templates", templates)
 			;
 	}
 

@@ -4,7 +4,17 @@ import java.util.Map;
 
 public class TemplateBuilder {
 
+	private Medium medium;
+
+	private ContentType contentType;
+
+	private String app;
+
+	private TemplateCategory category;
+
 	private String name;
+
+	private Boolean fragment;
 	
 	private String uri;
 	
@@ -12,12 +22,8 @@ public class TemplateBuilder {
 
 	private String content;
 
-	private Boolean html;
-	
 	private Map<String, Object> env;
 	
-	private Boolean enabled;
-
 	public TemplateBuilder() {	
 	}
 
@@ -36,6 +42,11 @@ public class TemplateBuilder {
 		return this;
 	}
 
+	public TemplateBuilder app(String app) {
+		this.app = app;
+		return this;
+	}
+
 	public TemplateBuilder subject(String subject) {
 		this.subject = subject;
 		return this;
@@ -46,26 +57,33 @@ public class TemplateBuilder {
 		return this;		
 	}
 
-	public TemplateBuilder html(Boolean html) {
-		this.html = html;
+	public TemplateBuilder medium(Medium medium) {
+		this.medium = medium;
 		return this;
 	}
 
-	
-	public TemplateBuilder enabled(Boolean enabled) {
-		this.enabled = enabled;
+	public TemplateBuilder contentType(ContentType contentType) {
+		this.contentType = contentType;
+		return this;
+	}
+
+	public TemplateBuilder fragment(Boolean fragment) {
+		this.fragment = fragment;
 		return this;
 	}
 
 	public Template build() {
 		Template template = new Template();
+		template.setMedium(medium);
+		template.setContentType(contentType);
+		template.setApp(app);
+		template.setCategory(category);
 		template.setName(name);
+		template.setFragment(fragment);
 		template.setUri(uri);
 		template.setSubject(subject);
 		template.setContent(content);
-		template.setHtml(html);
 		template.setEnv(env);
-		template.setEnabled(enabled);
 		return template;
 	}
 	
