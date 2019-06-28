@@ -1,6 +1,7 @@
 package org.einnovator.notifications.client.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.einnovator.util.model.Application;
 import org.einnovator.util.model.ObjectBase;
@@ -23,6 +24,8 @@ public class NotificationsRegistration extends ObjectBase {
 
 	private List<Template> templates;
 	
+	private Map<String, Object> properties;
+
 	public NotificationsRegistration() {
 	}
 	
@@ -106,6 +109,26 @@ public class NotificationsRegistration extends ObjectBase {
 	}
 
 
+	/**
+	 * Get the value of property {@code properties}.
+	 *
+	 * @return the properties
+	 */
+	public Map<String, Object> getProperties() {
+		return properties;
+	}
+
+
+	/**
+	 * Set the value of property {@code properties}.
+	 *
+	 * @param properties the properties to set
+	 */
+	public void setProperties(Map<String, Object> properties) {
+		this.properties = properties;
+	}
+
+
 	@Override
 	public ToStringCreator toString1(ToStringCreator creator) {
 		return super.toString1(creator)
@@ -113,6 +136,7 @@ public class NotificationsRegistration extends ObjectBase {
 			.append("application", application)
 			.append("types", types)
 			.append("templates", templates)
+			.append("properties", properties)
 			;
 	}
 
