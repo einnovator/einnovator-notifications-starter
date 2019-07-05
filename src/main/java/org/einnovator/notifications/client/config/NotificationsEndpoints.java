@@ -37,4 +37,12 @@ public class NotificationsEndpoints {
 	public static String api(NotificationsClientConfiguration config) {
 		return config.getServer() + "/api";
 	}
+	
+	public static String templates(NotificationsClientConfiguration config) {
+		return api(config) + "/template";
+	}
+	
+	public static String template(String id, NotificationsClientConfiguration config) {
+		return api(config) + "/template/" + id;
+	}
 }

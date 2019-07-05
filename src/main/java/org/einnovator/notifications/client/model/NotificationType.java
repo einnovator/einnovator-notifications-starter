@@ -2,7 +2,7 @@ package org.einnovator.notifications.client.model;
 
 import java.util.List;
 
-import org.einnovator.util.model.ObjectBase;
+import org.einnovator.util.model.EntityBase;
 import org.einnovator.util.model.ToStringCreator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class NotificationType extends ObjectBase {
+public class NotificationType extends EntityBase {
 
 	private String app;
 	

@@ -5,7 +5,7 @@ import java.util.Map;
 import org.einnovator.notifications.client.config.TemplatesConfiguration;
 import org.einnovator.util.PathUtil;
 import org.einnovator.util.ResourceUtils;
-import org.einnovator.util.model.ObjectBase;
+import org.einnovator.util.model.EntityBase;
 import org.einnovator.util.model.ToStringCreator;
 import org.springframework.util.StringUtils;
 
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Template extends ObjectBase {
+public class Template extends EntityBase {
 	
 	private Medium medium;
 
@@ -47,6 +47,10 @@ public class Template extends ObjectBase {
 	public Template(String name, String basePath) {	
 		this.name = name;
 		loadContent(basePath, false);
+	}
+
+	public Template(Object obj) {	
+		super(obj);
 	}
 
 	
@@ -246,6 +250,14 @@ public class Template extends ObjectBase {
 	}
 
 		
+	public String getRequiredContent(TemplatesConfiguration config) {
+		if (content!=null) {
+			return content;
+		}
+		loadContent(false, config);
+		return content;
+	}
+	
 	public boolean isAbsoluteUri() {
 		if (StringUtils.hasText(uri)) {
 			String uri = this.uri.trim();

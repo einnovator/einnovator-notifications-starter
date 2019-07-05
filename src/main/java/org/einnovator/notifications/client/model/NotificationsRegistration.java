@@ -140,5 +140,15 @@ public class NotificationsRegistration extends ObjectBase {
 			;
 	}
 
+	public Template findTemplate(String name, Medium medium) {
+		if (templates!=null) {
+			for (Template template: templates) {
+				if (name.equalsIgnoreCase(template.getName()) && (template.getMedium()==null || template.getMedium().equals(medium))) {
+					return template;
+				}
+			}
+		}
+		return null;
+	}
 	
 }

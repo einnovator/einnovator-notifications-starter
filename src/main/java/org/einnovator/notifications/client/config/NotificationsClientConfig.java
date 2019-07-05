@@ -8,6 +8,8 @@ import org.einnovator.notifications.client.manager.NotificationManager;
 import org.einnovator.notifications.client.manager.NotificationManagerImpl;
 import org.einnovator.notifications.client.manager.PreferencesManager;
 import org.einnovator.notifications.client.manager.PreferencesManagerImpl;
+import org.einnovator.notifications.client.manager.TemplateManager;
+import org.einnovator.notifications.client.manager.TemplateManagerImpl;
 import org.einnovator.notifications.client.web.PreferenceThemeResolver;
 import org.einnovator.notifications.client.web.PreferencesRestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,11 @@ public class NotificationsClientConfig {
 	@Bean
 	public NotificationManager notificationManager(CacheManager cacheManager) {
 		return new NotificationManagerImpl(cacheManager);
+	}
+	
+	@Bean
+	public TemplateManager templateManager(CacheManager cacheManager) {
+		return new TemplateManagerImpl(cacheManager);
 	}
 	
 	@Bean

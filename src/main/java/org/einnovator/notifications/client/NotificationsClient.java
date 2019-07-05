@@ -1,6 +1,7 @@
 package org.einnovator.notifications.client;
 
 import static org.einnovator.util.UriUtils.appendQueryParameters;
+import static org.einnovator.util.UriUtils.encodeId;
 import static org.einnovator.util.UriUtils.makeURI;
 
 import java.net.URI;
@@ -26,8 +27,11 @@ import org.einnovator.notifications.client.model.Target;
 import org.einnovator.notifications.client.model.Template;
 import org.einnovator.notifications.client.modelx.NotificationFilter;
 import org.einnovator.notifications.client.modelx.NotificationOptions;
+import org.einnovator.notifications.client.modelx.TemplateFilter;
+import org.einnovator.notifications.client.modelx.TemplateOptions;
 import org.einnovator.util.MappingUtils;
 import org.einnovator.util.PageOptions;
+import org.einnovator.util.PageResult;
 import org.einnovator.util.PageUtil;
 import org.einnovator.util.model.Application;
 import org.einnovator.util.security.ClientTokenProvider;
@@ -321,6 +325,64 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		}
 	}
 
+	public Template getTemplate(String id) {
+		return getTemplate(id, null);
+	}
+	
+	public Template getTemplate(String id, TemplateOptions options) {
+		URI uri = makeURI(NotificationsEndpoints.template(id, config));
+		if (options!=null) {
+			Map<String, String> params = new LinkedHashMap<>();
+			params.putAll(MappingUtils.toMapFormatted(options));
+			uri = appendQueryParameters(uri, params);			
+		}
+
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<Template> result = exchange(request, Template.class);
+		return result.getBody();
+	}
+	
+
+	public Page<Template> listTemplates(TemplateFilter filter, Pageable pageable) {
+		URI uri = makeURI(NotificationsEndpoints.templates(config));
+		if (filter!=null || pageable!=null) {
+			Map<String, String> params = new LinkedHashMap<>();
+			if (filter!=null) {
+				params.putAll(MappingUtils.toMapFormatted(filter));
+			}
+			if (pageable!=null) {
+				params.putAll(MappingUtils.toMapFormatted(new PageOptions(pageable)));
+			}
+			uri = appendQueryParameters(uri, params);			
+		}
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		@SuppressWarnings("rawtypes")
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class);
+		return PageUtil.create2(result.getBody(),  Template.class);
+	}
+
+	public URI createTemplate(Template template) {
+		URI uri = makeURI(NotificationsEndpoints.templates(config));
+		RequestEntity<Template> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(template);
+		
+		ResponseEntity<Void> result = exchange(request, Void.class);
+		return result.getHeaders().getLocation();
+	}
+	
+	public void updateTemplate(Template template) {
+		URI uri = makeURI(NotificationsEndpoints.template(template.getId(), config));
+		RequestEntity<Template> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(template);
+		
+		exchange(request, Template.class);
+	}
+	
+	public void deleteTemplate(String templateId) {
+		templateId = encodeId(templateId);
+		URI uri = makeURI(NotificationsEndpoints.template(templateId, config));
+		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
+		
+		exchange(request, Void.class);
+	}
 	
 	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType) throws RestClientException {
 		return exchange(restTemplate, request, responseType);
