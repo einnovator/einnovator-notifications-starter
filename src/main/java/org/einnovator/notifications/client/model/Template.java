@@ -271,9 +271,8 @@ public class Template extends EntityBase {
 			return this;
 		}
 		if (StringUtils.hasText(uri)) {
-			String uri = this.uri;
 			if (!isAbsoluteUri()) {
-				if (baseUri!=null) {
+				if (baseUri!=null && !uri.startsWith(baseUri)) {
 					uri = PathUtil.concat(baseUri, uri);
 				}
 			}
@@ -292,18 +291,14 @@ public class Template extends EntityBase {
 
 	@JsonIgnore
 	public String getBaseUri(TemplatesConfiguration config) {
-		if (!isAbsoluteUri()) {
-			if (medium==Medium.EMAIL) {
-				return config.getMail();
-			} else if (getMedium()==Medium.APP) {
-				return config.getApp();
-			} else if (getMedium()==Medium.SMS) {
-				return config.getSms();				
-			} else {
-				return config.getUri();
-			}
+		if (medium==Medium.EMAIL) {
+			return PathUtil.concat(config.getUri(), config.getMail());
+		} else if (getMedium()==Medium.APP) {
+			return PathUtil.concat(config.getUri(), config.getApp());
+		} else if (getMedium()==Medium.SMS) {
+			return PathUtil.concat(config.getUri(), config.getSms());				
 		}
-		return null;
+		return config.getUri();
 	}
 	
 }

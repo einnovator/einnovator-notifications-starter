@@ -22,6 +22,10 @@ public class TemplatesConfiguration extends ObjectBase {
 	
 	private String sms = DEFAULT_SMS_TEMPLATE_DIR;
 	
+	private Boolean cache;
+
+	private Long expires;
+	
 	public TemplatesConfiguration() {
 	}
 	
@@ -95,6 +99,43 @@ public class TemplatesConfiguration extends ObjectBase {
 	 */
 	public void setSms(String sms) {
 		this.sms = sms;
+	}
+
+	
+	/**
+	 * Get the value of property {@code cache}.
+	 *
+	 * @return the cache
+	 */
+	public Boolean getCache() {
+		return cache;
+	}
+
+	/**
+	 * Set the value of property {@code cache}.
+	 *
+	 * @param cache the cache to set
+	 */
+	public void setCache(Boolean cache) {
+		this.cache = cache;
+	}
+
+	/**
+	 * Get the value of property {@code expires}.
+	 *
+	 * @return the expires
+	 */
+	public Long getExpires() {
+		return expires;
+	}
+
+	/**
+	 * Set the value of property {@code expires}.
+	 *
+	 * @param expires the expires to set
+	 */
+	public void setExpires(Long expires) {
+		this.expires = expires;
 	}
 
 	@Override

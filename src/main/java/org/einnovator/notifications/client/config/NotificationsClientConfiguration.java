@@ -1,12 +1,17 @@
 package org.einnovator.notifications.client.config;
 
+import javax.annotation.PostConstruct;
+
 import org.einnovator.notifications.client.amqp.AmqpConfiguration;
 import org.einnovator.notifications.client.model.NotificationsRegistration;
+import org.einnovator.util.StringUtil;
 import org.einnovator.util.config.ConnectionConfiguration;
 import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.core.env.Environment;
 
 @ConfigurationProperties("notifications")
 public class NotificationsClientConfiguration extends ObjectBase {
@@ -25,7 +30,20 @@ public class NotificationsClientConfiguration extends ObjectBase {
 	@NestedConfigurationProperty
 	private NotificationsRegistration registration = new NotificationsRegistration();
 	
+	@Autowired
+	private Environment env;
+	
 	public NotificationsClientConfiguration() {
+	}
+
+
+	@PostConstruct
+	public void init() {
+		if (StringUtil.contains(env.getActiveProfiles(), "dev")) {
+			if (templates.getCache()==null) {
+				templates.setCache(true);
+			}
+		}
 	}
 
 	public ConnectionConfiguration getConnection() {

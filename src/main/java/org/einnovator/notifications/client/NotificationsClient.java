@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
@@ -34,6 +36,8 @@ import org.einnovator.util.PageOptions;
 import org.einnovator.util.PageResult;
 import org.einnovator.util.PageUtil;
 import org.einnovator.util.model.Application;
+import org.einnovator.util.script.EnvironmentVariableResolver;
+import org.einnovator.util.script.TextTemplates;
 import org.einnovator.util.security.ClientTokenProvider;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
@@ -41,6 +45,7 @@ import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -75,6 +80,11 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	private Application application;
 
 
+	private TextTemplates engine;
+
+	@Autowired
+	private Environment env;
+	
 	@Autowired
 	public NotificationsClient() {
 	}
@@ -86,6 +96,11 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	public NotificationsClient(OAuth2RestTemplate restTemplate, NotificationsClientConfiguration config) {
 		this.restTemplate = restTemplate;
 		this.config = config;
+	}
+	
+	@PostConstruct
+	public void init() {
+		 engine = new TextTemplates("{", "}", new EnvironmentVariableResolver(env));
 	}
 	
 	public void publishEvent(Event event) {
@@ -174,12 +189,18 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		return registration;
 	}
 	
+
+	
 	public Template preprocess(Template template, Medium medium) {
 		if (template!=null) {
 			if (template.getMedium()==null) {
 				template.setMedium(medium);
 			}
 			try {
+				if (template.getUri()!=null) {
+					String uri = engine.expand(template.getUri(), null);
+					template.setUri(uri);
+				}
 				template.loadContent(true, config.getTemplates());							
 			} catch (RuntimeException e) {
 				logger.error("preprocess:" + e + " " + template.getName() + " " + template.getUri() + " " + template.isAbsoluteUri() + " " + template.getBaseUri(config.getTemplates())) ;

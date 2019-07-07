@@ -67,6 +67,8 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 		if (local) {
 			Template template = config.getRegistration().findTemplate(id, medium);
 			if (template!=null) {
+				boolean reload = Boolean.FALSE.equals(config.getTemplates().getCache());
+				template.loadContent(reload, config.getTemplates());
 				return template;
 			}
 		}

@@ -4,9 +4,8 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.einnovator.util.script.TextTemplates;
 import org.springframework.stereotype.Service;
-
-import org.einnovator.util.TextTemplates;
 
 @Service
 public class SimpleTemplateManager extends TemplateManagerBase {
