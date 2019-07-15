@@ -5,6 +5,7 @@ import java.util.Map;
 import org.einnovator.notifications.client.config.TemplatesConfiguration;
 import org.einnovator.util.PathUtil;
 import org.einnovator.util.ResourceUtils;
+import org.einnovator.util.UriUtils;
 import org.einnovator.util.model.EntityBase;
 import org.einnovator.util.model.ToStringCreator;
 import org.springframework.util.StringUtils;
@@ -259,11 +260,7 @@ public class Template extends EntityBase {
 	}
 	
 	public boolean isAbsoluteUri() {
-		if (StringUtils.hasText(uri)) {
-			String uri = this.uri.trim();
-			return uri.contains("://") || uri.startsWith("/");
-		}
-		return false;
+		return UriUtils.isAbsolute(uri);
 	}
 	
 	public Template loadContent(String baseUri, boolean reload) {

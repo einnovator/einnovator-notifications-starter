@@ -3,6 +3,7 @@
  */
 package org.einnovator.notifications.client;
 
+import org.einnovator.notifications.client.manager.NotificationManager;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.util.event.EventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class NotificationEventPublisher implements EventPublisher {
 
 	@Autowired
-	protected NotificationsClient client;
+	protected NotificationManager manager;
 
 	/**
 	 * Create instance of {@code RemoteEventPublisher}.
@@ -26,7 +27,7 @@ public class NotificationEventPublisher implements EventPublisher {
 	@Override
 	public void publishEvent(Object event) {
 		if (event instanceof Event) {
-			client.publishEvent((Event)event);
+			manager.publishEvent((Event)event);
 		}
 	}
 

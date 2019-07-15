@@ -1,10 +1,12 @@
 package org.einnovator.notifications.client.amqp;
 
+import org.einnovator.util.model.ObjectBase;
+import org.einnovator.util.model.ToStringCreator;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
 @ConfigurationProperties
-public class AmqpConfiguration {
+public class AmqpConfiguration extends ObjectBase {
 	
 	public static final String DEFAULT_EVENTS_EXCHANGE = "events";
 
@@ -18,6 +20,8 @@ public class AmqpConfiguration {
 	
 	private String notificationsExchange = DEFAULT_NOTIFICATIONS_EXCHANGE;
 
+	private Boolean enabled = true;
+	
 	public AmqpConfiguration() {
 	}
 	
@@ -45,6 +49,26 @@ public class AmqpConfiguration {
 	public void setNotificationsExchange(String notificationsExchange) {
 		this.notificationsExchange = notificationsExchange;
 	}
+	
+	
+
+	/**
+	 * Get the value of property {@code enabled}.
+	 *
+	 * @return the enabled
+	 */
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	/**
+	 * Set the value of property {@code enabled}.
+	 *
+	 * @param enabled the enabled to set
+	 */
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
 
 	@Override
 	public String toString() {
@@ -53,5 +77,14 @@ public class AmqpConfiguration {
 				+ (notificationsExchange != null ? "notificationsExchange=" + notificationsExchange : "") + "]";
 	}
 	
+	@Override
+	public ToStringCreator toString(ToStringCreator creator) {
+		return super.toString(creator)
+			.append("eventExchange", eventExchange)
+			.append("notificationsQueue", notificationsQueue)
+			.append("notificationsExchange", notificationsExchange)
+			.append("enabled", enabled)
+			;
+	}
 	
 }

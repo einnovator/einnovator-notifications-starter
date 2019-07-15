@@ -33,6 +33,8 @@ public class NotificationsClientConfiguration extends ObjectBase {
 	@Autowired
 	private Environment env;
 	
+	private Boolean enabled = true;
+	
 	public NotificationsClientConfiguration() {
 	}
 
@@ -106,6 +108,46 @@ public class NotificationsClientConfiguration extends ObjectBase {
 		this.registration = registration;
 	}
 
+	/**
+	 * Get the value of property {@code env}.
+	 *
+	 * @return the env
+	 */
+	public Environment getEnv() {
+		return env;
+	}
+
+
+	/**
+	 * Set the value of property {@code env}.
+	 *
+	 * @param env the env to set
+	 */
+	public void setEnv(Environment env) {
+		this.env = env;
+	}
+
+
+	/**
+	 * Get the value of property {@code enabled}.
+	 *
+	 * @return the enabled
+	 */
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+
+	/**
+	 * Set the value of property {@code enabled}.
+	 *
+	 * @param enabled the enabled to set
+	 */
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+
 	@Override
 	public ToStringCreator toString(ToStringCreator creator) {
 		return creator
@@ -113,6 +155,7 @@ public class NotificationsClientConfiguration extends ObjectBase {
 				.append("amqp", amqp)
 				.append("templates", templates)
 				.append("registration", registration)
+				.append("enabled", enabled)
 				;
 	}
 	

@@ -70,7 +70,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	@Autowired
 	private OAuth2RestTemplate restTemplate;
 
-	@Autowired
+	@Autowired(required=false)
 	private RabbitTemplate amqpTemplate;
 
 	@Autowired(required=false)
@@ -104,7 +104,11 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	}
 	
 	public void publishEvent(Event event) {
-		publishEventAmqp(event);
+		if (amqpTemplate!=null && (config.getAmqp().getEnabled()==null || Boolean.TRUE.equals(config.getAmqp().getEnabled()))) {
+			publishEventAmqp(event);			
+		} else {
+			publishEventHttp(event);
+		}
 	}
 	
 	public void publishDirect(Notification notification) {
@@ -410,6 +414,9 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	}
 
 	protected <T> ResponseEntity<T> exchange(OAuth2RestTemplate restTemplate, RequestEntity<?> request, Class<T> responseType) throws RestClientException {
+		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
+			throw new RuntimeException("Notifications Not Enabled");
+		}
 		return restTemplate.exchange(request, responseType);
 	}
 	

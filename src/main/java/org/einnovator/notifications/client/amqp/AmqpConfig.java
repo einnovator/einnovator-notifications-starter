@@ -23,12 +23,16 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 
 
 @Configuration
 @Import(RabbitAutoConfiguration.class)
 @EnableConfigurationProperties({RabbitProperties.class})
+@Profile(AmqpConfig.AMQP)
 public class AmqpConfig {
+	
+	public static final String AMQP = "amqp";
 	
 	private final Log logger = LogFactory.getLog(getClass());
 
