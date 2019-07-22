@@ -9,7 +9,6 @@ import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
 import org.einnovator.notifications.client.model.Medium;
 import org.einnovator.notifications.client.model.Notification;
-import org.einnovator.notifications.client.model.NotificationsRegistration;
 import org.einnovator.notifications.client.model.Template;
 import org.einnovator.notifications.client.modelx.TemplateFilter;
 import org.einnovator.notifications.client.modelx.TemplateOptions;

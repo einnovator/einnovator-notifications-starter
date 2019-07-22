@@ -10,10 +10,8 @@ import org.einnovator.notifications.client.config.NotificationsClientConfigurati
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
-import org.einnovator.notifications.client.model.NotificationType;
 import org.einnovator.notifications.client.model.NotificationsRegistration;
 import org.einnovator.notifications.client.model.Target;
-import org.einnovator.notifications.client.model.Template;
 import org.einnovator.notifications.client.modelx.NotificationFilter;
 import org.einnovator.notifications.client.modelx.NotificationOptions;
 import org.einnovator.util.SecurityUtil;

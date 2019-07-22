@@ -8,14 +8,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.PayloadApplicationEvent;
 import org.springframework.util.StringUtils;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.NotificationListener;
 import org.einnovator.notifications.client.model.Event;
@@ -37,7 +37,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 	public static final String OP_LHSET = "lhset";
 
 
-	private Logger logger = Logger.getLogger(this.getClass());
+	protected final Log logger = LogFactory.getLog(getClass());
 
 	@Autowired
 	private NotificationsClient client;
