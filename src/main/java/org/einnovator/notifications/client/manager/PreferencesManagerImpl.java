@@ -18,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.NotificationListener;
+import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
 import org.einnovator.notifications.client.model.Preference;
@@ -41,6 +42,9 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 
 	@Autowired
 	private NotificationsClient client;
+
+	@Autowired
+	private NotificationsClientConfiguration config;
 
 	private CacheManager cacheManager;
 
@@ -140,6 +144,9 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 		Map<String, Object> map = getCacheValueForUser(username, Map.class, getPreferencesCache());
 		if (map==null) {
 			try {
+				if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
+					return null;
+				}
 				 Map<String, Preference> prefs = client.getPreferences(username);
 				 map = getAllValues(prefs);		
 				 if (map!=null) {

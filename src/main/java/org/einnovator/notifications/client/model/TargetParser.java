@@ -8,8 +8,8 @@ import org.springframework.util.StringUtils;
 public class TargetParser {
 
 	public static final String GROUP_PREFIX = "@";
-	public static final String ROLE_PREFIX = "#";
-	public static final String PERM_PREFIX = "$";
+	public static final String ROLE_PREFIX = ".";
+	public static final String PERM_PREFIX = ":";
 
 	/**
 	 * Parser to make Target from simple expression.
@@ -17,11 +17,11 @@ public class TargetParser {
 	 * @param destination
 	 *  username@email - user with email
 	 *  +1555444555 - user with phone
-	 * 	\@group - all users in group
-	 * %role - all users with global role
-	 * %role@group - all user with role in group (organization or operation)
-	 * $perm - all users with global permission
-	 * $perm@group - all user with permission  in group (organization or operation)
+	 * 	uuid\@group - all users in group with specified uuid
+	 * .role - all users with name global role
+	 * .role@group - all user with role in group
+	 * :perm - all users with named global permission
+	 * :perm\@group - all user with permission  in group
 	 * 
 	 * @return the {@code Target}
 	 */
