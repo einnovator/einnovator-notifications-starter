@@ -141,7 +141,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 
 	public Map<String, Object> getAllValuesForUser(String username) {
 		@SuppressWarnings("unchecked")
-		Map<String, Object> map = getCacheValueForUser(username, Map.class, getPreferencesCache());
+		Map<String, Object> map = getCacheValueForUser(Map.class, getPreferencesCache(), username);
 		if (map==null) {
 			try {
 				if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
@@ -150,14 +150,14 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 				 Map<String, Preference> prefs = client.getPreferences(username);
 				 map = getAllValues(prefs);		
 				 if (map!=null) {
-					putCacheValueForUser(username, map, getPreferencesCache());
+					putCacheValueForUser(map, getPreferencesCache(), username);
 				 }
 			} catch (RuntimeException e) {
 				logger.error("getAllValuesForUser: failed to intialize preferences:" + username + " " + e);
 			}
 			if (map==null) {
 				map = new LinkedHashMap<>();
-				putCacheValueForUser(username, map, getPreferencesCache());			
+				putCacheValueForUser(map, getPreferencesCache(), username);			
 			}
 		}
 		return map;
@@ -194,7 +194,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 		Map<String, Object> map = getAllValuesForUser(username);
 		if (map==null) {
 			map = new LinkedHashMap<>();
-			putCacheValueForUser(username, map, getPreferencesCache());			
+			putCacheValueForUser(map, getPreferencesCache(), username);			
 		}
 		map.put(key, value);
 		logger.debug("setValueForUser:" + username + " " + key + " " + value + " " + map);
