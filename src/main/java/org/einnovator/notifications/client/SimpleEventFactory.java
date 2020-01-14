@@ -23,7 +23,7 @@ import org.einnovator.util.event.EventFactory;
 
 
 /**
- * @author jsima
+ * @author support@einnovator.org
  *
  */
 public class SimpleEventFactory implements EventFactory {

@@ -233,6 +233,17 @@ public class Notification extends ObjectBase2 {
 				+ (sms != null ? "sms=" + sms  : "")
 				+ "]";
 	}
+
+	public static Notification find(Notification notification, List<Notification> notifications) {
+		if (notification!=null && notifications!=null) {
+			for (Notification notification2: notifications) {
+				if (notification.getId()!=null && notification.getId().equals(notification2.getId())) {
+					return notification2;
+				}				
+			}
+		}
+		return null;
+	}
 	
 	
 }
