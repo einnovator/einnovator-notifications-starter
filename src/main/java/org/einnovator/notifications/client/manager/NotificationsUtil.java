@@ -40,7 +40,7 @@ public class NotificationsUtil {
 		List<String> profiles = new ArrayList<>();
 
 		String rabbitHost = getEnv("SPRING_RABBITMQ_HOST");
-		boolean excludeRabbit = !StringUtils.hasText(rabbitHost);
+		boolean excludeRabbit = isEmpty(rabbitHost);
 		if (excludeRabbit) {
 			exclude.append(RabbitAutoConfiguration.class.getName());
 		} else {
@@ -54,7 +54,7 @@ public class NotificationsUtil {
 		if (notificationsEnabled!=null && notificationsEnabled.equalsIgnoreCase("true")) {
 			notifications = true;
 		}
-		if (StringUtils.hasText(notificationsServer)) {
+		if (!isEmpty(notificationsServer)) {
 			notifications = true;
 		}
 		if (amqp) {
@@ -77,5 +77,9 @@ public class NotificationsUtil {
 			logger.info("setupFromEnv: AMQP disabled");			
 		}
 		return profiles.toArray(new String[profiles.size()]);
+	}
+	
+	private static boolean isEmpty(String s) {
+		return !StringUtils.hasText(s) || s.contains("***");
 	}
 }

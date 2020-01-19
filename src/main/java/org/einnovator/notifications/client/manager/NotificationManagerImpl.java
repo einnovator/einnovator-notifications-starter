@@ -150,6 +150,11 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	@Override
 	@SuppressWarnings("unchecked")
 	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable) {
+		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
+			logger.debug("listNotifications: not enabled");
+			return null;
+		}
+
 		String username = filter!=null && filter.getUsername()!=null ? filter.getUsername() : SecurityUtil.getPrincipalName();
 		Page<Notification> notifications = null;
 		if (isKey(true, filter, pageable)) {
@@ -198,6 +203,12 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	@Override
 	public Long countNotifications(NotificationFilter filter) {
 		String username = filter!=null && filter.getUsername()!=null ? filter.getUsername() : SecurityUtil.getPrincipalName();
+
+		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
+			logger.debug("countNotifications: not enabled");
+			return 0L;
+		}
+
 		Long count = getCacheValue(Long.class, getNotificationCountCache(), username);
 		if (count!=null) {
 			return count;
