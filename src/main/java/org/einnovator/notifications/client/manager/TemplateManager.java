@@ -14,12 +14,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface TemplateManager {
-	
+
+
+	Template getTemplate(String id, String app, Medium medium, boolean remote, boolean local);
+
 	Template getTemplate(String id, Medium medium, boolean remote, boolean local);
 
 	Template getTemplate(String id);
 	
 	Template getTemplate(String id, TemplateOptions options);
+
+	Template getLocalTemplate(String id, Medium medium);
 
 	URI createTemplate(Template user);
 	
@@ -36,5 +41,6 @@ public interface TemplateManager {
 	Cache getTemplateCache();
 
 	void onEvent(ApplicationEvent event);
+
 
 }

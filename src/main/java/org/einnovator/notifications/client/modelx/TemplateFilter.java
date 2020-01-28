@@ -8,7 +8,9 @@ import org.einnovator.util.model.ToStringCreator;
 public class TemplateFilter extends TemplateOptions {
 	
 	private String q;
-	
+
+	private String app;
+
 	private Boolean strict;
 
 	private Medium medium;
@@ -20,16 +22,43 @@ public class TemplateFilter extends TemplateOptions {
 	
 	public TemplateFilter() {
 	}
-	
+
+	/**
+	 * Get the value of property {@code q}.
+	 *
+	 * @return the q
+	 */
 	public String getQ() {
 		return q;
 	}
 
+	/**
+	 * Set the value of property {@code q}.
+	 *
+	 * @param q the value of property q
+	 */
 	public void setQ(String q) {
 		this.q = q;
 	}
 
-	
+	/**
+	 * Get the value of property {@code app}.
+	 *
+	 * @return the app
+	 */
+	public String getApp() {
+		return app;
+	}
+
+	/**
+	 * Set the value of property {@code app}.
+	 *
+	 * @param app the value of property app
+	 */
+	public void setApp(String app) {
+		this.app = app;
+	}
+
 	/**
 	 * Get the value of property {@code strict}.
 	 *
@@ -107,6 +136,7 @@ public class TemplateFilter extends TemplateOptions {
 	@Override
 	public ToStringCreator toString(ToStringCreator creator) {
 		return creator
+			.append("app", app)
 			.append("q", q)
 			.append("strict", strict)
 			.append("medium", medium)

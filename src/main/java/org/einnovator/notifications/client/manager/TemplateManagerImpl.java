@@ -21,6 +21,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.PayloadApplicationEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -52,6 +53,26 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	public TemplateManagerImpl() {
 	}
 
+	
+	@Override
+	public Template getTemplate(String id, String app, Medium medium, boolean remote, boolean local) {
+		Template template = null;
+		if (remote) {
+			TemplateFilter filter = new TemplateFilter();
+			filter.setQ(id);
+			filter.setApp(app);
+			Page<Template> page = listTemplates(filter, new PageRequest(0, 1));
+			if (page==null || page.getContent()==null || page.getContent().isEmpty()) {
+				return null;
+			}
+			template = page.getContent().get(0);
+		}
+		if (template==null && local) {
+			template = getLocalTemplate(id, medium);			
+		}
+		return template;
+	}
+
 	@Override
 	public Template getTemplate(String id, Medium medium, boolean remote, boolean local) {
 		if (remote) {
@@ -64,15 +85,23 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 			}
 		}
 		if (local) {
-			Template template = config.getRegistration().findTemplate(id, medium);
-			if (template!=null) {
-				boolean reload = Boolean.FALSE.equals(config.getTemplates().getCache());
-				template.loadContent(reload, config.getTemplates());
-				return template;
-			}
+			Template template = getLocalTemplate(id, medium);
+			return template;
 		}
 		return null;
 	}
+	
+	@Override
+	public Template getLocalTemplate(String id, Medium medium) {
+		Template template = config.getRegistration().findTemplate(id, medium);
+		if (template!=null) {
+			boolean reload = Boolean.FALSE.equals(config.getTemplates().getCache());
+			template.loadContent(reload, config.getTemplates());
+			return template;
+		}
+		return template;
+	}
+
 	
 	@Override
 	public Template getTemplate(String id) {
