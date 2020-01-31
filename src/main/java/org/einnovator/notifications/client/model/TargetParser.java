@@ -15,14 +15,16 @@ public class TargetParser {
 	 * Parser to make Target from simple expression.
 	 * 
 	 * @param destination
+	 *  username - user with specificed username or uuid
 	 *  username@email - user with email
 	 *  +1555444555 - user with phone
-	 * 	uuid\@group - all users in group with specified uuid
-	 * .role - all users with name global role
+	 *  \@group - all users in group with specified uuid or organization with unique name
+	 * .role - all users with global role
 	 * .role@group - all user with role in group
 	 * :perm - all users with named global permission
 	 * :perm\@group - all user with permission  in group
-	 * 
+	 * #obj - all users with any permission in object with specified uuid (Reserved for future use)
+	 * #obj:perm - all users with specified permission in object with specified uuid  (Reserved for future use)
 	 * @return the {@code Target}
 	 */
 	public static Target makeTarget(String destination) {

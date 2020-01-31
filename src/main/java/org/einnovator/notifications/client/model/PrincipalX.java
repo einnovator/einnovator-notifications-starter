@@ -24,18 +24,6 @@ public class PrincipalX extends ObjectBase2 {
 	public PrincipalX(String type, String id, String name) {
 		super(type, id, name);
 	}
-
-	
-	@Override
-	public String toString() {
-		return "PrincipalX ["
-				+ (getType() != null ? "type=" + getType() + ", " : "")
-				+ (getId() != null ? "id=" + getId() + ", " : "")
-				+ (getName() != null ? "name=" + getName() : "")
-				+ (getUri() != null ? "uri=" + getUri() : "") 
-				+ (getDetails() != null ? "uri=" + getDetails() : "")				
-				+ "]";
-	}
 	
 	
 	public static PrincipalX makeUserPrincipal() {

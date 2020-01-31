@@ -28,14 +28,14 @@ import org.einnovator.util.event.EventFactory;
  */
 public class SimpleEventFactory implements EventFactory {
 
-	/* (non-Javadoc)
+	/* 
 	 * @see org.einnovator.notifications.client.support.EventFactory#makeEvent(java.lang.Object, java.lang.String, java.lang.String, java.lang.Object[])
 	 */
 	@Override
-	public Event makeEvent(String principal, Object obj, String actionType, Object... targets) {
+	public Event makeEvent(String principal, Object source, Object param, String actionType, Object... targets) {
 		
-		Source source = makeEventSource(obj);
-		Source source2 = makeEventSource2(obj);
+		Source source2 = makeEventSource(source);
+		Source param2 = makeEventParam(param);
 		
 		Action action = new ActionBuilder()
 				.type(actionType)
@@ -51,8 +51,8 @@ public class SimpleEventFactory implements EventFactory {
 		List<Target> targets2 = TargetParser.makeTargets(targets);
 		
 		EventBuilder builder = new EventBuilder()
-				.source(source)
-				.source2(source2)
+				.source(source2)
+				.param(param2)
 				.action(action)
 				.meta(meta)
 				.principal(principalx)
@@ -64,10 +64,13 @@ public class SimpleEventFactory implements EventFactory {
 
 	
 	protected Source makeEventSource(Object obj) {
+		if (obj instanceof Source) {
+			return (Source)obj;
+		}
 		Map<String, Object> details = makeSourceDetails(obj);
 		String id = getSourceId(obj);
 		if (id==null && details!=null) {
-			id = (String)details.get("uuid");
+			id = getSourceId(details);
 		}
 		return new SourceBuilder()
 				.type(obj.getClass().getSimpleName())
@@ -76,17 +79,21 @@ public class SimpleEventFactory implements EventFactory {
 				.build();
 	}
 
-	/**
-	 * @param obj
-	 * @return
-	 */
-	private String getSourceId(Object obj) {
+
+	protected String getSourceId(Object obj) {
 		return null;
 	}
 
+	protected String getSourceId(Map<String, Object> details) {
+		return (String)details.get("uuid");
+	}
 
-	protected Source makeEventSource2(Object obj) {
-		return null;
+
+	protected Source makeEventParam(Object obj) {
+		if (obj==null) {
+			return null;
+		}
+		return makeEventSource(obj);
 	}
 
 	protected Map<String, Object> makeSourceDetails(Object obj) {

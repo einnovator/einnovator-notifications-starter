@@ -21,7 +21,7 @@ public class Event extends ObjectBase {
 
 	private Source source;
 	
-	private Source source2;
+	private Source param;
 
 	private Action action;
 	
@@ -98,12 +98,12 @@ public class Event extends ObjectBase {
 		this.source = source;
 	}
 
-	public Source getSource2() {
-		return source2;
+	public Source getParam() {
+		return param;
 	}
 
-	public void setSource2(Source source2) {
-		this.source2 = source2;
+	public void setParam(Source param) {
+		this.param = param;
 	}
 
 	public Action getAction() {

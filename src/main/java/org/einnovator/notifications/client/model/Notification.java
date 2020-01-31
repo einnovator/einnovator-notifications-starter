@@ -19,7 +19,7 @@ public class Notification extends ObjectBase2 {
 
 	private Source source;
 	
-	private Source source2;
+	private Source param;
 
 	private Action action;
 	
@@ -98,12 +98,12 @@ public class Notification extends ObjectBase2 {
 		this.source = source;
 	}
 	
-	public Source getSource2() {
-		return source2;
+	public Source getParam() {
+		return param;
 	}
 
-	public void setSource2(Source source2) {
-		this.source2 = source2;
+	public void setParam(Source param) {
+		this.param = param;
 	}
 
 	public Action getAction() {
@@ -218,7 +218,7 @@ public class Notification extends ObjectBase2 {
 				+ (getId() != null ? "id=" + getId() + ", " : "")
 				+ (getName() != null ? "name=" + getName()  + ", " : "")
 				+ (source != null ? "source=" + source + ", " : "")
-				+ (source2 != null ? "source2=" + source2 + ", " : "")
+				+ (param != null ? "param=" + param + ", " : "")
 				+ (action != null ? "action=" + action + ", " : "")
 				+ (principal != null ? "principal=" + principal + ", " : "")
 				+ (meta != null ? "meta=" + meta  + ", " : "")

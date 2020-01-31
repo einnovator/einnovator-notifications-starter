@@ -72,7 +72,7 @@ public class NotificationsTestHelper {
 		};
 		Map<String, Object> map = MappingUtils.toMap(notification);
 		env.put("source",  map.get("source"));
-		env.put("source2",  map.get("source2"));
+		env.put("param",  map.get("param"));
 		env.put("action",  map.get("action"));
 		env.put("principal",  map.get("principal"));
 		env.put("meta",  map.get("meta"));

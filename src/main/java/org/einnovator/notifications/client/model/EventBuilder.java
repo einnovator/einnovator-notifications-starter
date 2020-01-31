@@ -9,7 +9,7 @@ public class EventBuilder {
 	
 	private Source source;
 	
-	private Source source2;
+	private Source param;
 	
 	private Action action;
 	
@@ -37,8 +37,8 @@ public class EventBuilder {
 		return this;
 	}
 
-	public EventBuilder source2(Source source2) {
-		this.source2 = source2;
+	public EventBuilder param(Source param) {
+		this.param = param;
 		return this;
 	}
 
@@ -99,7 +99,7 @@ public class EventBuilder {
 	public Event build() {
 		Event event = new Event();
 		event.setSource(source);
-		event.setSource2(source2);
+		event.setParam(param);
 		event.setAction(action);
 		event.setPrincipal(principal);
 		event.setMeta(meta);
