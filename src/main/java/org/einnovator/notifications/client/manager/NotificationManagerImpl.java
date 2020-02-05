@@ -69,26 +69,35 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 		try {
 			client.publishEvent(event);			
 		} catch (RuntimeException e) {
-			logger.error("publishEvent: " + e + " " + event);
+			logger.error("publishEvent: " + e + " " + format(event));
 		}
 	}
-	
+
+
 	@Override
 	public void publishDirect(Notification notification) {
 		try {
 			client.publishDirect(notification);			
 		} catch (RuntimeException e) {
-			logger.error("publishEvent: " + e + " " + notification);
+			logger.error("publishEvent: " + e + " " + format(notification));
 		}
 		
 	}
 	
+	private String format(Notification notification) {
+		return String.format("%s", notification.getType());
+	}
+
+	private String format(Event event) {
+		return String.format("%s", event.getType());
+	}
+
 	@Override
 	public void publishEventHttp(Event event) {
 		try {
 			client.publishEventHttp(event);			
 		} catch (RuntimeException e) {
-			logger.error("publishEvent: " + e + " " + event);
+			logger.error("publishEvent: " + e + " " + format(event));
 		}
 	}
 	
@@ -97,7 +106,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 		try {
 			client.publishEventAmqp(event);			
 		} catch (RuntimeException e) {
-			logger.error("publishEventAmqp: " + e + " " + event);
+			logger.error("publishEventAmqp: " + e + " " + format(event));
 		}
 
 	}
@@ -107,7 +116,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 		try {
 			client.publishDirectAmqp(notification);			
 		} catch (RuntimeException e) {
-			logger.error("publishDirectAmqp: " + e + " " + notification);
+			logger.error("publishDirectAmqp: " + e + " " + format(notification));
 		}
 
 	}
@@ -261,11 +270,15 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 		} catch (RuntimeException e) {
 			logger.error("onNotification: " + e);
 		}
-		logger.debug("onNotification: " + notification);
+		if (logger.isDebugEnabled()) {
+			logger.debug("onNotification: " + format(notification));			
+		}
 		if (notification.getAction()!=null) {
 			if (Action.ACTION_TYPE_LOGOUT.equalsIgnoreCase(notification.getAction().getType())) {
 				if (notification.getPrincipal()!=null && notification.getPrincipal().getId()!=null) {
-					logger.info("onNotification: logout:" + notification.getPrincipal().getId());
+					if (logger.isDebugEnabled()) {
+						logger.debug("onNotification: logout:" + notification.getPrincipal().getId());						
+					}
 					eventPublisher.publishEvent(new LogoutApplicationEvent(this, notification.getPrincipal().getId()));					
 					return;
 				}
