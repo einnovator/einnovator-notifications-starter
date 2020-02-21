@@ -104,6 +104,9 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 		if (session!=null) {
 			session.setAttribute(makeAttributeName(key), value);				
 		}
+		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
+			return;
+		}
 		Event event = makeEvent(pref);
 		client.publishEvent(event);
 	}
