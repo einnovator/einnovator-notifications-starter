@@ -25,7 +25,7 @@ public class ReportErrorController {
     public String sendError(ErrorReport error, Principal principal, RedirectAttributes redirectAttributes) {
     	logger.error("error:" + error);
 		try {
-			notificationClient.reportError(error);
+			notificationClient.reportError(error, null);
 			logger.debug("reportError:" + error);
 	    	redirectAttributes.addFlashAttribute(Messages.ATTRIBUTE_INFO, Messages.MSG_ERROR_SENT);
 		} catch (RuntimeException e) {

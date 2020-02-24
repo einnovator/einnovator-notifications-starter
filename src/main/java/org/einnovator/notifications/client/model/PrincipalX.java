@@ -2,7 +2,7 @@ package org.einnovator.notifications.client.model;
 
 import java.security.Principal;
 
-import org.einnovator.util.SecurityUtil;
+import org.einnovator.util.security.SecurityUtil;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

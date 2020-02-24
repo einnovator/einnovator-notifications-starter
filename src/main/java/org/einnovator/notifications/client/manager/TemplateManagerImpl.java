@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
+import org.einnovator.notifications.client.config.NotificationsClientContext;
 import org.einnovator.notifications.client.model.Medium;
 import org.einnovator.notifications.client.model.Notification;
 import org.einnovator.notifications.client.model.Template;
@@ -55,44 +56,44 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 
 	
 	@Override
-	public Template getTemplate(String id, String app, Medium medium, boolean remote, boolean local) {
+	public Template getTemplate(String id, String app, Medium medium, boolean remote, boolean local, NotificationsClientContext context) {
 		Template template = null;
 		if (remote) {
 			TemplateFilter filter = new TemplateFilter();
 			filter.setQ(id);
 			filter.setApp(app);
-			Page<Template> page = listTemplates(filter, new PageRequest(0, 1));
+			Page<Template> page = listTemplates(filter, new PageRequest(0, 1), null);
 			if (page==null || page.getContent()==null || page.getContent().isEmpty()) {
 				return null;
 			}
 			template = page.getContent().get(0);
 		}
 		if (template==null && local) {
-			template = getLocalTemplate(id, medium);			
+			template = getLocalTemplate(id, medium, null);			
 		}
 		return template;
 	}
 
 	@Override
-	public Template getTemplate(String id, Medium medium, boolean remote, boolean local) {
+	public Template getTemplate(String id, Medium medium, boolean remote, boolean local, NotificationsClientContext context) {
 		if (remote) {
 			if (medium!=null) {
 				id = medium.name().toLowerCase() + ":" + id;
 			}
-			Template template = getTemplate(id);
+			Template template = getTemplate(id, null, null);
 			if (template!=null) {
 				return template;
 			}
 		}
 		if (local) {
-			Template template = getLocalTemplate(id, medium);
+			Template template = getLocalTemplate(id, medium, null);
 			return template;
 		}
 		return null;
 	}
 	
 	@Override
-	public Template getLocalTemplate(String id, Medium medium) {
+	public Template getLocalTemplate(String id, Medium medium, NotificationsClientContext context) {
 		Template template = config.getRegistration().findTemplate(id, medium);
 		if (template!=null) {
 			boolean reload = Boolean.FALSE.equals(config.getTemplates().getCache());
@@ -104,7 +105,7 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 
 	
 	@Override
-	public Template getTemplate(String id) {
+	public Template getTemplate(String id, NotificationsClientContext context) {
 		if (id==null) {
 			return null;
 		}
@@ -113,7 +114,7 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 			if (template!=null) {
 				return template;
 			}
-			template = notificationsClient.getTemplate(id);	
+			template = notificationsClient.getTemplate(id, context);	
 			return putCacheValue(template, getTemplateCache(), id);
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
@@ -127,7 +128,7 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	}
 
 	@Override
-	public Template getTemplate(String id, TemplateOptions options) {
+	public Template getTemplate(String id, TemplateOptions options, NotificationsClientContext context) {
 		if (id==null) {
 			return null;
 		}
@@ -138,7 +139,7 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 			}			
 		}
 		try {
-			Template template = notificationsClient.getTemplate(id, options);	
+			Template template = notificationsClient.getTemplate(id, options, context);	
 			if (cacheable(options)) {
 				return putCacheValue(template, getTemplateCache(), id, options);				
 			}
@@ -160,9 +161,9 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	}
 	
 	@Override
-	public URI createTemplate(Template template) {
+	public URI createTemplate(Template template, NotificationsClientContext context) {
 		try {
-			return notificationsClient.createTemplate(template);
+			return notificationsClient.createTemplate(template, context);
 		} catch (RuntimeException e) {
 			logger.error("createTemplate:" + e);
 			return null;
@@ -171,9 +172,9 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	
 
 	@Override
-	public Template updateTemplate(Template template) {
+	public Template updateTemplate(Template template, NotificationsClientContext context) {
 		try {
-			notificationsClient.updateTemplate(template);
+			notificationsClient.updateTemplate(template, context);
 			evictCaches(template.getUuid());
 			return template;
 		} catch (RuntimeException e) {
@@ -184,9 +185,9 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	
 	@Override
 	@CacheEvict(value=CACHE_TEMPLATE, key="#id")
-	public boolean deleteTemplate(String id) {
+	public boolean deleteTemplate(String id, NotificationsClientContext context) {
 		try {
-			notificationsClient.deleteTemplate(id);
+			notificationsClient.deleteTemplate(id, context);
 			return true;
 		} catch (RuntimeException e) {
 			logger.error("deleteTemplate:" + e);
@@ -196,9 +197,9 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	
 	
 	@Override
-	public Page<Template> listTemplates(TemplateFilter filter, Pageable pageable) {
+	public Page<Template> listTemplates(TemplateFilter filter, Pageable pageable, NotificationsClientContext context) {
 		try {
-			return notificationsClient.listTemplates(filter, pageable);
+			return notificationsClient.listTemplates(filter, pageable, context);
 		} catch (RuntimeException e) {
 			logger.error("listTemplates:" + e);
 			return null;

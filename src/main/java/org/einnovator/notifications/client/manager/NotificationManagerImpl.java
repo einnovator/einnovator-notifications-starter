@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.NotificationListener;
 import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
+import org.einnovator.notifications.client.config.NotificationsClientContext;
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
@@ -14,8 +15,8 @@ import org.einnovator.notifications.client.model.NotificationsRegistration;
 import org.einnovator.notifications.client.model.Target;
 import org.einnovator.notifications.client.modelx.NotificationFilter;
 import org.einnovator.notifications.client.modelx.NotificationOptions;
-import org.einnovator.util.SecurityUtil;
 import org.einnovator.util.event.LogoutApplicationEvent;
+import org.einnovator.util.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -59,15 +60,15 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	public void initialize() {
 		if (config.getRegistration()!=null) {
 			if (config.getRegistration().isAuto()) {
-				register();
+				register(null, (NotificationsClientContext)null);
 			}
 		}
 	}
 	
 	@Override
-	public void publishEvent(Event event) {
+	public void publishEvent(Event event, NotificationsClientContext context) {
 		try {
-			client.publishEvent(event);			
+			client.publishEvent(event, context);			
 		} catch (RuntimeException e) {
 			logger.error("publishEvent: " + e + " " + format(event));
 		}
@@ -75,9 +76,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 
 
 	@Override
-	public void publishDirect(Notification notification) {
+	public void publishDirect(Notification notification, NotificationsClientContext context) {
 		try {
-			client.publishDirect(notification);			
+			client.publishDirect(notification, context);			
 		} catch (RuntimeException e) {
 			logger.error("publishEvent: " + e + " " + format(notification));
 		}
@@ -93,18 +94,18 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 
 	@Override
-	public void publishEventHttp(Event event) {
+	public void publishEventHttp(Event event, NotificationsClientContext context) {
 		try {
-			client.publishEventHttp(event);			
+			client.publishEventHttp(event, context);			
 		} catch (RuntimeException e) {
 			logger.error("publishEvent: " + e + " " + format(event));
 		}
 	}
 	
 	@Override
-	public void publishEventAmqp(Event event) {
+	public void publishEventAmqp(Event event, NotificationsClientContext context) {
 		try {
-			client.publishEventAmqp(event);			
+			client.publishEventAmqp(event, context);			
 		} catch (RuntimeException e) {
 			logger.error("publishEventAmqp: " + e + " " + format(event));
 		}
@@ -112,9 +113,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 	
 	@Override
-	public void publishDirectAmqp(Notification notification) {
+	public void publishDirectAmqp(Notification notification, NotificationsClientContext context) {
 		try {
-			client.publishDirectAmqp(notification);			
+			client.publishDirectAmqp(notification, context);			
 		} catch (RuntimeException e) {
 			logger.error("publishDirectAmqp: " + e + " " + format(notification));
 		}
@@ -122,9 +123,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 
 	@Override
-	public boolean register() {
+	public boolean register(NotificationsClientContext context) {
 		try {
-			client.register();			
+			client.register(context);			
 			return true;
 		} catch (RuntimeException e) {
 			logger.error("register: " + e);
@@ -133,9 +134,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 
 	@Override
-	public boolean register(NotificationsRegistration registration) {
+	public boolean register(NotificationsRegistration registration, NotificationsClientContext context) {
 		try {
-			client.register(registration);			
+			client.register(registration, context);			
 			return true;
 		} catch (RuntimeException e) {
 			logger.error("register: " + e + " " + registration);
@@ -158,7 +159,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable) {
+	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable, NotificationsClientContext context) {
 		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
 			logger.debug("listNotifications: not enabled");
 			return null;
@@ -173,7 +174,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			}			
 		}
 		try {
-			notifications = client.listNotifications(filter, pageable);		
+			notifications = client.listNotifications(filter, pageable, null);		
 			if (isKey(true, filter, pageable)) {
 				return putCacheValue(notifications, getNotificationCache(), username);
 			}
@@ -211,6 +212,11 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 
 	@Override
 	public Long countNotifications(NotificationFilter filter) {
+		return countNotifications(filter, null);
+	}
+
+	@Override
+	public Long countNotifications(NotificationFilter filter, NotificationsClientContext context) {
 		String username = filter!=null && filter.getUsername()!=null ? filter.getUsername() : SecurityUtil.getPrincipalName();
 
 		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
@@ -223,7 +229,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			return count;
 		}
 		try {
-			count = client.countNotifications(filter);	
+			count = client.countNotifications(filter, context);	
 			return putCacheValue(count, getNotificationCountCache(), username);
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
@@ -239,10 +245,10 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	
 	
 	@Override
-	public void deleteNotification(String id, NotificationOptions options) {
+	public void deleteNotification(String id, NotificationOptions options, NotificationsClientContext context) {
 		String username = options!=null && options.getUsername()!=null ? options.getUsername() : SecurityUtil.getPrincipalName();
 		try {
-			client.deleteNotification(id, options);
+			client.deleteNotification(id, options, context);
 			evictCachesForUser(username);				
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {

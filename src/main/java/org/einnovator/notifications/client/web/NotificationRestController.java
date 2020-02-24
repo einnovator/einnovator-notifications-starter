@@ -35,14 +35,14 @@ public class NotificationRestController extends ControllerBase {
 	public ResponseEntity<Page<Notification>> notifications(NotificationFilter filter,
 			 Principal principal, HttpServletResponse response, HttpSession session) {
 		Pageable pageable = null;
-		Page<Notification> notifications = manager.listNotifications(filter, pageable);
+		Page<Notification> notifications = manager.listNotifications(filter, pageable, null);
 		return ok(notifications, "notifications", response, PageUtil.toString(notifications), filter, principal.getName());
     }
 	
 	@DeleteMapping("/api/notification/{id}")
 	public ResponseEntity<Void> delete(@PathVariable String id, NotificationOptions options, 
 			 Principal principal, HttpServletResponse response, HttpSession session) {
-		manager.deleteNotification(id, options);
+		manager.deleteNotification(id, options, null);
 		return nocontent("delete", response, id, options, principal.getName());
 	}
 	

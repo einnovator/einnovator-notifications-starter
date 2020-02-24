@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
+import org.einnovator.notifications.client.config.NotificationsClientContext;
 import org.einnovator.notifications.client.config.NotificationsEndpoints;
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.ErrorReport;
@@ -39,6 +40,7 @@ import org.einnovator.util.model.Application;
 import org.einnovator.util.script.EnvironmentVariableResolver;
 import org.einnovator.util.script.TextTemplates;
 import org.einnovator.util.security.ClientTokenProvider;
+import org.einnovator.util.web.WebUtil;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessagePostProcessor;
@@ -51,7 +53,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
@@ -85,6 +90,12 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	@Autowired
 	private Environment env;
 	
+	private OAuth2ClientContext oauth2ClientContext0 = new DefaultOAuth2ClientContext();
+
+	private OAuth2RestTemplate restTemplate0;
+
+	private ClientHttpRequestFactory clientHttpRequestFactory;
+	
 	@Autowired
 	public NotificationsClient() {
 	}
@@ -103,27 +114,201 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		 engine = new TextTemplates("{", "}", new EnvironmentVariableResolver(env));
 	}
 	
-	public void publishEvent(Event event) {
+	//
+	// Getters/Setters
+	//
+
+	/**
+	 * Get the value of property {@code config}.
+	 *
+	 * @return the config
+	 */
+	public NotificationsClientConfiguration getConfig() {
+		return config;
+	}
+
+	/**
+	 * Set the value of property {@code config}.
+	 *
+	 * @param config the value of property config
+	 */
+	public void setConfig(NotificationsClientConfiguration config) {
+		this.config = config;
+	}
+
+	/**
+	 * Get the value of property {@code restTemplate}.
+	 *
+	 * @return the restTemplate
+	 */
+	public OAuth2RestTemplate getRestTemplate() {
+		return restTemplate;
+	}
+
+	/**
+	 * Set the value of property {@code restTemplate}.
+	 *
+	 * @param restTemplate the value of property restTemplate
+	 */
+	public void setRestTemplate(OAuth2RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
+
+	/**
+	 * Get the value of property {@code amqpTemplate}.
+	 *
+	 * @return the amqpTemplate
+	 */
+	public RabbitTemplate getAmqpTemplate() {
+		return amqpTemplate;
+	}
+
+	/**
+	 * Set the value of property {@code amqpTemplate}.
+	 *
+	 * @param amqpTemplate the value of property amqpTemplate
+	 */
+	public void setAmqpTemplate(RabbitTemplate amqpTemplate) {
+		this.amqpTemplate = amqpTemplate;
+	}
+
+	/**
+	 * Get the value of property {@code clientTokenProvider}.
+	 *
+	 * @return the clientTokenProvider
+	 */
+	public ClientTokenProvider getClientTokenProvider() {
+		return clientTokenProvider;
+	}
+
+	/**
+	 * Set the value of property {@code clientTokenProvider}.
+	 *
+	 * @param clientTokenProvider the value of property clientTokenProvider
+	 */
+	public void setClientTokenProvider(ClientTokenProvider clientTokenProvider) {
+		this.clientTokenProvider = clientTokenProvider;
+	}
+
+	/**
+	 * Get the value of property {@code application}.
+	 *
+	 * @return the application
+	 */
+	public Application getApplication() {
+		return application;
+	}
+
+	/**
+	 * Set the value of property {@code application}.
+	 *
+	 * @param application the value of property application
+	 */
+	public void setApplication(Application application) {
+		this.application = application;
+	}
+
+	/**
+	 * Get the value of property {@code engine}.
+	 *
+	 * @return the engine
+	 */
+	public TextTemplates getEngine() {
+		return engine;
+	}
+
+	/**
+	 * Set the value of property {@code engine}.
+	 *
+	 * @param engine the value of property engine
+	 */
+	public void setEngine(TextTemplates engine) {
+		this.engine = engine;
+	}
+
+	/**
+	 * Get the value of property {@code oauth2ClientContext0}.
+	 *
+	 * @return the oauth2ClientContext0
+	 */
+	public OAuth2ClientContext getOauth2ClientContext0() {
+		return oauth2ClientContext0;
+	}
+
+	/**
+	 * Set the value of property {@code oauth2ClientContext0}.
+	 *
+	 * @param oauth2ClientContext0 the value of property oauth2ClientContext0
+	 */
+	public void setOauth2ClientContext0(OAuth2ClientContext oauth2ClientContext0) {
+		this.oauth2ClientContext0 = oauth2ClientContext0;
+	}
+
+	/**
+	 * Get the value of property {@code restTemplate0}.
+	 *
+	 * @return the restTemplate0
+	 */
+	public OAuth2RestTemplate getRestTemplate0() {
+		return restTemplate0;
+	}
+
+	/**
+	 * Set the value of property {@code restTemplate0}.
+	 *
+	 * @param restTemplate0 the value of property restTemplate0
+	 */
+	public void setRestTemplate0(OAuth2RestTemplate restTemplate0) {
+		this.restTemplate0 = restTemplate0;
+	}
+
+	/**
+	 * Get the value of property {@code clientHttpRequestFactory}.
+	 *
+	 * @return the clientHttpRequestFactory
+	 */
+	public ClientHttpRequestFactory getClientHttpRequestFactory() {
+		return clientHttpRequestFactory;
+	}
+
+	/**
+	 * Set the value of property {@code clientHttpRequestFactory}.
+	 *
+	 * @param clientHttpRequestFactory the value of property clientHttpRequestFactory
+	 */
+	public void setClientHttpRequestFactory(ClientHttpRequestFactory clientHttpRequestFactory) {
+		this.clientHttpRequestFactory = clientHttpRequestFactory;
+	}
+	
+	//
+	// Publish
+	//
+	
+	public void publishEvent(Event event, NotificationsClientContext context) {
 		if (amqpTemplate!=null && (config.getAmqp().getEnabled()==null || Boolean.TRUE.equals(config.getAmqp().getEnabled()))) {
-			publishEventAmqp(event);			
+			publishEventAmqp(event, context);			
 		} else {
-			publishEventHttp(event);
+			publishEventHttp(event, context);
 		}
 	}
-	
-	public void publishDirect(Notification notification) {
-		publishDirect(notification);
+
+	public void publishDirect(Notification notification, NotificationsClientContext context) {
+		publishDirect(notification, context);
 	}
-	
-	public void publishEventHttp(Event event) {
+
+	@Override
+	public void publishEventHttp(Event event, NotificationsClientContext context) {
 		URI uri = makeURI(NotificationsEndpoints.event(config));
 		RequestEntity<Event> request = RequestEntity.post(uri).body(event);
-		exchange(request, Void.class);
+		exchange(request, Void.class, context);
 	}
 	
-	public void publishEventAmqp(Event event) {
+	@Override
+	public void publishEventAmqp(Event event, NotificationsClientContext context) {
 		Object eventData = MappingUtils.convert(event, LinkedHashMap.class);
-		logger.debug("publishEventAmqp:" + eventData);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("publishEventAmqp: %s", eventData));			
+		}
 		amqpTemplate.convertAndSend(config.getAmqp().getEventExchange(), "" /*routingKey*/, eventData, new MessagePostProcessor() {
 			
 			@Override
@@ -133,7 +318,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		});
 	}
 	
-	public void publishDirectAmqp(Notification notification) {
+	public void publishDirectAmqp(Notification notification, NotificationsClientContext context) {
 		Object notificationData =  MappingUtils.convert(notification, LinkedHashMap.class);
 		logger.debug("publishDirectAmqp:" + notificationData);
 		amqpTemplate.convertAndSend(config.getAmqp().getNotificationsExchange(), "" /*routingKey*/, notificationData, new MessagePostProcessor() {
@@ -146,21 +331,21 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	}
 	
 	
-	public void reportError(ErrorReport error) {
+	public void reportError(ErrorReport error, NotificationsClientContext context) {
 		
 	}
 
-	public void register() {
+	public void register(NotificationsClientContext context) {
 		NotificationsRegistration registration = config.getRegistration();
 		if (registration!=null) {
 			if (clientTokenProvider!=null) {
 				clientTokenProvider.setupToken();
 			}
-			register(registration);			
+			register(registration, context);			
 		}
 	}
 	
-	public void register(NotificationsRegistration registration) {
+	public void register(NotificationsRegistration registration, NotificationsClientContext context) {
 		OAuth2RestTemplate restTemplate = this.restTemplate;
 		if (clientTokenProvider!=null) {
 			clientTokenProvider.setupToken();
@@ -221,7 +406,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	}
 
 
-	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable) {
+	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable, NotificationsClientContext context) {
 		URI uri = makeURI(NotificationsEndpoints.notifications(config));
 		if (filter!=null || pageable!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
@@ -241,14 +426,14 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List<Notification> getUserNotifications() {
+	public List<Notification> getUserNotifications(NotificationsClientContext context) {
 		URI uri = makeURI(NotificationsEndpoints.notifications(config));
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		ResponseEntity<List> result = exchange(request, List.class);
 		return result.getBody();
 	}
 	
-	public Long countNotifications(NotificationFilter filter) {
+	public Long countNotifications(NotificationFilter filter, NotificationsClientContext context) {
 		URI uri = makeURI(NotificationsEndpoints.count(config));
 		if (filter!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
@@ -260,7 +445,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		return result.getBody();
 	}
 
-	public void deleteNotification(String id, NotificationOptions options) {
+	public void deleteNotification(String id, NotificationOptions options, NotificationsClientContext context) {
 		URI uri = makeURI(NotificationsEndpoints.notification(id, config));
 		if (options!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
@@ -271,11 +456,11 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		exchange(request, Void.class);
 	}
 
-	public Map<String, Preference> getPreferences() {
-		return getPreferences(null);
+	public Map<String, Preference> getPreferences(NotificationsClientContext context) {
+		return getPreferences(null, context);
 	}
 
-	public Map<String, Preference> getPreferences(String username) {
+	public Map<String, Preference> getPreferences(String username, NotificationsClientContext context) {
 		URI uri = makeURI(NotificationsEndpoints.preferences(config));
 		if (username!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
@@ -349,12 +534,16 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 			}
 		}
 	}
+	
+	//
+	// Templates
+	//
 
-	public Template getTemplate(String id) {
-		return getTemplate(id, null);
+	public Template getTemplate(String id, NotificationsClientContext context) {
+		return getTemplate(id, null, context);
 	}
 	
-	public Template getTemplate(String id, TemplateOptions options) {
+	public Template getTemplate(String id, TemplateOptions options, NotificationsClientContext context) {
 		URI uri = makeURI(NotificationsEndpoints.template(id, config));
 		if (options!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
@@ -368,7 +557,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	}
 	
 
-	public Page<Template> listTemplates(TemplateFilter filter, Pageable pageable) {
+	public Page<Template> listTemplates(TemplateFilter filter, Pageable pageable, NotificationsClientContext context) {
 		URI uri = makeURI(NotificationsEndpoints.templates(config));
 		if (filter!=null || pageable!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
@@ -386,7 +575,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		return PageUtil.create2(result.getBody(),  Template.class);
 	}
 
-	public URI createTemplate(Template template) {
+	public URI createTemplate(Template template, NotificationsClientContext context) {
 		URI uri = makeURI(NotificationsEndpoints.templates(config));
 		RequestEntity<Template> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(template);
 		
@@ -394,14 +583,14 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		return result.getHeaders().getLocation();
 	}
 	
-	public void updateTemplate(Template template) {
+	public void updateTemplate(Template template, NotificationsClientContext context) {
 		URI uri = makeURI(NotificationsEndpoints.template(template.getId(), config));
 		RequestEntity<Template> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(template);
 		
 		exchange(request, Template.class);
 	}
 	
-	public void deleteTemplate(String templateId) {
+	public void deleteTemplate(String templateId, NotificationsClientContext context) {
 		templateId = encodeId(templateId);
 		URI uri = makeURI(NotificationsEndpoints.template(templateId, config));
 		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
@@ -409,7 +598,20 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		exchange(request, Void.class);
 	}
 	
-	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType) throws RestClientException {
+	
+	//
+	// HTTP transport
+	//
+	
+	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType, NotificationsClientContext context) throws RestClientException {
+		OAuth2RestTemplate restTemplate = this.restTemplate;
+		if (context!=null && context.getRestTemplate()!=null) {
+			restTemplate = context.getRestTemplate();
+		} else {
+			if (WebUtil.getHttpServletRequest()==null && this.restTemplate0!=null) {
+				restTemplate = this.restTemplate0;
+			}			
+		}
 		return exchange(restTemplate, request, responseType);
 	}
 
@@ -420,4 +622,9 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		return restTemplate.exchange(request, responseType);
 	}
 	
+	
+	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType) throws RestClientException {
+		return exchange(restTemplate, request, responseType);
+	}
+
 }
