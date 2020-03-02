@@ -23,8 +23,9 @@ import org.einnovator.notifications.client.config.NotificationsClientContext;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
 import org.einnovator.notifications.client.model.Preference;
-import org.einnovator.notifications.client.model.PrincipalX;
+import org.einnovator.notifications.client.model.PrincipalDetails;
 import org.einnovator.notifications.client.model.ValuePreference;
+import org.einnovator.notifications.client.modelx.PreferenceFilter;
 import org.einnovator.util.security.SecurityUtil;
 
 public class PreferencesManagerImpl extends ManagerBase implements PreferencesManager, NotificationListener {
@@ -151,8 +152,8 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 				if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
 					return null;
 				}
-				 Map<String, Preference> prefs = client.getPreferences(username, context);
-				 map = getAllValues(prefs);		
+				Map<String, Preference> prefs = client.getPreferences((PreferenceFilter)new PreferenceFilter().withRunAs(username), context);
+				map = getAllValues(prefs);		
 				 if (map!=null) {
 					putCacheValueForUser(map, getPreferencesCache(), username);
 				 }
@@ -255,7 +256,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 	}
 
 	protected Event makeEvent(ValuePreference pref) {
-		return new Event(pref, PrincipalX.makeUserPrincipal());
+		return new Event(pref, PrincipalDetails.makeUserPrincipal());
 	}
 
 	protected ValuePreference makePreference(String key, Object value, String op, Object... params) {
@@ -280,7 +281,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 		}
 		logger.debug("onNotification: " + pref);
 
-		PrincipalX principalx = notification.getPrincipal();
+		PrincipalDetails principalx = notification.getPrincipal();
 		if (principalx==null || !StringUtils.hasText(principalx.getId())) {
 			return;
 		}

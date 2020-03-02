@@ -8,15 +8,15 @@ import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.NotificationListener;
 import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
 import org.einnovator.notifications.client.config.NotificationsClientContext;
-import org.einnovator.notifications.client.model.Action;
+import org.einnovator.notifications.client.model.ActionType;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
 import org.einnovator.notifications.client.model.NotificationsRegistration;
 import org.einnovator.notifications.client.model.Target;
 import org.einnovator.notifications.client.modelx.NotificationFilter;
-import org.einnovator.notifications.client.modelx.NotificationOptions;
 import org.einnovator.util.event.LogoutApplicationEvent;
 import org.einnovator.util.security.SecurityUtil;
+import org.einnovator.util.web.RequestOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -60,72 +60,74 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	public void initialize() {
 		if (config.getRegistration()!=null) {
 			if (config.getRegistration().isAuto()) {
-				register(null, (NotificationsClientContext)null);
+				register();
 			}
 		}
 	}
 	
 	@Override
-	public void publishEvent(Event event, NotificationsClientContext context) {
+	public boolean publishEvent(Event event, NotificationsClientContext context) {
 		try {
-			client.publishEvent(event, context);			
+			client.publishEvent(event, context);	
+			return true;
 		} catch (RuntimeException e) {
 			logger.error("publishEvent: " + e + " " + format(event));
+			return false;
 		}
 	}
 
 
 	@Override
-	public void publishDirect(Notification notification, NotificationsClientContext context) {
+	public boolean publishDirect(Notification notification, NotificationsClientContext context) {
 		try {
-			client.publishDirect(notification, context);			
+			client.publishDirect(notification, context);		
+			return true;			
 		} catch (RuntimeException e) {
 			logger.error("publishEvent: " + e + " " + format(notification));
+			return false;
 		}
 		
 	}
-	
-	private String format(Notification notification) {
-		return String.format("%s", notification.getType());
-	}
-
-	private String format(Event event) {
-		return String.format("%s", event.getType());
-	}
 
 	@Override
-	public void publishEventHttp(Event event, NotificationsClientContext context) {
+	public boolean publishEventHttp(Event event, NotificationsClientContext context) {
 		try {
-			client.publishEventHttp(event, context);			
+			client.publishEventHttp(event, context);
+			return true;			
 		} catch (RuntimeException e) {
 			logger.error("publishEvent: " + e + " " + format(event));
+			return false;
 		}
 	}
 	
 	@Override
-	public void publishEventAmqp(Event event, NotificationsClientContext context) {
+	public boolean publishEventAmqp(Event event, NotificationsClientContext context) {
 		try {
 			client.publishEventAmqp(event, context);			
+			return true;
 		} catch (RuntimeException e) {
 			logger.error("publishEventAmqp: " + e + " " + format(event));
+			return false;
 		}
 
 	}
 	
 	@Override
-	public void publishDirectAmqp(Notification notification, NotificationsClientContext context) {
+	public boolean publishDirectAmqp(Notification notification, NotificationsClientContext context) {
 		try {
 			client.publishDirectAmqp(notification, context);			
+			return true;
 		} catch (RuntimeException e) {
 			logger.error("publishDirectAmqp: " + e + " " + format(notification));
+			return false;
 		}
 
 	}
 
 	@Override
-	public boolean register(NotificationsClientContext context) {
+	public boolean register() {
 		try {
-			client.register(context);			
+			client.register();			
 			return true;
 		} catch (RuntimeException e) {
 			logger.error("register: " + e);
@@ -134,15 +136,16 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 
 	@Override
-	public boolean register(NotificationsRegistration registration, NotificationsClientContext context) {
+	public boolean register(NotificationsRegistration registration) {
 		try {
-			client.register(registration, context);			
+			client.register(registration);			
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("register: " + e + " " + registration);
+			logger.error("register: " + e);
 			return false;
-		}
+		}		
 	}
+
 	
 	@Override
 	public boolean register(NotificationsRegistration registration, OAuth2RestTemplate template) {
@@ -165,7 +168,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			return null;
 		}
 
-		String username = filter!=null && filter.getUsername()!=null ? filter.getUsername() : SecurityUtil.getPrincipalName();
+		String username = filter!=null  ? filter.getRequiredPrincipal() : SecurityUtil.getPrincipalName();
 		Page<Notification> notifications = null;
 		if (isKey(true, filter, pageable)) {
 			notifications = getCacheValue(Page.class, getNotificationCache(), username);
@@ -191,24 +194,6 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 		}		
 	}
 	
-	protected boolean isKey(Object obj, boolean emptyKey) {
-		if (obj==null) {
-			return emptyKey;
-		}
-		return false;
-	}
-
-	protected boolean isKey(boolean emptyKey, Object... objs) {
-		if (objs==null || objs.length==0) {
-			return emptyKey;
-		}
-		for (Object obj: objs) {
-			if (!isKey(obj, emptyKey)) {
-				return false;
-			}
-		}
-		return true;
-	}
 
 	@Override
 	public Long countNotifications(NotificationFilter filter) {
@@ -217,7 +202,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 
 	@Override
 	public Long countNotifications(NotificationFilter filter, NotificationsClientContext context) {
-		String username = filter!=null && filter.getUsername()!=null ? filter.getUsername() : SecurityUtil.getPrincipalName();
+		String username = filter!=null  ? filter.getRequiredPrincipal() : SecurityUtil.getPrincipalName();
 
 		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
 			logger.debug("countNotifications: not enabled");
@@ -245,8 +230,8 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	
 	
 	@Override
-	public void deleteNotification(String id, NotificationOptions options, NotificationsClientContext context) {
-		String username = options!=null && options.getUsername()!=null ? options.getUsername() : SecurityUtil.getPrincipalName();
+	public void deleteNotification(String id, RequestOptions options, NotificationsClientContext context) {
+		String username = options!=null  ? options.getRequiredPrincipal() : SecurityUtil.getPrincipalName();
 		try {
 			client.deleteNotification(id, options, context);
 			evictCachesForUser(username);				
@@ -259,6 +244,10 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 		}		
 	}
 
+	//
+	// Caching
+	//
+	
 	@Override
 	public void onNotification(Notification notification) {
 		if (notification==null) {
@@ -280,7 +269,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			logger.debug("onNotification: " + format(notification));			
 		}
 		if (notification.getAction()!=null) {
-			if (Action.ACTION_TYPE_LOGOUT.equalsIgnoreCase(notification.getAction().getType())) {
+			if (ActionType.LOGOUT.equalsIgnoreCase(notification.getAction().getType())) {
 				if (notification.getPrincipal()!=null && notification.getPrincipal().getId()!=null) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("onNotification: logout:" + notification.getPrincipal().getId());						
@@ -331,5 +320,32 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 		return cache;
 	}
 
+	protected boolean isKey(Object obj, boolean emptyKey) {
+		if (obj==null) {
+			return emptyKey;
+		}
+		return false;
+	}
+
+	protected boolean isKey(boolean emptyKey, Object... objs) {
+		if (objs==null || objs.length==0) {
+			return emptyKey;
+		}
+		for (Object obj: objs) {
+			if (!isKey(obj, emptyKey)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	
+	private String format(Notification notification) {
+		return String.format("%s", notification.getType());
+	}
+
+	private String format(Event event) {
+		return String.format("%s", event.getType());
+	}
 
 }

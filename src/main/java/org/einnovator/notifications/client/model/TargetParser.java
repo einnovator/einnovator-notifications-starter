@@ -9,7 +9,6 @@ public class TargetParser {
 
 	public static final String GROUP_PREFIX = "@";
 	public static final String ROLE_PREFIX = ".";
-	public static final String PERM_PREFIX = ":";
 
 	/**
 	 * Parser to make Target from simple expression.
@@ -18,13 +17,10 @@ public class TargetParser {
 	 *  username - user with specificed username or uuid
 	 *  username@email - user with email
 	 *  +1555444555 - user with phone
-	 *  \@group - all users in group with specified uuid or organization with unique name
+	 *  \@group - all users in group with specified uuid or root group with unique name
 	 * .role - all users with global role
 	 * .role@group - all user with role in group
-	 * :perm - all users with named global permission
-	 * :perm\@group - all user with permission  in group
 	 * #obj - all users with any permission in object with specified uuid (Reserved for future use)
-	 * #obj:perm - all users with specified permission in object with specified uuid  (Reserved for future use)
 	 * @return the {@code Target}
 	 */
 	public static Target makeTarget(String destination) {
@@ -38,21 +34,14 @@ public class TargetParser {
 			if (destination.length()<=1) {
 				return null;
 			}
-			type = Target.TARGET_TYPE_GROUP;
+			type = TargetType.GROUP.name();
 			destination = destination.substring(1);
 			name = destination;
 		} else if (destination.startsWith(ROLE_PREFIX)) {
 			if (destination.length()<=1) {
 				return null;
 			}
-			type = Target.TARGET_TYPE_ROLE;
-			destination = destination.substring(1);
-			name = destination;
-		} else if (destination.startsWith(PERM_PREFIX)) {
-			if (destination.length()<=1) {
-				return null;
-			}
-			type = Target.TARGET_TYPE_PERMISSION;
+			type = TargetType.ROLE.name();
 			destination = destination.substring(1);
 			name = destination;
 		}
@@ -63,12 +52,12 @@ public class TargetParser {
 			name = destination.substring(0, i);
 		}
 		
-		Target target = new TargetBuilder()
-				.type(type)
-				.id(destination)
-				.name(name)
-				.context(group)
-				.build();
+		Target target = (Target)new Target()
+				.withContextId(group)
+				.withType(type)
+				.withId(destination)
+				.withName(name)
+				;
 		return target;
 	}
 
@@ -165,33 +154,5 @@ public class TargetParser {
 	public static List<String> roleInGroup(String role, String group) {
 		return rolesInGroup(group, new String[] {role});
 	}
-
-	public static List<String> permissionsInGroup(String group, String... permissions) {
-		List<String> destinations = new ArrayList<>(permissions.length);
-		for (String permission: permissions) {
-			destinations.add(PERM_PREFIX + permission + GROUP_PREFIX + group);
-		}
-		return destinations;
-	}
-
-	public static List<String> permissionsInGroups(String[] groups, String... permissions) {
-		List<String> destinations = new ArrayList<>(permissions.length);
-		for (String group: groups) {
-			for (String permission: permissions) {
-				destinations.add(PERM_PREFIX + permission + GROUP_PREFIX + group);
-			}			
-		}
-		return destinations;
-	}
-
-	public static List<String> permissionsInGroups(List<String> groups, String... permissions) {
-		return permissionsInGroups(groups.toArray(new String[groups.size()]), permissions);
-	}
-
-
-	public static List<String> permissionInGroup(String permission, String group) {
-		return permissionsInGroup(group, new String[] {permission});
-	}
-
 	
 }

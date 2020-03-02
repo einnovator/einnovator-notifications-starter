@@ -4,10 +4,17 @@
 package org.einnovator.notifications.client.model;
 
 
+/**
+ * Enum for type of  {@code Event}.
+ *
+ * @see Event
+ * @author support@einnovator.org
+ *
+ */
 public enum EventType {
 	NOTIFICATION("Notification"),
 	PREFERENCE("Preference"),
-	FOLLOW("Follow")
+	ERROR("Error")
 	;
 	
 	private final String displayValue;

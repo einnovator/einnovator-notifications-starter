@@ -15,23 +15,23 @@ public class NotificationsEndpoints {
 	}
 	
 	public static String notification(String id, NotificationsClientConfiguration config) {
-		return api(config) + "/notification/" + id;
+		return notifications(config) + "/" + id;
+	}
+
+	public static String notificationTypes(NotificationsClientConfiguration config) {
+		return api(config) + "/notificationtype";
 	}
 	
+	public static String notificationType(String id, NotificationsClientConfiguration config) {
+		return notificationTypes(config) + "/" + id;
+	}
+
 	public static String count(NotificationsClientConfiguration config) {
 		return api(config) + "/count";
 	}
 
 	public static String preferences(NotificationsClientConfiguration config) {
 		return api(config) + "/preference";
-	}
-
-	public static String follow(NotificationsClientConfiguration config) {
-		return api(config) + "/follow";
-	}
-
-	public static String unfollow(NotificationsClientConfiguration config) {
-		return api(config) + "/unfollow";
 	}
 
 	public static String api(NotificationsClientConfiguration config) {
@@ -43,6 +43,11 @@ public class NotificationsEndpoints {
 	}
 	
 	public static String template(String id, NotificationsClientConfiguration config) {
-		return api(config) + "/template/" + id;
+		return templates(config) + "/" + id;
+	}
+
+
+	public static String error(NotificationsClientConfiguration config) {
+		return api(config) + "/error";
 	}
 }

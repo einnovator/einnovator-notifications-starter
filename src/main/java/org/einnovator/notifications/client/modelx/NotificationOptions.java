@@ -1,33 +1,28 @@
 package org.einnovator.notifications.client.modelx;
 
-import org.einnovator.util.model.ObjectBase;
-import org.einnovator.util.model.ToStringCreator;
+import org.einnovator.notifications.client.model.Notification;
+import org.einnovator.util.model.EntityOptions;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * Options to retrieve {@code Notification}s.
+ *
+ * @see Notification
+ * @see NotificationFilter
+ * @author support@einnovator.org
+ *
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class NotificationOptions extends ObjectBase {
+public class NotificationOptions extends EntityOptions<Notification> {
 	
-	private String username;
-
+	/**
+	 * Create instance of {@code NotificationOptions}.
+	 *
+	 */
 	public NotificationOptions() {
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
-	@Override
-	public ToStringCreator toString1(ToStringCreator builder) {
-		return builder
-				.append("username", username)
-				;
-	}
-	
 }

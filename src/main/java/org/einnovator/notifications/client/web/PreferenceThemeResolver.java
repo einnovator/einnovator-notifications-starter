@@ -45,60 +45,120 @@ public class PreferenceThemeResolver implements ThemeResolver {
 	private String defaultThemeName = ORIGINAL_DEFAULT_THEME_NAME;
 
 
+	//
+	// Constructor
+	//
+	
+	/**
+	 * Create instance of {@code PreferenceThemeResolver}.
+	 *
+	 */
 	@Autowired
 	public PreferenceThemeResolver() {
 		
 	}
 	
+	/**
+	 * Create instance of {@code PreferenceThemeResolver}.
+	 *
+	 * @param fallback fallback {@code ThemeResolver}
+	 */
 	public PreferenceThemeResolver(ThemeResolver fallback) {
 		this.fallback  = fallback;
 	}
 
+	/**
+	 * Create instance of {@code PreferenceThemeResolver}.
+	 *
+	 * @param fallback fallback {@code ThemeResolver}
+	 * @param defaultThemeName default theme
+	 */
 	public PreferenceThemeResolver(ThemeResolver fallback, String defaultThemeName) {
 		this.fallback  = fallback;
 		this.defaultThemeName = defaultThemeName;
 	}
 
 
+	//
+	// Setter/Getters
+	//
+
 	/**
-	 * Set the name of the default theme.
+	 * Get the value of property {@code manager}.
+	 *
+	 * @return the manager
 	 */
-	public void setDefaultThemeName(String defaultThemeName) {
-		this.defaultThemeName = defaultThemeName;
+	public PreferencesManager getManager() {
+		return manager;
 	}
 
 	/**
-	 * Return the name of the default theme.
+	 * Set the value of property {@code manager}.
+	 *
+	 * @param manager the value of property manager
+	 */
+	public void setManager(PreferencesManager manager) {
+		this.manager = manager;
+	}
+
+	/**
+	 * Get the value of property {@code fallback}.
+	 *
+	 * @return the fallback
+	 */
+	public ThemeResolver getFallback() {
+		return fallback;
+	}
+
+	/**
+	 * Set the value of property {@code fallback}.
+	 *
+	 * @param fallback the value of property fallback
+	 */
+	public void setFallback(ThemeResolver fallback) {
+		this.fallback = fallback;
+	}
+
+	/**
+	 * Get the value of property {@code key}.
+	 *
+	 * @return the key
+	 */
+	public String getKey() {
+		return key;
+	}
+
+	/**
+	 * Set the value of property {@code key}.
+	 *
+	 * @param key the value of property key
+	 */
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	/**
+	 * Get the value of property {@code defaultThemeName}.
+	 *
+	 * @return the defaultThemeName
 	 */
 	public String getDefaultThemeName() {
 		return defaultThemeName;
 	}
 
-
-	public PreferencesManager getManager() {
-		return manager;
+	/**
+	 * Set the value of property {@code defaultThemeName}.
+	 *
+	 * @param defaultThemeName the value of property defaultThemeName
+	 */
+	public void setDefaultThemeName(String defaultThemeName) {
+		this.defaultThemeName = defaultThemeName;
 	}
 
-	public void setManager(PreferencesManager manager) {
-		this.manager = manager;
-	}
-
-	public ThemeResolver getFallback() {
-		return fallback;
-	}
-
-	public void setFallback(ThemeResolver fallback) {
-		this.fallback = fallback;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
-	}
-
+	//
+	// ThemeResolver
+	//
+	
 	@Override
 	public String resolveThemeName(HttpServletRequest request) {
 		// Check request for preparsed or preset theme.

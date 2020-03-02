@@ -9,6 +9,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 
+/**
+ * Based object for notifications model.
+ *
+ * @author support@einnovator.org
+ *
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class ObjectBase2 extends ObjectBase {
@@ -25,47 +31,43 @@ public class ObjectBase2 extends ObjectBase {
 	
 	protected Map<String, Object> details;
 
+	//
+	// Constructors
+	//
 	
-
-	public ObjectBase2(String type, String id, String name, String uri, String img,  Map<String, Object> details) {
-		this.type = type;
-		this.id = id;
-		this.name = name;
-		this.uri = uri;
-		this.img = img;
-		this.details = details;
-	}
-	
-	public ObjectBase2(String type, String id, String name, Map<String, Object> details) {
-		this.type = type;
-		this.id = id;
-		this.name = name;
-		this.details = details;
+	/**
+	 * Create instance of {@code ObjectBase2}.
+	 *
+	 */
+	public ObjectBase2() {
 	}
 
-	public ObjectBase2(String type, String id, Map<String, Object> details) {
-		this.type = type;
-		this.id = id;
-		this.details = details;
+	/**
+	 * Create instance of {@code ObjectBase2}.
+	 *
+	 * @param obj a prototype
+	 */
+	public ObjectBase2(Object obj) {
+		super(obj);
 	}
 
+	/**
+	 * Create instance of {@code ObjectBase2}.
+	 *
+	 * @param type the type
+	 * @param id the id
+	 * @param name the name
+	 */
 	public ObjectBase2(String type, String id, String name) {
 		this.type = type;
 		this.id = id;
 		this.name = name;
 	}
 	
-	public ObjectBase2(ObjectBase2 obj) {
-		this(obj.type, obj.id, obj.name, obj.uri, obj.img, obj.details);
-	}
+	//
+	// Getters/Setters
+	//
 	
-	public ObjectBase2(Object protoype) {
-		super(protoype);
-	}
-
-
-	public ObjectBase2() {
-	}
 
 	/**
 	 * Get the value of property {@code type}.
@@ -175,18 +177,90 @@ public class ObjectBase2 extends ObjectBase {
 		this.details = details;
 	}
 
+	
+	//
+	// With
+	//
+
+	/**
+	 * Set the value of property {@code type}.
+	 *
+	 * @param type the value of property type
+	 * @return this {@code ObjectBase2}
+	 */
+	public ObjectBase2 withType(String type) {
+		this.type = type;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code id}.
+	 *
+	 * @param id the value of property id
+	 * @return this {@code ObjectBase2}
+	 */
+	public ObjectBase2 withId(String id) {
+		this.id = id;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code name}.
+	 *
+	 * @param name the value of property name
+	 * @return this {@code ObjectBase2}
+	 */
+	public ObjectBase2 withName(String name) {
+		this.name = name;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code uri}.
+	 *
+	 * @param uri the value of property uri
+	 * @return this {@code ObjectBase2}
+	 */
+	public ObjectBase2 withUri(String uri) {
+		this.uri = uri;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code img}.
+	 *
+	 * @param img the value of property img
+	 * @return this {@code ObjectBase2}
+	 */
+	public ObjectBase2 withImg(String img) {
+		this.img = img;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code details}.
+	 *
+	 * @param details the value of property details
+	 * @return this {@code ObjectBase2}
+	 */
+	public ObjectBase2 withDetails(Map<String, Object> details) {
+		this.details = details;
+		return this;
+	}
+
 	public ToStringCreator toString0(ToStringCreator creator) {
 		return creator
 				.append("type", type)
 				.append("id", id)
 				.append("name", name)
-				.append("uri", uri)
-				.append("img", img)
-				.append("details", details)
-				.append("type", type)
-				.append("type", type)
 				;
 	}
 
-	
+	public ToStringCreator toString2(ToStringCreator creator) {
+		return creator
+				.append("uri", uri)
+				.append("img", img)
+				.append("details", details)
+				;
+	}
 }

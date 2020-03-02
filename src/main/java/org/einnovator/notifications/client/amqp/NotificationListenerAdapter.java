@@ -16,7 +16,7 @@ import org.einnovator.notifications.client.NotificationSelector;
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.Meta;
 import org.einnovator.notifications.client.model.Notification;
-import org.einnovator.notifications.client.model.PrincipalX;
+import org.einnovator.notifications.client.model.PrincipalDetails;
 import org.einnovator.notifications.client.model.Source;
 
 public class NotificationListenerAdapter implements NotificationListener {
@@ -128,7 +128,7 @@ public class NotificationListenerAdapter implements NotificationListener {
 		if (type.isAssignableFrom(Meta.class) ) {
 			return notification.getMeta();
 		}
-		if (type.isAssignableFrom(PrincipalX.class) ) {
+		if (type.isAssignableFrom(PrincipalDetails.class) ) {
 			return notification.getPrincipal();
 		}
 		try {

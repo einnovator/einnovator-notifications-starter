@@ -9,27 +9,33 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class PrincipalX extends ObjectBase2 {
+public class PrincipalDetails extends ObjectBase2 {
 
 	public static final String PRINCIPAL_TYPE_USER = "User";
-	public static final String PRINCIPAL_TYPE_ORG = "Organization";
-	public static final String PRINCIPAL_TYPE_ADMIN = "Admin";
-	public static final String PRINCIPAL_TYPE_ORG_ADMIN = "OrgAdmin";
-	public static final String PRINCIPAL_TYPE_APP = "App";
 	
-	public PrincipalX() {
+	/**
+	 * Create instance of {@code PrincipalDetails}.
+	 *
+	 */
+	public PrincipalDetails() {
 		super();
 	}
 
-	public PrincipalX(String type, String id, String name) {
-		super(type, id, name);
+	/**
+	 * Create instance of {@code PrincipalDetails}.
+	 *
+	 * @param id the id
+	 * @param name the name
+	 */
+	public PrincipalDetails(String id, String name) {
+		super(PRINCIPAL_TYPE_USER, id, name);
 	}
 	
 	
-	public static PrincipalX makeUserPrincipal() {
+	public static PrincipalDetails makeUserPrincipal() {
 		Principal principal = SecurityUtil.getPrincipal();
 		String username = principal!=null ? principal.getName() : null;
-		return new PrincipalX(PrincipalX.PRINCIPAL_TYPE_USER, username, username);
+		return new PrincipalDetails(username, username);
 	}
 
 }

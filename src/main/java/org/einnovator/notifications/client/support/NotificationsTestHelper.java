@@ -11,11 +11,11 @@ import org.einnovator.util.MappingUtils;
 import org.einnovator.util.PathUtil;
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.Event;
-import org.einnovator.notifications.client.model.EventBuilder;
 import org.einnovator.notifications.client.model.Notification;
-import org.einnovator.notifications.client.model.PrincipalX;
+import org.einnovator.notifications.client.model.PrincipalDetails;
 import org.einnovator.notifications.client.model.Source;
 import org.einnovator.notifications.client.model.Target;
+import org.einnovator.notifications.client.model.TargetType;
 
 public class NotificationsTestHelper {
 
@@ -137,16 +137,15 @@ public class NotificationsTestHelper {
 
 	protected Source makeSource(Object obj) {
 		Map<String, Object> details = MappingUtils.toMap(obj);
-		return new Source(obj.getClass().getSimpleName(), (String)details.get("uuid"), details);
+		return (Source)new Source().withName(obj.getClass().getSimpleName()).withId((String)details.get("uuid")).withDetails(details);
 	}
 	
 
 	protected Event makeEvent(Source source, String action, String principal, String target) {
-		return new EventBuilder()
-				.source(source)
-				.action(new Action(action, null, null))
-				.principal(new PrincipalX(PrincipalX.PRINCIPAL_TYPE_USER, principal, principal))
-				.targets(new Target(Target.TARGET_TYPE_USER, target, target))
-				.build();
+		return new Event()
+				.withSource(source)
+				.withAction(new Action(action, null, null))
+				.withPrincipal(new PrincipalDetails(principal, principal))
+				.withTargets((Target)new Target().withType(TargetType.USER.name()).withId(target).withName(target));
 	}
 }

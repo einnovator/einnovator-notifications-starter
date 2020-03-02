@@ -1,13 +1,18 @@
 package org.einnovator.notifications.client.model;
 
-import java.util.List;
-
 import org.einnovator.util.model.EntityBase;
 import org.einnovator.util.model.ToStringCreator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * A type of {@code Notification} registered by an app.
+ *
+ * @see NotificationsRegistration
+ * @author support@einnovator.org
+ *
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class NotificationType extends EntityBase {
@@ -19,8 +24,6 @@ public class NotificationType extends EntityBase {
 	private String sourceType;
 	
 	private String actionType;
-	
-	private List<Trigger> triggers;
 	
 	private Integer priority;
 	
@@ -52,6 +55,10 @@ public class NotificationType extends EntityBase {
 	public NotificationType() {
 	}
 	
+	//
+	// Getters/Setters
+	//
+
 	/**
 	 * Get the value of property {@code app}.
 	 *
@@ -64,7 +71,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code app}.
 	 *
-	 * @param app the app to set
+	 * @param app the value of property app
 	 */
 	public void setApp(String app) {
 		this.app = app;
@@ -82,7 +89,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code typeId}.
 	 *
-	 * @param typeId the typeId to set
+	 * @param typeId the value of property typeId
 	 */
 	public void setTypeId(String typeId) {
 		this.typeId = typeId;
@@ -100,7 +107,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code sourceType}.
 	 *
-	 * @param sourceType the sourceType to set
+	 * @param sourceType the value of property sourceType
 	 */
 	public void setSourceType(String sourceType) {
 		this.sourceType = sourceType;
@@ -118,28 +125,10 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code actionType}.
 	 *
-	 * @param actionType the actionType to set
+	 * @param actionType the value of property actionType
 	 */
 	public void setActionType(String actionType) {
 		this.actionType = actionType;
-	}
-
-	/**
-	 * Get the value of property {@code triggers}.
-	 *
-	 * @return the triggers
-	 */
-	public List<Trigger> getTriggers() {
-		return triggers;
-	}
-
-	/**
-	 * Set the value of property {@code triggers}.
-	 *
-	 * @param triggers the triggers to set
-	 */
-	public void setTriggers(List<Trigger> triggers) {
-		this.triggers = triggers;
 	}
 
 	/**
@@ -154,7 +143,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code priority}.
 	 *
-	 * @param priority the priority to set
+	 * @param priority the value of property priority
 	 */
 	public void setPriority(Integer priority) {
 		this.priority = priority;
@@ -172,7 +161,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code category}.
 	 *
-	 * @param category the category to set
+	 * @param category the value of property category
 	 */
 	public void setCategory(String category) {
 		this.category = category;
@@ -190,7 +179,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code subcategory}.
 	 *
-	 * @param subcategory the subcategory to set
+	 * @param subcategory the value of property subcategory
 	 */
 	public void setSubcategory(String subcategory) {
 		this.subcategory = subcategory;
@@ -208,7 +197,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code label}.
 	 *
-	 * @param label the label to set
+	 * @param label the value of property label
 	 */
 	public void setLabel(String label) {
 		this.label = label;
@@ -226,7 +215,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code description}.
 	 *
-	 * @param description the description to set
+	 * @param description the value of property description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -244,7 +233,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code categoryOrder}.
 	 *
-	 * @param categoryOrder the categoryOrder to set
+	 * @param categoryOrder the value of property categoryOrder
 	 */
 	public void setCategoryOrder(Integer categoryOrder) {
 		this.categoryOrder = categoryOrder;
@@ -262,7 +251,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code subcategoryOrder}.
 	 *
-	 * @param subcategoryOrder the subcategoryOrder to set
+	 * @param subcategoryOrder the value of property subcategoryOrder
 	 */
 	public void setSubcategoryOrder(Integer subcategoryOrder) {
 		this.subcategoryOrder = subcategoryOrder;
@@ -280,7 +269,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code order}.
 	 *
-	 * @param order the order to set
+	 * @param order the value of property order
 	 */
 	public void setOrder(Integer order) {
 		this.order = order;
@@ -298,7 +287,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code template}.
 	 *
-	 * @param template the template to set
+	 * @param template the value of property template
 	 */
 	public void setTemplate(Template template) {
 		this.template = template;
@@ -316,7 +305,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code mailTemplate}.
 	 *
-	 * @param mailTemplate the mailTemplate to set
+	 * @param mailTemplate the value of property mailTemplate
 	 */
 	public void setMailTemplate(Template mailTemplate) {
 		this.mailTemplate = mailTemplate;
@@ -334,7 +323,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code smsTemplate}.
 	 *
-	 * @param smsTemplate the smsTemplate to set
+	 * @param smsTemplate the value of property smsTemplate
 	 */
 	public void setSmsTemplate(Template smsTemplate) {
 		this.smsTemplate = smsTemplate;
@@ -352,7 +341,7 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code enabled}.
 	 *
-	 * @param enabled the enabled to set
+	 * @param enabled the value of property enabled
 	 */
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
@@ -370,12 +359,205 @@ public class NotificationType extends EntityBase {
 	/**
 	 * Set the value of property {@code admin}.
 	 *
-	 * @param admin the admin to set
+	 * @param admin the value of property admin
 	 */
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
 	}
+	
+	//
+	// With
+	//
 
+	/**
+	 * Set the value of property {@code app}.
+	 *
+	 * @param app the value of property app
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withApp(String app) {
+		this.app = app;
+		return this;
+	}
+	
+	/**
+	 * Set the value of property {@code typeId}.
+	 *
+	 * @param typeId the value of property typeId
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withTypeId(String typeId) {
+		this.typeId = typeId;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code sourceType}.
+	 *
+	 * @param sourceType the value of property sourceType
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withSourceType(String sourceType) {
+		this.sourceType = sourceType;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code actionType}.
+	 *
+	 * @param actionType the value of property actionType
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withActionType(String actionType) {
+		this.actionType = actionType;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code priority}.
+	 *
+	 * @param priority the value of property priority
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withPriority(Integer priority) {
+		this.priority = priority;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code category}.
+	 *
+	 * @param category the value of property category
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withCategory(String category) {
+		this.category = category;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code subcategory}.
+	 *
+	 * @param subcategory the value of property subcategory
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withSubcategory(String subcategory) {
+		this.subcategory = subcategory;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code label}.
+	 *
+	 * @param label the value of property label
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withLabel(String label) {
+		this.label = label;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code description}.
+	 *
+	 * @param description the value of property description
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withDescription(String description) {
+		this.description = description;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code categoryOrder}.
+	 *
+	 * @param categoryOrder the value of property categoryOrder
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withCategoryOrder(Integer categoryOrder) {
+		this.categoryOrder = categoryOrder;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code subcategoryOrder}.
+	 *
+	 * @param subcategoryOrder the value of property subcategoryOrder
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withSubcategoryOrder(Integer subcategoryOrder) {
+		this.subcategoryOrder = subcategoryOrder;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code order}.
+	 *
+	 * @param order the value of property order
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withOrder(Integer order) {
+		this.order = order;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code template}.
+	 *
+	 * @param template the value of property template
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withTemplate(Template template) {
+		this.template = template;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code mailTemplate}.
+	 *
+	 * @param mailTemplate the value of property mailTemplate
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withMailTemplate(Template mailTemplate) {
+		this.mailTemplate = mailTemplate;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code smsTemplate}.
+	 *
+	 * @param smsTemplate the value of property smsTemplate
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withSmsTemplate(Template smsTemplate) {
+		this.smsTemplate = smsTemplate;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code enabled}.
+	 *
+	 * @param enabled the value of property enabled
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withEnabled(Boolean enabled) {
+		this.enabled = enabled;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code admin}.
+	 *
+	 * @param admin the value of property admin
+	 * @return this {@code NotificationType}
+	 */
+	public NotificationType withAdmin(Boolean admin) {
+		this.admin = admin;
+		return this;
+	}
+			
+	
+	
 	@Override
 	public ToStringCreator toString1(ToStringCreator creator) {
 		return super.toString1(creator)
@@ -393,10 +575,8 @@ public class NotificationType extends EntityBase {
 			.append("admin", admin)
 			.append("enabled", enabled)
 			.append("template", template)
-			.append("triggers", triggers)
 			.append("description", description)
 			;
 	}
-			
-	
+
 }

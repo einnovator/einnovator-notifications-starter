@@ -114,7 +114,7 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 			if (template!=null) {
 				return template;
 			}
-			template = notificationsClient.getTemplate(id, context);	
+			template = notificationsClient.getTemplate(id, null, context);	
 			return putCacheValue(template, getTemplateCache(), id);
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
@@ -163,7 +163,7 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	@Override
 	public URI createTemplate(Template template, NotificationsClientContext context) {
 		try {
-			return notificationsClient.createTemplate(template, context);
+			return notificationsClient.createTemplate(template, null, context);
 		} catch (RuntimeException e) {
 			logger.error("createTemplate:" + e);
 			return null;
@@ -174,7 +174,7 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	@Override
 	public Template updateTemplate(Template template, NotificationsClientContext context) {
 		try {
-			notificationsClient.updateTemplate(template, context);
+			notificationsClient.updateTemplate(template, null, context);
 			evictCaches(template.getUuid());
 			return template;
 		} catch (RuntimeException e) {
@@ -187,7 +187,7 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	@CacheEvict(value=CACHE_TEMPLATE, key="#id")
 	public boolean deleteTemplate(String id, NotificationsClientContext context) {
 		try {
-			notificationsClient.deleteTemplate(id, context);
+			notificationsClient.deleteTemplate(id, null, context);
 			return true;
 		} catch (RuntimeException e) {
 			logger.error("deleteTemplate:" + e);
