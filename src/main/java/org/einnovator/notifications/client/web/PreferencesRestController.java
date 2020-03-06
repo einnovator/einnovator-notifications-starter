@@ -22,17 +22,18 @@ public class PreferencesRestController extends ControllerBase {
 	@Autowired
 	protected PreferencesManager manager;
 
-	@PutMapping @GetMapping
+	@GetMapping
 	@ResponseBody
-	public ResponseEntity<Object> getPreference(String key,
+	public ResponseEntity<Object> getPreference(@RequestParam("key") String key,
 			Principal principal,  HttpServletResponse response, HttpSession session) {
 		Object value = manager.getValue(session, key);
 		return ok(value, "getPreference", response, key, value);
 	}
 	
-	@PostMapping @PutMapping
+	@PostMapping
+	@PutMapping
 	@ResponseBody
-	public ResponseEntity<Void> setPreference(String key, @RequestParam(required = false) Object value,
+	public ResponseEntity<Void> setPreference(@RequestParam("key") String key, @RequestParam(required = false, name="value") Object value,
 			 Principal principal, HttpServletResponse response, HttpSession session) {
 		manager.setValue(session, key, value);
 		return nocontent("setPreference", response, key, value);
@@ -41,7 +42,7 @@ public class PreferencesRestController extends ControllerBase {
 	
 	@DeleteMapping
 	@ResponseBody
-	public ResponseEntity<Void> removePreference(String key, 
+	public ResponseEntity<Void> removePreference(@RequestParam("key") String key, 
 		Principal principal, HttpServletResponse response, HttpSession session) {
 		manager.remove(key, session);
 		return nocontent("removePreference", response, key);

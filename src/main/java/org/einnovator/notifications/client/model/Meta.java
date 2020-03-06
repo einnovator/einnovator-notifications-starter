@@ -2,70 +2,123 @@ package org.einnovator.notifications.client.model;
 
 import java.util.Date;
 
+import org.einnovator.util.model.ObjectBase;
+import org.einnovator.util.model.ToStringCreator;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * {@code Event} options metadata.
+ *
+ * @see Event
+ * @author support@einnovator.org
+ *
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Meta {
+public class Meta extends ObjectBase {
 
-	public static final Integer PRIORITY_NORMAL = 0;
 
-	public static final Integer PRIORITY_URGENT = -10;
-
-	public static final Integer PRIORITY_IMPORTANT = -100;
-
-	public static final Integer PRIORITY_UNIMPORTANT = 10;
+	protected Integer priority;
 	
-	public static final Integer PRIORITY_JUNK = 100;
+	protected Date expires;
 
-	private Integer priority;
+	//
+	// Constructors
+	//
 
-	private Date date;
-	
-	private Date expires;
-
+	/**
+	 * Create instance of {@code Meta}.
+	 *
+	 */
 	public Meta() {
 	}
 	
-	public Meta(Integer priority, Date date, Date expires) {
+	/**
+	 * Create instance of {@code Meta}.
+	 *
+	 * @param priority the priority
+	 * @param expires the expiration date
+	 */
+	public Meta(Integer priority, Date expires) {
 		super();
 		this.priority = priority;
-		this.date = date;
 		this.expires = expires;
 	}
+	
+	//
+	// Getter/Setters
+	//
 
+	/**
+	 * Set the value of property {@code priority}.
+	 *
+	 * @param priority the value of property priority
+	 * @return this {@code Meta}
+	 */
+	public Meta withPriority(Integer priority) {
+		this.priority = priority;
+		return this;
+	}
+
+	/**
+	 * Get the value of property {@code priority}.
+	 *
+	 * @return the priority
+	 */
 	public Integer getPriority() {
 		return priority;
 	}
 
+	/**
+	 * Set the value of property {@code priority}.
+	 *
+	 * @param priority the value of property priority
+	 */
 	public void setPriority(Integer priority) {
 		this.priority = priority;
 	}
 
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
+	/**
+	 * Get the value of property {@code expires}.
+	 *
+	 * @return the expires
+	 */
 	public Date getExpires() {
 		return expires;
 	}
 
+	/**
+	 * Set the value of property {@code expires}.
+	 *
+	 * @param expires the value of property expires
+	 */
 	public void setExpires(Date expires) {
 		this.expires = expires;
 	}
 
-	
+	//
+	// With
+	//
+
+
+	/**
+	 * Set the value of property {@code expires}.
+	 *
+	 * @param expires the value of property expires
+	 * @return this {@code Meta}
+	 */
+	public Meta withExpires(Date expires) {
+		this.expires = expires;
+		return this;
+	}
+
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((expires == null) ? 0 : expires.hashCode());
 		result = prime * result + ((priority == null) ? 0 : priority.hashCode());
 		return result;
@@ -80,11 +133,6 @@ public class Meta {
 		if (getClass() != obj.getClass())
 			return false;
 		Meta other = (Meta) obj;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else if (!date.equals(other.date))
-			return false;
 		if (expires == null) {
 			if (other.expires != null)
 				return false;
@@ -98,10 +146,13 @@ public class Meta {
 		return true;
 	}
 
+	
 	@Override
-	public String toString() {
-		return "Meta [" + (priority != null ? "priority=" + priority + ", " : "")
-				+ (date != null ? "date=" + date + ", " : "") + (expires != null ? "expires=" + expires : "") + "]";
+	public ToStringCreator toString1(ToStringCreator creator) {
+		return super.toString1(creator)
+				.append("priority", priority)
+				.append("expires", expires)
+				;
 	}
 	
 	

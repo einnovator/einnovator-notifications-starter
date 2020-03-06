@@ -167,6 +167,7 @@ public class Target extends ObjectBase2 {
 		return this;
 	}
 
+
 	@Override
 	public ToStringCreator toString1(ToStringCreator creator) {
 		return super.toString1(creator)
@@ -176,5 +177,11 @@ public class Target extends ObjectBase2 {
 			;
 	}
 	
+	//
+	// Static Factory Methods 
+	//
 	
+	public static Target user(String username) {
+		return (Target)new Target().withId(username);
+	}
 }

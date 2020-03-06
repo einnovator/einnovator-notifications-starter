@@ -56,4 +56,11 @@ public class SourceType {
 	public static final String APPLICATION = "Application";
 
 	public static final String SETTING = "Setting";
+	
+	//
+	// Test
+	//
+	
+	public static final String TEST = "Test";
+
 }

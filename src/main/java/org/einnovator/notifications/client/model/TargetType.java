@@ -4,6 +4,12 @@
 package org.einnovator.notifications.client.model;
 
 
+/**
+ * Enum for type of {@code Target}.
+ *
+ * @see Target
+ * @author support@einnovator.org
+ */
 public enum TargetType {
 	USER("User"),
 	GROUP("Group"),

@@ -24,15 +24,23 @@ public class PrincipalDetails extends ObjectBase2 {
 	/**
 	 * Create instance of {@code PrincipalDetails}.
 	 *
-	 * @param id the id
+	 * @param username the username
 	 * @param name the name
 	 */
-	public PrincipalDetails(String id, String name) {
-		super(PRINCIPAL_TYPE_USER, id, name);
+	public PrincipalDetails(String username, String name) {
+		super(PRINCIPAL_TYPE_USER, username, name);
 	}
 	
+	/**
+	 * Create instance of {@code PrincipalDetails}.
+	 *
+	 * @param username the username
+	 */
+	public PrincipalDetails(String username) {
+		super(PRINCIPAL_TYPE_USER, username, username);
+	}
 	
-	public static PrincipalDetails makeUserPrincipal() {
+	public static PrincipalDetails principal() {
 		Principal principal = SecurityUtil.getPrincipal();
 		String username = principal!=null ? principal.getName() : null;
 		return new PrincipalDetails(username, username);

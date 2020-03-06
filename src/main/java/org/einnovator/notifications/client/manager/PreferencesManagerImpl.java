@@ -256,7 +256,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 	}
 
 	protected Event makeEvent(ValuePreference pref) {
-		return new Event(pref, PrincipalDetails.makeUserPrincipal());
+		return new Event(pref, PrincipalDetails.principal());
 	}
 
 	protected ValuePreference makePreference(String key, Object value, String op, Object... params) {

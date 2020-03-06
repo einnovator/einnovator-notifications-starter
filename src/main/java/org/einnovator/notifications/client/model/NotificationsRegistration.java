@@ -26,10 +26,21 @@ public class NotificationsRegistration extends ObjectBase {
 	
 	private Map<String, Object> properties;
 
+	//
+	// contructor
+	//
+
+	/**
+	 * Create instance of {@code NotificationsRegistration}.
+	 *
+	 */
 	public NotificationsRegistration() {
 	}
 	
-	
+	//
+	// Getters/Setters
+	//
+
 	/**
 	 * Get the value of property {@code auto}.
 	 *
@@ -38,7 +49,6 @@ public class NotificationsRegistration extends ObjectBase {
 	public boolean isAuto() {
 		return auto;
 	}
-
 
 	/**
 	 * Set the value of property {@code auto}.
@@ -49,7 +59,6 @@ public class NotificationsRegistration extends ObjectBase {
 		this.auto = auto;
 	}
 
-
 	/**
 	 * Get the value of property {@code application}.
 	 *
@@ -58,7 +67,6 @@ public class NotificationsRegistration extends ObjectBase {
 	public Application getApplication() {
 		return application;
 	}
-
 
 	/**
 	 * Set the value of property {@code application}.
@@ -69,7 +77,6 @@ public class NotificationsRegistration extends ObjectBase {
 		this.application = application;
 	}
 
-
 	/**
 	 * Get the value of property {@code types}.
 	 *
@@ -79,7 +86,6 @@ public class NotificationsRegistration extends ObjectBase {
 		return types;
 	}
 
-
 	/**
 	 * Set the value of property {@code types}.
 	 *
@@ -88,7 +94,6 @@ public class NotificationsRegistration extends ObjectBase {
 	public void setTypes(List<NotificationType> types) {
 		this.types = types;
 	}
-
 
 	/**
 	 * Get the value of property {@code templates}.
@@ -108,7 +113,6 @@ public class NotificationsRegistration extends ObjectBase {
 		this.templates = templates;
 	}
 
-
 	/**
 	 * Get the value of property {@code properties}.
 	 *
@@ -117,7 +121,6 @@ public class NotificationsRegistration extends ObjectBase {
 	public Map<String, Object> getProperties() {
 		return properties;
 	}
-
 
 	/**
 	 * Set the value of property {@code properties}.
@@ -129,6 +132,65 @@ public class NotificationsRegistration extends ObjectBase {
 	}
 
 
+	//
+	// With
+	//
+
+	/**
+	 * Set the value of property {@code auto}.
+	 *
+	 * @param auto the value of property auto
+	 * @return this {@code NotificationsRegistration}
+	 */
+	public NotificationsRegistration withAuto(boolean auto) {
+		this.auto = auto;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code application}.
+	 *
+	 * @param application the value of property application
+	 * @return this {@code NotificationsRegistration}
+	 */
+	public NotificationsRegistration withApplication(Application application) {
+		this.application = application;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code types}.
+	 *
+	 * @param types the value of property types
+	 */
+	public NotificationsRegistration withTypes(List<NotificationType> types) {
+		this.types = types;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code templates}.
+	 *
+	 * @param templates the value of property templates
+	 * @return this {@code NotificationsRegistration}
+	 */
+	public NotificationsRegistration withTemplates(List<Template> templates) {
+		this.templates = templates;
+		return this;
+	}
+
+	/**
+	 * Set the value of property {@code properties}.
+	 *
+	 * @param properties the value of property properties
+	 * @return this {@code NotificationsRegistration}
+	 */
+	public NotificationsRegistration withProperties(Map<String, Object> properties) {
+		this.properties = properties;
+		return this;
+	}
+
+	
 	@Override
 	public ToStringCreator toString1(ToStringCreator creator) {
 		return super.toString1(creator)
@@ -140,6 +202,18 @@ public class NotificationsRegistration extends ObjectBase {
 			;
 	}
 
+	//
+	// Template
+	//
+	
+	
+	/**
+	 * Find {@code Template} with specified name.
+	 * 
+	 * @param name the name 
+	 * @param medium the {@code Medium}
+	 * @return the {@code Template} if found, null otherwise
+	 */
 	public Template findTemplate(String name, Medium medium) {
 		if (templates!=null) {
 			for (Template template: templates) {
