@@ -617,7 +617,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	public void deliver(SimpMessagingTemplate template, Notification notification, Target target) {
 		Map<String, Object> payload = MappingUtils.toMap(notification);
 		String username = target.getId();		
-		template.convertAndSend("/queue/" + username, payload);
+		template.convertAndSendToUser(username, "/notification", payload);
 	}
 	
 	/**

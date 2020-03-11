@@ -18,7 +18,7 @@ public class StompWebSocketConfig extends AbstractWebSocketMessageBrokerConfigur
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.setApplicationDestinationPrefixes("/app");
-        config.enableSimpleBroker("/topic", "/queue", "/user", "/log");
+        config.enableSimpleBroker("/topic", "/queue", "/user");
     }
 
 }
