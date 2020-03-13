@@ -46,6 +46,13 @@ public class NotificationsEndpoints {
 		return templates(config) + "/" + id;
 	}
 
+	public static String jobs(NotificationsClientConfiguration config) {
+		return api(config) + "/job";
+	}
+	
+	public static String job(String id, NotificationsClientConfiguration config) {
+		return jobs(config) + "/" + id;
+	}
 
 	public static String error(NotificationsClientConfiguration config) {
 		return api(config) + "/error";

@@ -18,6 +18,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class NotificationOptions extends EntityOptions<Notification> {
 	
+
+	//
+	// Constructors
+	//
+	
 	/**
 	 * Create instance of {@code NotificationOptions}.
 	 *

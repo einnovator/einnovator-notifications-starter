@@ -19,6 +19,7 @@ import org.einnovator.notifications.client.config.NotificationsEndpoints;
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.ErrorReport;
 import org.einnovator.notifications.client.model.Event;
+import org.einnovator.notifications.client.model.Job;
 import org.einnovator.notifications.client.model.Medium;
 import org.einnovator.notifications.client.model.Notification;
 import org.einnovator.notifications.client.model.NotificationType;
@@ -27,6 +28,8 @@ import org.einnovator.notifications.client.model.Preference;
 import org.einnovator.notifications.client.model.Source;
 import org.einnovator.notifications.client.model.Target;
 import org.einnovator.notifications.client.model.Template;
+import org.einnovator.notifications.client.modelx.JobFilter;
+import org.einnovator.notifications.client.modelx.JobOptions;
 import org.einnovator.notifications.client.modelx.NotificationFilter;
 import org.einnovator.notifications.client.modelx.NotificationTypeFilter;
 import org.einnovator.notifications.client.modelx.NotificationTypeOptions;
@@ -905,6 +908,105 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		exchange(request, Void.class);
 	}
 	
+	//
+	// Jobs
+	//
+
+	/**
+	 * Get {@code Job} with specified identifier.
+	 * 
+	 * <p><b>Required Security Credentials</b>: any.
+	 * 
+	 * @param id the identifier
+	 * @param options (optional) the {@code JobOptions} that tailor which fields are returned (projection)
+	 * @param context optional {@code NotificationsClientContext}
+	 * @return the {@code Job}
+	 * @throws RestClientException if request fails
+	 */
+	public Job getJob(String id, JobOptions options, NotificationsClientContext context) {
+		URI uri = makeURI(NotificationsEndpoints.job(id, config));
+		uri = processURI(uri, options);
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<Job> result = exchange(request, Job.class);
+		return result.getBody();
+	}
+	
+
+	/**
+	 * List {@code Job}s.
+	 * 
+	 * <p><b>Required Security Credentials</b>: any.
+	 * 
+	 * @param filter a {@code JobFilter}
+	 * @param pageable a {@code Pageable} (optional)
+	 * @param context optional {@code NotificationsClientContext}
+	 * @throws RestClientException if request fails
+	 * @return a {@code Page} with {@code Job}s, or null if request failed
+	 */
+	public Page<Job> listJobs(JobFilter filter, Pageable pageable, NotificationsClientContext context) {
+		URI uri = makeURI(NotificationsEndpoints.jobs(config));
+		uri = processURI(uri, filter, pageable);
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		@SuppressWarnings("rawtypes")
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class);
+		return PageUtil.create2(result.getBody(),  Job.class);
+	}
+
+	/**
+	 * Create a new {@code Job}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
+	 * 
+	 * @param job the {@code Job}
+	 * @param options optional {@code RequestOptions}
+	 * @param context optional {@code NotificationsClientContext}
+	 * @return the location {@code URI} for the created {@code Job}
+	 * @throws RestClientException if request fails
+	 */
+	public URI createJob(Job job, RequestOptions options, NotificationsClientContext context) {
+		URI uri = makeURI(NotificationsEndpoints.jobs(config));
+		uri = processURI(uri, options);
+		RequestEntity<Job> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(job);
+		ResponseEntity<Void> result = exchange(request, Void.class);
+		return result.getHeaders().getLocation();
+	}
+	
+	
+	/**
+	 * Update existing {@code Job}
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
+	 * 
+	 * @param job the {@code Job}
+	 * @param options optional {@code RequestOptions}
+	 * @param context optional {@code NotificationsClientContext}
+	 * @throws RestClientException if request fails
+	 */
+	public void updateJob(Job job, RequestOptions options, NotificationsClientContext context) {
+		URI uri = makeURI(NotificationsEndpoints.job(job.getId(), config));
+		uri = processURI(uri, options);
+		RequestEntity<Job> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(job);
+		exchange(request, Job.class);
+	}
+	
+	/**
+	 * Delete existing {@code Job}
+	 * 
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
+	 * 
+	 * @param id the {@code Job} identifier (UUID)
+	 * @param options optional {@code RequestOptions}
+	 * @param context optional {@code NotificationsClientContext}
+	 * @throws RestClientException if request fails
+	 */
+	public void deleteJob(String id, RequestOptions options, NotificationsClientContext context) {
+		id = encodeId(id);
+		URI uri = makeURI(NotificationsEndpoints.job(id, config));
+		uri = processURI(uri, options);
+		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();		
+		exchange(request, Void.class);
+	}
 	
 	//
 	// HTTP transport

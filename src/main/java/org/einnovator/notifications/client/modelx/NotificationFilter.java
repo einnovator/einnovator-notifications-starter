@@ -1,11 +1,14 @@
 package org.einnovator.notifications.client.modelx;
 
+import org.einnovator.notifications.client.model.Notification;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * A {@code NotificationFilter}.
+ * A filter for {@code Notifications}s.
  *
+ * @see Notification
  * @author support@einnovator.org
  *
  */
