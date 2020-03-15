@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
-import org.einnovator.notifications.client.config.NotificationsClientContext;
+
 import org.einnovator.notifications.client.config.NotificationsEndpoints;
 import org.einnovator.notifications.client.model.Action;
 import org.einnovator.notifications.client.model.ErrorReport;
@@ -46,6 +46,7 @@ import org.einnovator.util.script.EnvironmentVariableResolver;
 import org.einnovator.util.script.TextTemplates;
 import org.einnovator.util.security.ClientTokenProvider;
 import org.einnovator.util.web.RequestOptions;
+import org.einnovator.util.web.Result;
 import org.einnovator.util.web.WebUtil;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
@@ -76,8 +77,6 @@ import org.springframework.web.client.RestClientException;
  * <p>For caching enabled "high-level" API, see Manager classes.
  * <p>{@code NotificationsClientConfiguration} specifies configuration details, including server URL and client credentials.
  * <p>Property {@link #getConfig()} provides the default {@code NotificationsClientConfiguration} to use.
- * <p>All API methods that invoke a server endpoint accept an <em>optional</em> tail parameter to connect to alternative server
- *  (e.g. for cover the less likely case where an application need to connect to multiple servers in different clusters).
  * <p>Internally, {@code NotificationsClient} uses a {@code OAuth2RestTemplate} to invoke a remote server.
  * <p>When setup as a <b>Spring Bean</b> both {@code NotificationsClientConfiguration} and {@code OAuth2RestTemplate} are auto-configured.
  * <p>Requests use a session-scoped  {@code OAuth2ClientContext} if running in a web-environment.
@@ -441,13 +440,13 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * Publish {@code Event} using the default transport.
 	 * 
 	 * @param event the {@code Event}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 */
-	public void publishEvent(Event event, NotificationsClientContext context) {
+	public void publishEvent(Event event) {
 		if (amqpTemplate!=null && (config.getAmqp().getEnabled()==null || Boolean.TRUE.equals(config.getAmqp().getEnabled()))) {
-			publishEventAmqp(event, context);			
+			publishEventAmqp(event);			
 		} else {
-			publishEventHttp(event, context);
+			publishEventHttp(event, null);
 		}
 	}
 
@@ -455,44 +454,45 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * Publish {@code Notification} directly to Broker using asynchronous transport.
 	 * 
 	 * @param notification the {@code Notification}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 */
-	public void publishDirect(Notification notification, NotificationsClientContext context) {
-		publishDirectAmqp(notification, context);
+	public void publishDirect(Notification notification) {
+		publishDirectAmqp(notification);
 	}
 
 	/**
 	 * Publish {@code Event} using synchronous HTTP request.
 	 * 
 	 * @param event the {@code Event}
-	 * @param context optional {@code NotificationsClientContext}
+	 * @param options optinal {@code RequestOptions}
+	 
 	 */
 	@Override
-	public void publishEventHttp(Event event, NotificationsClientContext context) {
+	public void publishEventHttp(Event event, RequestOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.event(config));
 		RequestEntity<Event> request = RequestEntity.post(uri).body(event);
-		exchange(request, Void.class, context);
+		exchange(request, Void.class, options);
 	}
 
 	/**
 	 * Publish {@code Event} using default async transport.
 	 * 
 	 * @param event the {@code Event}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 */
 	@Override
-	public void publishEventAsync(Event event, NotificationsClientContext context) {
-		publishEventAmqp(event, context);
+	public void publishEventAsync(Event event) {
+		publishEventAmqp(event);
 	}
 
 	/**
 	 * Publish {@code Event} using the AMQP transport.
 	 * 
 	 * @param event the {@code Event}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 */
 	@Override
-	public void publishEventAmqp(Event event, NotificationsClientContext context) {
+	public void publishEventAmqp(Event event) {
 		Object eventData = MappingUtils.convert(event, LinkedHashMap.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("publishEventAmqp: %s", eventData));			
@@ -510,9 +510,9 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * Publish {@code Notification} directly using default asynchronous transport.
 	 * 
 	 * @param notification the {@code Notification}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 */
-	public void publishDirectAmqp(Notification notification, NotificationsClientContext context) {
+	public void publishDirectAmqp(Notification notification) {
 		Object notificationData =  MappingUtils.convert(notification, LinkedHashMap.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("publishDirectAmqp: %s", notificationData));			
@@ -535,12 +535,12 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * Report an application Error.
 	 * 
 	 * @param error the {@code ErrorReport}
-	 * @param context optional {@code NotificationsClientContext}
+	 * @param options optional {@code RequestOptions}
 	 */
-	public void reportError(ErrorReport error, NotificationsClientContext context) {
+	public void reportError(ErrorReport error, RequestOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.error(config));
 		RequestEntity<ErrorReport> request = RequestEntity.post(uri).body(error);
-		exchange(request, Void.class, context);
+		exchange(request, Void.class, options);
 	}
 
 
@@ -555,16 +555,16 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param filter a {@code NotificationFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 * @throws RestClientException if request fails
 	 * @return a {@code Page} with {@code Notification}s, or null if request failed
 	 */
-	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable, NotificationsClientContext context) {
+	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable) {
 		URI uri = makeURI(NotificationsEndpoints.notifications(config));
 		uri = processURI(uri, filter, pageable);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
-		ResponseEntity<Page> result = exchange(request, Page.class);
+		ResponseEntity<Page> result = exchange(request, Page.class, filter);
 		return PageUtil.create(result.getBody(),  Notification.class);
 	}
 
@@ -574,15 +574,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner.
 	 * 
 	 * @param filter a {@code NotificationFilter}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 * @throws RestClientException if request fails
 	 * @return the {@code Notification} count
 	 */
-	public Long countNotifications(NotificationFilter filter, NotificationsClientContext context) {
+	public Long countNotifications(NotificationFilter filter) {
 		URI uri = makeURI(NotificationsEndpoints.count(config));
 		uri = processURI(uri, filter);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<Long> result = exchange(request, Long.class);
+		ResponseEntity<Long> result = exchange(request, Long.class, filter);
 		return result.getBody();
 	}
 
@@ -594,14 +594,14 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param id the {@code Notification} identifier (UUID)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 * @throws RestClientException if request fails
 	 */
-	public void deleteNotification(String id, RequestOptions options, NotificationsClientContext context) {
+	public void deleteNotification(String id, RequestOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.notification(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
-		exchange(request, Void.class);
+		exchange(request, Void.class, options);
 	}
 	
 	
@@ -651,15 +651,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * Get map of {@code Preference}s for a user (the principal, by default).
 	 * 
 	 * @param filter a {@code PreferenceFilter}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 * @return the {@code Preference} map
 	 */
-	public Map<String, Preference> getPreferences(PreferenceFilter filter, NotificationsClientContext context) {
+	public Map<String, Preference> getPreferences(PreferenceFilter filter) {
 		URI uri = makeURI(NotificationsEndpoints.preferences(config));
 		uri = processURI(uri, filter);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
-		ResponseEntity<Map> result = exchange(request, Map.class);
+		ResponseEntity<Map> result = exchange(request, Map.class, filter);
 		Map<String, Preference> map = new LinkedHashMap<>();
 		@SuppressWarnings("unchecked")
 		Set<Map.Entry<?, ?>> ee = result.getBody().entrySet();		
@@ -683,15 +683,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param id the identifier
 	 * @param options (optional) the {@code NotificationTypeOptions} that tailor which fields are returned (projection)
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 * @return the {@code NotificationType}
 	 * @throws RestClientException if request fails
 	 */
-	public NotificationType getNotificationType(String id, NotificationTypeOptions options, NotificationsClientContext context) {
+	public NotificationType getNotificationType(String id, NotificationTypeOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.notificationType(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<NotificationType> result = exchange(request, NotificationType.class);
+		ResponseEntity<NotificationType> result = exchange(request, NotificationType.class, options);
 		return result.getBody();
 	}
 	
@@ -703,16 +703,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param filter a {@code NotificationTypeFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	 * @param context optional {@code NotificationsClientContext}
 	 * @throws RestClientException if request fails
 	 * @return a {@code Page} with {@code NotificationType}s, or null if request failed
 	 */
-	public Page<NotificationType> listNotificationTypes(NotificationTypeFilter filter, Pageable pageable, NotificationsClientContext context) {
+	public Page<NotificationType> listNotificationTypes(NotificationTypeFilter filter, Pageable pageable) {
 		URI uri = makeURI(NotificationsEndpoints.notificationTypes(config));
 		uri = processURI(uri, filter, pageable);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
-		ResponseEntity<PageResult> result = exchange(request, PageResult.class);
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class, filter);
 		return PageUtil.create2(result.getBody(),  NotificationType.class);
 	}
 
@@ -723,15 +722,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param notificationType the {@code NotificationType}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code NotificationsClientContext}
+
 	 * @return the location {@code URI} for the created {@code NotificationType}
 	 * @throws RestClientException if request fails
 	 */
-	public URI createNotificationType(NotificationType notificationType, RequestOptions options, NotificationsClientContext context) {
+	public URI createNotificationType(NotificationType notificationType, RequestOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.notificationTypes(config));
 		uri = processURI(uri, options);
 		RequestEntity<NotificationType> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(notificationType);
-		ResponseEntity<Void> result = exchange(request, Void.class);
+		ResponseEntity<Void> result = exchange(request, Void.class, options);
 		return result.getHeaders().getLocation();
 	}
 	
@@ -743,14 +742,14 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param notificationType the {@code NotificationType}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 * @throws RestClientException if request fails
 	 */
-	public void updateNotificationType(NotificationType notificationType, RequestOptions options, NotificationsClientContext context) {
+	public void updateNotificationType(NotificationType notificationType, RequestOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.notificationType(notificationType.getId(), config));
 		uri = processURI(uri, options);
 		RequestEntity<NotificationType> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(notificationType);
-		exchange(request, NotificationType.class);
+		exchange(request, NotificationType.class, options);
 	}
 	
 	/**
@@ -760,16 +759,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
 	 * 
 	 * @param id the {@code NotificationType} identifier (UUID)
-	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code NotificationsClientContext}
+	 * @param options optional {@code RequestOptions} 
 	 * @throws RestClientException if request fails
 	 */
-	public void deleteNotificationType(String id, RequestOptions options, NotificationsClientContext context) {
+	public void deleteNotificationType(String id, RequestOptions options) {
 		id = encodeId(id);
 		URI uri = makeURI(NotificationsEndpoints.notificationType(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();		
-		exchange(request, Void.class);
+		exchange(request, Void.class, options);
 	}
 	
 	//
@@ -819,15 +817,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param id the identifier
 	 * @param options (optional) the {@code TemplateOptions} that tailor which fields are returned (projection)
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 * @return the {@code Template}
 	 * @throws RestClientException if request fails
 	 */
-	public Template getTemplate(String id, TemplateOptions options, NotificationsClientContext context) {
+	public Template getTemplate(String id, TemplateOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.template(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<Template> result = exchange(request, Template.class);
+		ResponseEntity<Template> result = exchange(request, Template.class, options);
 		return result.getBody();
 	}
 	
@@ -839,16 +837,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param filter a {@code TemplateFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	 * @param context optional {@code NotificationsClientContext}
 	 * @throws RestClientException if request fails
 	 * @return a {@code Page} with {@code Template}s, or null if request failed
 	 */
-	public Page<Template> listTemplates(TemplateFilter filter, Pageable pageable, NotificationsClientContext context) {
+	public Page<Template> listTemplates(TemplateFilter filter, Pageable pageable) {
 		URI uri = makeURI(NotificationsEndpoints.templates(config));
 		uri = processURI(uri, filter, pageable);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
-		ResponseEntity<PageResult> result = exchange(request, PageResult.class);
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class, filter);
 		return PageUtil.create2(result.getBody(),  Template.class);
 	}
 
@@ -859,15 +856,14 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param template the {@code Template}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code NotificationsClientContext}
 	 * @return the location {@code URI} for the created {@code Template}
 	 * @throws RestClientException if request fails
 	 */
-	public URI createTemplate(Template template, RequestOptions options, NotificationsClientContext context) {
+	public URI createTemplate(Template template, RequestOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.templates(config));
 		uri = processURI(uri, options);
 		RequestEntity<Template> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(template);
-		ResponseEntity<Void> result = exchange(request, Void.class);
+		ResponseEntity<Void> result = exchange(request, Void.class, options);
 		return result.getHeaders().getLocation();
 	}
 	
@@ -879,14 +875,14 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param template the {@code Template}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 * @throws RestClientException if request fails
 	 */
-	public void updateTemplate(Template template, RequestOptions options, NotificationsClientContext context) {
+	public void updateTemplate(Template template, RequestOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.template(template.getId(), config));
 		uri = processURI(uri, options);
 		RequestEntity<Template> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(template);
-		exchange(request, Template.class);
+		exchange(request, Template.class, options);
 	}
 	
 	/**
@@ -896,16 +892,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
 	 * 
 	 * @param id the {@code Template} identifier (UUID)
-	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code NotificationsClientContext}
+	 * @param options optional {@code RequestOptions} 
 	 * @throws RestClientException if request fails
 	 */
-	public void deleteTemplate(String id, RequestOptions options, NotificationsClientContext context) {
+	public void deleteTemplate(String id, RequestOptions options) {
 		id = encodeId(id);
 		URI uri = makeURI(NotificationsEndpoints.template(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();		
-		exchange(request, Void.class);
+		exchange(request, Void.class, options);
 	}
 	
 	//
@@ -919,15 +914,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param id the identifier
 	 * @param options (optional) the {@code JobOptions} that tailor which fields are returned (projection)
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 * @return the {@code Job}
 	 * @throws RestClientException if request fails
 	 */
-	public Job getJob(String id, JobOptions options, NotificationsClientContext context) {
+	public Job getJob(String id, JobOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.job(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<Job> result = exchange(request, Job.class);
+		ResponseEntity<Job> result = exchange(request, Job.class, options);
 		return result.getBody();
 	}
 	
@@ -938,17 +933,16 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * <p><b>Required Security Credentials</b>: any.
 	 * 
 	 * @param filter a {@code JobFilter}
-	 * @param pageable a {@code Pageable} (optional)
-	 * @param context optional {@code NotificationsClientContext}
+	 * @param pageable a {@code Pageable} (optional) 
 	 * @throws RestClientException if request fails
 	 * @return a {@code Page} with {@code Job}s, or null if request failed
 	 */
-	public Page<Job> listJobs(JobFilter filter, Pageable pageable, NotificationsClientContext context) {
+	public Page<Job> listJobs(JobFilter filter, Pageable pageable) {
 		URI uri = makeURI(NotificationsEndpoints.jobs(config));
 		uri = processURI(uri, filter, pageable);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
-		ResponseEntity<PageResult> result = exchange(request, PageResult.class);
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class, filter);
 		return PageUtil.create2(result.getBody(),  Job.class);
 	}
 
@@ -959,15 +953,15 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param job the {@code Job}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code NotificationsClientContext}
+	 
 	 * @return the location {@code URI} for the created {@code Job}
 	 * @throws RestClientException if request fails
 	 */
-	public URI createJob(Job job, RequestOptions options, NotificationsClientContext context) {
+	public URI createJob(Job job, RequestOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.jobs(config));
 		uri = processURI(uri, options);
 		RequestEntity<Job> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(job);
-		ResponseEntity<Void> result = exchange(request, Void.class);
+		ResponseEntity<Void> result = exchange(request, Void.class, options);
 		return result.getHeaders().getLocation();
 	}
 	
@@ -978,15 +972,14 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
 	 * 
 	 * @param job the {@code Job}
-	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code NotificationsClientContext}
+	 * @param options optional {@code RequestOptions} 
 	 * @throws RestClientException if request fails
 	 */
-	public void updateJob(Job job, RequestOptions options, NotificationsClientContext context) {
+	public void updateJob(Job job, RequestOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.job(job.getId(), config));
 		uri = processURI(uri, options);
 		RequestEntity<Job> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(job);
-		exchange(request, Job.class);
+		exchange(request, Job.class, options);
 	}
 	
 	/**
@@ -997,33 +990,59 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * 
 	 * @param id the {@code Job} identifier (UUID)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code NotificationsClientContext}
 	 * @throws RestClientException if request fails
 	 */
-	public void deleteJob(String id, RequestOptions options, NotificationsClientContext context) {
+	public void deleteJob(String id, RequestOptions options) {
 		id = encodeId(id);
 		URI uri = makeURI(NotificationsEndpoints.job(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();		
-		exchange(request, Void.class);
+		exchange(request, Void.class, options);
 	}
 	
 	//
 	// HTTP transport
 	//
 	
-	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType, NotificationsClientContext context) throws RestClientException {
-		OAuth2RestTemplate restTemplate = this.restTemplate;
-		if (context!=null && context.getRestTemplate()!=null) {
-			restTemplate = context.getRestTemplate();
-		} else {
-			if (WebUtil.getHttpServletRequest()==null && this.restTemplate0!=null) {
-				restTemplate = this.restTemplate0;
-			}			
+	/**
+	 * Submit HTTP request.
+	 * 
+	 * If {@code context} is not null, use provided {@code OAuth2RestTemplate} if any.
+	 * Otherwise, use session scoped {@code OAuth2RestTemplate} if in web request thread. 
+	 * Otherwise, use client credentials singleton (non thread-safe) @code OAuth2RestTemplate}.
+	 * 
+	 * @param <T> response type
+	 * @param request the {@code RequestEntity}
+	 * @param responseType the response type
+	 * @param options optional {@code RequestOptions}
+	 * @return result {@code ResponseEntity}
+	 * @throws RestClientException if request fails
+	 */
+	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType, RequestOptions options) throws RestClientException {
+		OAuth2RestTemplate restTemplate = getRequiredRestTemplate(options);
+		try {
+			return exchange(restTemplate, request, responseType);			
+		} catch (RuntimeException e) {
+			if (options!=null && !options.isSingleton()) {
+				options.setResult(new Result<Object>(e));
+			}
+			throw e;
 		}
-		return exchange(restTemplate, request, responseType);
 	}
 
+	
+	/**
+	 * Submit HTTP request.
+	 * 
+	 * May be overriden by sub-classes for custom/advanced functionality.
+	 * 
+	 * @param <T> response type
+	 * @param restTemplate the {@code OAuth2RestTemplate} to use
+	 * @param request the {@code RequestEntity}
+	 * @param responseType the response type
+	 * @return the result {@code ResponseEntity}
+	 * @throws RestClientException if request fails
+	 */
 	protected <T> ResponseEntity<T> exchange(OAuth2RestTemplate restTemplate, RequestEntity<?> request, Class<T> responseType) throws RestClientException {
 		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
 			throw new RuntimeException("Notifications Not Enabled");
@@ -1031,9 +1050,21 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		return restTemplate.exchange(request, responseType);
 	}
 	
-	
-	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType) throws RestClientException {
-		return exchange(restTemplate, request, responseType);
+	/**
+	 * Get the {@code OAuth2RestTemplate} to use to perform a request.
+	 * 
+	 * Return the configured {@code OAuth2RestTemplate} in property {@link #restTemplate}.
+	 * If not, fallback to {@link #restTemplate0} (e.g. client credential {@code OAuth2RestTemplate}).
+	 * 
+	 * @param options optional {@code RequestOptions}
+	 * @return the {@code OAuth2RestTemplate}
+	 */
+	protected OAuth2RestTemplate getRequiredRestTemplate(RequestOptions options) {
+		OAuth2RestTemplate restTemplate = this.restTemplate;
+		if (WebUtil.getHttpServletRequest()==null && this.restTemplate0!=null) {
+			restTemplate = this.restTemplate0;
+		}			
+		return restTemplate;
 	}
 
 	//

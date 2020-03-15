@@ -1,12 +1,13 @@
 package org.einnovator.notifications.client.modelx;
 
+import org.einnovator.notifications.client.model.Job;
 import org.einnovator.notifications.client.model.JobStatus;
 import org.einnovator.util.model.ToStringCreator;
 
 /**
  * A filter for {@code Job}s.
  *
- * @see Jobs
+ * @see Job
  * @author support@einnovator.org
  *
  */

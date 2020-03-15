@@ -27,7 +27,7 @@ public class NotificationEventPublisher implements EventPublisher {
 	@Override
 	public void publishEvent(Object event) {
 		if (event instanceof Event) {
-			manager.publishEvent((Event)event, null);
+			manager.publishEvent((Event)event);
 		}
 	}
 

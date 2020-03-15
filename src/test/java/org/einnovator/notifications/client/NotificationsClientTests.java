@@ -102,16 +102,16 @@ public class NotificationsClientTests extends SsoTestHelper {
 		setPrincipal(username, TEST_PASSWORD);
 		NotificationFilter filter = (NotificationFilter)new NotificationFilter().withRunAs(username);
 
-		Long n = client.countNotifications(filter, null);
+		Long n = client.countNotifications(filter);
 		assertNotNull(n);
 
 		client.publishEventHttp(event, null);
 
-		Long m = client.countNotifications(filter, null);
+		Long m = client.countNotifications(filter);
 		assertNotNull(m);
 		assertEquals(n+1, m.longValue());
 		
-		Page<Notification> notifications = client.listNotifications(filter, null, null);
+		Page<Notification> notifications = client.listNotifications(filter, null);
 		assertNotNull(notifications);
 		assertNotNull(notifications.getContent());
 		assertFalse(notifications.getContent().isEmpty());
@@ -132,23 +132,23 @@ public class NotificationsClientTests extends SsoTestHelper {
 		context.setAccessToken(null);
 		setPrincipal(username, TEST_PASSWORD);
 
-		Long n = client.countNotifications(filter, null);
+		Long n = client.countNotifications(filter);
 		assertNotNull(n);
 
 		client.publishEventHttp(event, null);
 
-		Long m = client.countNotifications(filter, null);
+		Long m = client.countNotifications(filter);
 		assertNotNull(m);
 		assertEquals(n+1, m.longValue());
 		
-		Page<Notification> notifications = client.listNotifications(filter, null, null);
+		Page<Notification> notifications = client.listNotifications(filter, null);
 		assertNotNull(notifications);
 		assertNotNull(notifications.getContent());
 		assertFalse(notifications.getContent().isEmpty());
 		String id = notifications.getContent().get(0).getId();
-		client.deleteNotification(id, filter, null);
+		client.deleteNotification(id, filter);
 		
-		Long m2 = client.countNotifications(filter, null);
+		Long m2 = client.countNotifications(filter);
 		assertNotNull(m2);
 		assertEquals(n.longValue(), m2.longValue());
 	}
@@ -166,23 +166,23 @@ public class NotificationsClientTests extends SsoTestHelper {
 		context.setAccessToken(null);
 		setPrincipal(username, TEST_PASSWORD);
 
-		Long n = client.countNotifications(filter, null);
+		Long n = client.countNotifications(filter);
 		assertNotNull(n);
 
 		client.publishEventHttp(event, null);
 
-		Long m = client.countNotifications(filter, null);
+		Long m = client.countNotifications(filter);
 		assertNotNull(m);
 		assertEquals(n+1, m.longValue());
 		
-		Page<Notification> notifications = client.listNotifications(filter, null, null);
+		Page<Notification> notifications = client.listNotifications(filter, null);
 		assertNotNull(notifications);
 		assertNotNull(notifications.getContent());
 		assertTrue(!notifications.getContent().isEmpty());
 		String id = notifications.getContent().get(0).getId();
-		client.deleteNotification(id, filter, null);
+		client.deleteNotification(id, filter);
 		
-		Long m2 = client.countNotifications(filter, null);
+		Long m2 = client.countNotifications(filter);
 		assertNotNull(m2);
 		assertEquals(n.longValue(), m2.longValue());
 	}
@@ -197,17 +197,17 @@ public class NotificationsClientTests extends SsoTestHelper {
 		String username = target.getId();
 		NotificationFilter filter = (NotificationFilter)new NotificationFilter().withRunAs(username);
 		
-		Long n = client.countNotifications(filter, null);
+		Long n = client.countNotifications(filter);
 		assertNotNull(n);
 
-		client.publishEventAmqp(event, null);
+		client.publishEventAmqp(event);
 		sleep(1000);
 		
-		Long m = client.countNotifications(filter, null);
+		Long m = client.countNotifications(filter);
 		assertNotNull(m);
 		assertEquals(n+1, m.longValue());
 		
-		Page<Notification> notifications = client.listNotifications(filter, null, null);
+		Page<Notification> notifications = client.listNotifications(filter, null);
 		assertNotNull(notifications);
 		assertNotNull(notifications.getContent());
 		assertFalse(notifications.getContent().isEmpty());
@@ -321,7 +321,7 @@ public class NotificationsClientTests extends SsoTestHelper {
 
 	@Test
 	public void getPreferencesTest() {
-		Map<String, Preference> map = client.getPreferences(null, null);
+		Map<String, Preference> map = client.getPreferences(null);
 		assertNotNull(map);
 		for (Map.Entry<String, Preference> e: map.entrySet()) {
 			System.out.println(e.getKey() + " = " + e.getValue());
@@ -333,7 +333,7 @@ public class NotificationsClientTests extends SsoTestHelper {
 	
 	@Test
 	public void getValuesTest() {
-		Map<String, Object> map = prefManager.getAllValuesForUser(null, null);
+		Map<String, Object> map = prefManager.getAllValuesForUser(null);
 		assertNotNull(map);
 		for (Map.Entry<String, Object> e: map.entrySet()) {
 			System.out.println(e.getKey() + " = " + e.getValue());

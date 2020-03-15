@@ -19,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.NotificationListener;
 import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
-import org.einnovator.notifications.client.config.NotificationsClientContext;
+
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
 import org.einnovator.notifications.client.model.Preference;
@@ -110,7 +110,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 			return;
 		}
 		Event event = makeEvent(pref);
-		client.publishEvent(event, null);
+		client.publishEvent(event);
 	}
 
 	protected String makeAttributeName(String key) {
@@ -144,7 +144,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 		return getValueForUser(SecurityUtil.getPrincipalName(), session, key);
 	}
 
-	public Map<String, Object> getAllValuesForUser(String username, NotificationsClientContext context) {
+	public Map<String, Object> getAllValuesForUser(String username) {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> map = getCacheValueForUser(Map.class, getPreferencesCache(), username);
 		if (map==null) {
@@ -152,7 +152,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 				if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
 					return null;
 				}
-				Map<String, Preference> prefs = client.getPreferences((PreferenceFilter)new PreferenceFilter().withRunAs(username), context);
+				Map<String, Preference> prefs = client.getPreferences((PreferenceFilter)new PreferenceFilter().withRunAs(username));
 				map = getAllValues(prefs);		
 				 if (map!=null) {
 					putCacheValueForUser(map, getPreferencesCache(), username);
@@ -189,14 +189,14 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 	}
 
 	public Object getValueForUser(String username, String key) {
-		Map<String, Object> map = getAllValuesForUser(username, null);
+		Map<String, Object> map = getAllValuesForUser(username);
 		Object value = map!=null ? map.get(key) : null;
 		logger.debug("getValueForUser:" + username + " " + key + " " + value + " " + map);
 		return value;
 	}
 
 	public Object setValueForUser(String username, String key, Object value) {
-		Map<String, Object> map = getAllValuesForUser(username, null);
+		Map<String, Object> map = getAllValuesForUser(username);
 		if (map==null) {
 			map = new LinkedHashMap<>();
 			putCacheValueForUser(map, getPreferencesCache(), username);			

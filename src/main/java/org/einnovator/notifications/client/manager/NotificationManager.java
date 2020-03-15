@@ -1,7 +1,7 @@
 package org.einnovator.notifications.client.manager;
 
 import org.einnovator.notifications.client.amqp.NotificationListener;
-import org.einnovator.notifications.client.config.NotificationsClientContext;
+
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
 import org.einnovator.notifications.client.model.NotificationsRegistration;
@@ -18,18 +18,17 @@ public interface NotificationManager extends NotificationListener {
 	boolean register(NotificationsRegistration registration);
 	boolean register(NotificationsRegistration registration, OAuth2RestTemplate restTemplate);
 
-	boolean publishEvent(Event event, NotificationsClientContext context);
-	boolean publishDirect(Notification notification, NotificationsClientContext context);	
-	boolean publishEventHttp(Event event, NotificationsClientContext context);
-	boolean publishEventAmqp(Event event, NotificationsClientContext context);
-	boolean publishDirectAmqp(Notification notification, NotificationsClientContext context);
+	boolean publishEvent(Event event);
+	boolean publishDirect(Notification notification);	
+	boolean publishEventHttp(Event event, RequestOptions options);
+	boolean publishEventAmqp(Event event);
+	boolean publishDirectAmqp(Notification notification);
 	
-	Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable, NotificationsClientContext context);
+	Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable);
 	
 	Long countNotifications(NotificationFilter filter);
-	Long countNotifications(NotificationFilter filter, NotificationsClientContext context);
 	
-	void deleteNotification(String id, RequestOptions options, NotificationsClientContext context);
+	void deleteNotification(String id, RequestOptions options);
 	
 	Cache getNotificationCache();
 	Cache getNotificationCountCache();

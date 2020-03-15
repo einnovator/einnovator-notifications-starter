@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.amqp.NotificationListener;
 import org.einnovator.notifications.client.config.NotificationsClientConfiguration;
-import org.einnovator.notifications.client.config.NotificationsClientContext;
+
 import org.einnovator.notifications.client.model.ActionType;
 import org.einnovator.notifications.client.model.Event;
 import org.einnovator.notifications.client.model.Notification;
@@ -66,9 +66,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 	
 	@Override
-	public boolean publishEvent(Event event, NotificationsClientContext context) {
+	public boolean publishEvent(Event event) {
 		try {
-			client.publishEvent(event, context);	
+			client.publishEvent(event);	
 			return true;
 		} catch (RuntimeException e) {
 			logger.error("publishEvent: " + e + " " + format(event));
@@ -78,9 +78,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 
 
 	@Override
-	public boolean publishDirect(Notification notification, NotificationsClientContext context) {
+	public boolean publishDirect(Notification notification) {
 		try {
-			client.publishDirect(notification, context);		
+			client.publishDirect(notification);		
 			return true;			
 		} catch (RuntimeException e) {
 			logger.error("publishEvent: " + e + " " + format(notification));
@@ -90,9 +90,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 
 	@Override
-	public boolean publishEventHttp(Event event, NotificationsClientContext context) {
+	public boolean publishEventHttp(Event event, RequestOptions options) {
 		try {
-			client.publishEventHttp(event, context);
+			client.publishEventHttp(event, options);
 			return true;			
 		} catch (RuntimeException e) {
 			logger.error("publishEvent: " + e + " " + format(event));
@@ -101,9 +101,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 	
 	@Override
-	public boolean publishEventAmqp(Event event, NotificationsClientContext context) {
+	public boolean publishEventAmqp(Event event) {
 		try {
-			client.publishEventAmqp(event, context);			
+			client.publishEventAmqp(event);			
 			return true;
 		} catch (RuntimeException e) {
 			logger.error("publishEventAmqp: " + e + " " + format(event));
@@ -113,9 +113,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	}
 	
 	@Override
-	public boolean publishDirectAmqp(Notification notification, NotificationsClientContext context) {
+	public boolean publishDirectAmqp(Notification notification) {
 		try {
-			client.publishDirectAmqp(notification, context);			
+			client.publishDirectAmqp(notification);			
 			return true;
 		} catch (RuntimeException e) {
 			logger.error("publishDirectAmqp: " + e + " " + format(notification));
@@ -162,7 +162,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable, NotificationsClientContext context) {
+	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable) {
 		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
 			logger.debug("listNotifications: not enabled");
 			return null;
@@ -177,7 +177,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			}			
 		}
 		try {
-			notifications = client.listNotifications(filter, pageable, null);		
+			notifications = client.listNotifications(filter, pageable);		
 			if (isKey(true, filter, pageable)) {
 				return putCacheValue(notifications, getNotificationCache(), username);
 			}
@@ -193,15 +193,9 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			return null;
 		}		
 	}
-	
 
 	@Override
 	public Long countNotifications(NotificationFilter filter) {
-		return countNotifications(filter, null);
-	}
-
-	@Override
-	public Long countNotifications(NotificationFilter filter, NotificationsClientContext context) {
 		String username = filter!=null  ? filter.getRequiredPrincipal() : SecurityUtil.getPrincipalName();
 
 		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
@@ -214,7 +208,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			return count;
 		}
 		try {
-			count = client.countNotifications(filter, context);	
+			count = client.countNotifications(filter);	
 			return putCacheValue(count, getNotificationCountCache(), username);
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
@@ -230,10 +224,10 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	
 	
 	@Override
-	public void deleteNotification(String id, RequestOptions options, NotificationsClientContext context) {
+	public void deleteNotification(String id, RequestOptions options) {
 		String username = options!=null  ? options.getRequiredPrincipal() : SecurityUtil.getPrincipalName();
 		try {
-			client.deleteNotification(id, options, context);
+			client.deleteNotification(id, options);
 			evictCachesForUser(username);				
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {

@@ -4,7 +4,7 @@ package org.einnovator.notifications.client.manager;
 import java.net.URI;
 import java.util.Map;
 
-import org.einnovator.notifications.client.config.NotificationsClientContext;
+
 import org.einnovator.notifications.client.model.Medium;
 import org.einnovator.notifications.client.model.Template;
 import org.einnovator.notifications.client.modelx.TemplateFilter;
@@ -17,23 +17,23 @@ import org.springframework.data.domain.Pageable;
 public interface TemplateManager {
 
 
-	Template getTemplate(String id, String app, Medium medium, boolean remote, boolean local, NotificationsClientContext context);
+	Template getTemplate(String id, String app, Medium medium, boolean remote, boolean local);
 
-	Template getTemplate(String id, Medium medium, boolean remote, boolean local, NotificationsClientContext context);
+	Template getTemplate(String id, Medium medium, boolean remote, boolean local);
 
-	Template getTemplate(String id, NotificationsClientContext context);
+	Template getTemplate(String id);
 	
-	Template getTemplate(String id, TemplateOptions options, NotificationsClientContext context);
+	Template getTemplate(String id, TemplateOptions options);
 
-	Template getLocalTemplate(String id, Medium medium, NotificationsClientContext context);
+	Template getLocalTemplate(String id, Medium medium);
 
-	URI createTemplate(Template user, NotificationsClientContext context);
+	URI createTemplate(Template user);
 	
-	Template updateTemplate(Template user, NotificationsClientContext context);
+	Template updateTemplate(Template user);
 
-	boolean deleteTemplate(String id, NotificationsClientContext context);
+	boolean deleteTemplate(String id);
 	
-	Page<Template> listTemplates(TemplateFilter filter, Pageable options, NotificationsClientContext context);
+	Page<Template> listTemplates(TemplateFilter filter, Pageable options);
 	
 	void onTemplateUpdate(String id, Map<String, Object> details);
 

@@ -162,6 +162,7 @@ public class NotificationsRegistration extends ObjectBase {
 	 * Set the value of property {@code types}.
 	 *
 	 * @param types the value of property types
+	 * @return this {@code NotificationsRegistration}
 	 */
 	public NotificationsRegistration withTypes(List<NotificationType> types) {
 		this.types = types;

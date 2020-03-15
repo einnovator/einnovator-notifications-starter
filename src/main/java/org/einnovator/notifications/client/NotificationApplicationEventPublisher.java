@@ -41,7 +41,7 @@ public class NotificationApplicationEventPublisher implements ApplicationEventPu
 	@Override
 	public void publishEvent(Object event) {
 		if (event instanceof Event) {
-			client.publishEvent((Event)event, null);
+			client.publishEvent((Event)event);
 		}
 	}
 
