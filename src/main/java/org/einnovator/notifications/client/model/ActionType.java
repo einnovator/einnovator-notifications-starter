@@ -80,6 +80,14 @@ public class ActionType {
 	public static final String TRANFER_PENDING = TRANFER_PREFIX + PENDING;
 
 	//
+	// Collaborators/Authorities
+	//
+	
+	public static final String AUTH_ADD = "Auth-Add";
+	public static final String AUTH_REMOVE = "Auth-Remove";
+	public static final String AUTH_UPDATE = "Auth-Update";
+
+	//
 	// Messages / Invitations
 	//
 	
