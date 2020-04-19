@@ -110,7 +110,11 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 			return;
 		}
 		Event event = makeEvent(pref);
-		client.publishEvent(event);
+		try {
+			client.publishEvent(event);			
+		} catch (RuntimeException e) {
+			logger.error(String.format("operation: %s", e));
+		}
 	}
 
 	protected String makeAttributeName(String key) {

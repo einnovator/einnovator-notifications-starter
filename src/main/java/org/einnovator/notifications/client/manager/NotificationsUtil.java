@@ -22,6 +22,7 @@ public class NotificationsUtil {
 
 	private final static Log logger = LogFactory.getLog(NotificationsUtil.class);
 
+	public static final String NOTIFICATIONS_ENABLED = "NOTIFICATIONS_ENABLED";
 	
 	/**
 	 * Setup notification from environment variables.
@@ -33,7 +34,7 @@ public class NotificationsUtil {
 	 */
 	public static String[] setupFromEnv() {
 		StringBuilder exclude = new StringBuilder();
-		String notificationsEnabled = getEnv("NOTIFICATIONS_ENABLED");
+		String notificationsEnabled = getEnv(NOTIFICATIONS_ENABLED);
 		String notificationsServer = getEnv("NOTIFICATIONS_SERVER");
 		boolean amqp = isSpringProfileActive(AmqpConfig.AMQP);
 
@@ -62,10 +63,10 @@ public class NotificationsUtil {
 		}
 
 		if (notifications) {
-			System.setProperty("NOTIFICATIONS_ENABLED", "true");	
+			System.setProperty(NOTIFICATIONS_ENABLED, "true");	
 			logger.info("setupFromEnv: Notifications enabled");			
 		} else {
-			System.setProperty("NOTIFICATIONS_ENABLED", "false");				
+			System.setProperty(NOTIFICATIONS_ENABLED, "false");				
 			logger.info("setupFromEnv: Notifications disabled");
 		}
 

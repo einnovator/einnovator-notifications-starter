@@ -1,11 +1,14 @@
 package org.einnovator.notifications.client.config;
 
+import javax.annotation.PostConstruct;
+
 import org.einnovator.notifications.client.NotificationEventPublisher;
 import org.einnovator.notifications.client.NotificationsClient;
 import org.einnovator.notifications.client.SimpleEventFactory;
 import org.einnovator.notifications.client.amqp.AmqpConfig;
 import org.einnovator.notifications.client.manager.NotificationManager;
 import org.einnovator.notifications.client.manager.NotificationManagerImpl;
+import org.einnovator.notifications.client.manager.NotificationsUtil;
 import org.einnovator.notifications.client.manager.PreferencesManager;
 import org.einnovator.notifications.client.manager.PreferencesManagerImpl;
 import org.einnovator.notifications.client.manager.TemplateManager;
@@ -19,6 +22,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
@@ -44,6 +48,9 @@ public class NotificationsClientConfig {
 	@Value("${ui.defaultTheme:}")
 	private String defaultTheme;
 
+	@Autowired
+	private Environment env;
+	
 	@Bean
 	public OAuth2RestTemplate notificationsRestTemplate() {
 		OAuth2RestTemplate template = new OAuth2RestTemplate(resourceDetails, oauth2ClientContext);			
@@ -99,4 +106,11 @@ public class NotificationsClientConfig {
 		return new SimpleEventFactory();
 	}
 
+	@PostConstruct
+	public void init() {
+		Boolean enabled = env.getProperty(NotificationsUtil.NOTIFICATIONS_ENABLED, Boolean.class);
+		if (enabled!=null && !Boolean.TRUE.equals(enabled)) {
+			config.setEnabled(false);
+		}
+	}
 }
