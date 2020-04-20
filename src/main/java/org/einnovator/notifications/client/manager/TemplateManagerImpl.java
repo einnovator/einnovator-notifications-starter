@@ -13,6 +13,7 @@ import org.einnovator.notifications.client.model.Notification;
 import org.einnovator.notifications.client.model.Template;
 import org.einnovator.notifications.client.modelx.TemplateFilter;
 import org.einnovator.notifications.client.modelx.TemplateOptions;
+import org.einnovator.util.MappingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
@@ -255,11 +256,14 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 			return;
 		}
 		Notification obj = (Notification)((PayloadApplicationEvent<?>)event).getPayload();
-		if (obj==null || obj.getSource()==null || obj.getSource().getDetails()==null) {
+		if (obj==null || obj.getSource()==null || obj.getSource().getDetails()==null || 
+			Template.class.getSimpleName().equalsIgnoreCase(obj.getSource().getType())) {
 			return;
 		}
-		Template template= new Template(obj.getSource().getDetails());
-		logger.debug("onEvent:" + template + " " + obj);
+		Template template= MappingUtils.fromMap(new Template(), obj.getSource().getDetails());
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("onEvent: %s", template));			
+		}
 		if (template!=null) {
 			evictCaches(template);
 			return;
