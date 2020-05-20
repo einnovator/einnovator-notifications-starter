@@ -74,6 +74,9 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 
 	@SuppressWarnings("unchecked")
 	public Object getValue(HttpSession session, String key, String op, Object... params) {
+		if (session==null) {
+			return null;
+		}
 		Object value = getValueForPrincipal(session, key);
 
 		if (!StringUtils.hasText(op) || OP_GET.equalsIgnoreCase(op)) {
@@ -133,6 +136,9 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 	}
 	
 	public Object apply(ValuePreference pref) {
+		if (SecurityUtil.getPrincipal()==null || SecurityUtil.isAnonymous()) {
+			return null;
+		}
 		String username = SecurityUtil.getPrincipalName();
 		if (username==null) {
 			return null;
@@ -141,11 +147,25 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 	}
 
 	public Object getValueForPrincipal(String key) {
-		return getValueForUser(SecurityUtil.getPrincipalName(), key);
+		if (SecurityUtil.getPrincipal()==null || SecurityUtil.isAnonymous()) {
+			return null;
+		}
+		String username = SecurityUtil.getPrincipalName();
+		if (username==null) {
+			return null;
+		}
+		return getValueForUser(username, key);
 	}
 
 	public Object getValueForPrincipal(HttpSession session, String key) {
-		return getValueForUser(SecurityUtil.getPrincipalName(), session, key);
+		if (SecurityUtil.getPrincipal()==null || SecurityUtil.isAnonymous()) {
+			return null;
+		}
+		String username = SecurityUtil.getPrincipalName();
+		if (username==null) {
+			return null;
+		}
+		return getValueForUser(username, session, key);
 	}
 
 	public Map<String, Object> getAllValuesForUser(String username) {
