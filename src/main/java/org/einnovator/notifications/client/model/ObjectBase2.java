@@ -122,6 +122,24 @@ public class ObjectBase2 extends ObjectBase {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * Get the value of property {@code name}.
+	 *
+	 * @return the name
+	 */
+	public String getDisplayName() {
+		return name;
+	}
+
+	/**
+	 * Set the value of property {@code name}.
+	 *
+	 * @param name the value of property name
+	 */
+	public void setDisplayName(String name) {
+		this.name = name;
+	}
 
 	/**
 	 * Get the value of property {@code uri}.
