@@ -67,11 +67,17 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	
 	@Override
 	public boolean publishEvent(Event event) {
+		if (!Boolean.TRUE.equals(config.getPublishEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("publishEvent: event notification not enabled");				
+			}
+			return true;
+		}
 		try {
 			client.publishEvent(event);	
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("publishEvent: " + e + " " + format(event));
+			logger.error(String.format("publishEvent: %s %s", e, format(event)));
 			return false;
 		}
 	}
@@ -79,11 +85,17 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 
 	@Override
 	public boolean publishDirect(Notification notification) {
+		if (!Boolean.TRUE.equals(config.getPublishEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("publishDirect: event notification not enabled");				
+			}
+			return true;
+		}
 		try {
 			client.publishDirect(notification);		
 			return true;			
 		} catch (RuntimeException e) {
-			logger.error("publishEvent: " + e + " " + format(notification));
+			logger.error(String.format("publishDirect: %s %s", e, format(notification)));
 			return false;
 		}
 		
@@ -91,22 +103,34 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 
 	@Override
 	public boolean publishEventHttp(Event event, RequestOptions options) {
+		if (!Boolean.TRUE.equals(config.getPublishEnabled()) && !Boolean.TRUE.equals(config.getEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("publishEventHttp: event notification not enabled");				
+			}
+			return true;
+		}
 		try {
 			client.publishEventHttp(event, options);
 			return true;			
 		} catch (RuntimeException e) {
-			logger.error("publishEvent: " + e + " " + format(event));
+			logger.error(String.format("publishEventHttp: %s %s %s", e, format(event), options));
 			return false;
 		}
 	}
 	
 	@Override
 	public boolean publishEventAmqp(Event event) {
+		if (!Boolean.TRUE.equals(config.getPublishEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("publishEventAmqp: event notification not enabled");				
+			}
+			return true;
+		}
 		try {
 			client.publishEventAmqp(event);			
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("publishEventAmqp: " + e + " " + format(event));
+			logger.error(String.format("publishEventAmqp: %s %s", e, format(event)));
 			return false;
 		}
 
@@ -118,7 +142,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			client.publishDirectAmqp(notification);			
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("publishDirectAmqp: " + e + " " + format(notification));
+			logger.error(String.format("publishDirectAmqp: %s %s", e, format(notification)));
 			return false;
 		}
 
@@ -126,22 +150,34 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 
 	@Override
 	public boolean register() {
+		if (!Boolean.TRUE.equals(config.getEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("register: notifications not enabled");				
+			}
+			return true;
+		}
 		try {
 			client.register();			
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("register: " + e);
+			logger.error(String.format("register: %s", e));
 			return false;
 		}		
 	}
 
 	@Override
 	public boolean register(NotificationsRegistration registration) {
+		if (!Boolean.TRUE.equals(config.getEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("register: notifications not enabled");				
+			}
+			return true;
+		}
 		try {
 			client.register(registration);			
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("register: " + e);
+			logger.error(String.format("register: %s", e));
 			return false;
 		}		
 	}
@@ -149,11 +185,17 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	
 	@Override
 	public boolean register(NotificationsRegistration registration, OAuth2RestTemplate template) {
+		if (!Boolean.TRUE.equals(config.getEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("register: notifications not enabled");				
+			}
+			return true;
+		}
 		try {
 			client.register(registration, template);
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("register: Attempt to register application failed: " + e + " " + registration);
+			logger.error(String.format("register: %s", e));
 			return false;
 		}
 	}
@@ -163,11 +205,12 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	@Override
 	@SuppressWarnings("unchecked")
 	public Page<Notification> listNotifications(NotificationFilter filter, Pageable pageable) {
-		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
-			logger.debug("listNotifications: not enabled");
+		if (!Boolean.TRUE.equals(config.getEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("listNotifications: notifications not enabled");
+			}
 			return null;
 		}
-
 		String username = filter!=null  ? filter.getRequiredPrincipal() : SecurityUtil.getPrincipalName();
 		Page<Notification> notifications = null;
 		if (isKey(true, filter, pageable)) {
@@ -189,19 +232,21 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			}
 			return null;
 		} catch (RuntimeException e) {
-			logger.error("getNotification:" + e);
+			logger.error(String.format("getNotification: %s", e));
 			return null;
 		}		
 	}
 
 	@Override
 	public Long countNotifications(NotificationFilter filter) {
-		String username = filter!=null  ? filter.getRequiredPrincipal() : SecurityUtil.getPrincipalName();
-
-		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
-			logger.debug("countNotifications: not enabled");
+		if (!Boolean.TRUE.equals(config.getEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("countNotifications: notifications not enabled");
+			}
 			return 0L;
 		}
+
+		String username = filter!=null  ? filter.getRequiredPrincipal() : SecurityUtil.getPrincipalName();
 
 		Long count = getCacheValue(Long.class, getNotificationCountCache(), username);
 		if (count!=null) {
@@ -216,7 +261,7 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 			}
 			return null;
 		} catch (RuntimeException e) {
-			logger.error("getUserNotifications:" + e);
+			logger.error(String.format("countNotifications: %s", e));
 			return null;
 		}		
 		
@@ -224,17 +269,26 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 	
 	
 	@Override
-	public void deleteNotification(String id, RequestOptions options) {
+	public boolean deleteNotification(String id, RequestOptions options) {
+		if (!Boolean.TRUE.equals(config.getEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("deleteNotification: notifications not enabled");
+			}
+			return true;
+		}
 		String username = options!=null  ? options.getRequiredPrincipal() : SecurityUtil.getPrincipalName();
 		try {
 			client.deleteNotification(id, options);
-			evictCachesForUser(username);				
+			evictCachesForUser(username);
+			return true;
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
 				logger.error("deleteNotification: " + id);
 			}
+			return false;
 		} catch (RuntimeException e) {
-			logger.error("deleteNotification:" + e);
+			logger.error(String.format("deleteNotification: %s", e));
+			return false;
 		}		
 	}
 
@@ -247,6 +301,12 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 		if (notification==null) {
 			return;
 		}
+		if (!Boolean.TRUE.equals(config.getEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("onNotification: notifications not enabled");
+			}
+			return;
+		}
 		try {
 			if (notification.getTargets()!=null) {
 				for (Target target: notification.getTargets()) {
@@ -257,10 +317,10 @@ public class NotificationManagerImpl extends ManagerBase implements Notification
 				}
 			}
 		} catch (RuntimeException e) {
-			logger.error("onNotification: " + e);
+			logger.error(String.format("onNotification: %s", e));
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug("onNotification: " + format(notification));			
+			logger.debug(String.format("onNotification: %s", format(notification)));
 		}
 		if (notification.getAction()!=null) {
 			if (ActionType.LOGOUT.equalsIgnoreCase(notification.getAction().getType())) {

@@ -109,7 +109,10 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 		if (session!=null) {
 			session.setAttribute(makeAttributeName(key), value);				
 		}
-		if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
+		if (!Boolean.TRUE.equals(config.getEnabled())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("operation: notifications not enabled");				
+			}
 			return;
 		}
 		Event event = makeEvent(pref);
@@ -173,7 +176,10 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 		Map<String, Object> map = getCacheValueForUser(Map.class, getPreferencesCache(), username);
 		if (map==null) {
 			try {
-				if (config.getEnabled()!=null && Boolean.FALSE.equals(config.getEnabled())) {
+				if (!Boolean.TRUE.equals(config.getEnabled())) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("getAllValuesForUser: notifications not enabled");				
+					}
 					return null;
 				}
 				Map<String, Preference> prefs = client.getPreferences((PreferenceFilter)new PreferenceFilter().withRunAs(username));
@@ -215,7 +221,9 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 	public Object getValueForUser(String username, String key) {
 		Map<String, Object> map = getAllValuesForUser(username);
 		Object value = map!=null ? map.get(key) : null;
-		logger.debug("getValueForUser:" + username + " " + key + " " + value + " " + map);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("getValueForUser: %s %s %s %s", username, key, value, map));
+		}
 		return value;
 	}
 
@@ -226,7 +234,9 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 			putCacheValueForUser(map, getPreferencesCache(), username);			
 		}
 		map.put(key, value);
-		logger.debug("setValueForUser:" + username + " " + key + " " + value + " " + map);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("setValueForUser: %s %s %s %s", username, key, value, map));
+		}
 		return value;
 	}
 
@@ -234,7 +244,9 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 		Object value = getValueForUser(username, pref.getKey());
 		Object value2 = apply(value, pref);
 		setValueForUser(username, pref.getKey(), value2);
-		logger.info("apply: " + username + " " + value + " " + pref + " " + value2);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("apply: %s %s %s %s", username, value, pref, value2));
+		}
 		return value2;
 	}
 	
@@ -247,12 +259,12 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 			if (value==null) {
 				value = new LinkedHashMap<>();
 			} else if (!(value instanceof Map)) {
-				throw new RuntimeException("Invalid Operation: " + pref.getOp() + " on value of type: " + value.getClass().getSimpleName());
+				throw new RuntimeException(String.format("Invalid Operation: %s on value of type: %s", pref.getOp(), value.getClass().getSimpleName()));
 			}
 			Object hkey = pref.getParam(0);
 			Object hvalue = pref.getParam(1);
 			if (hkey==null || !(hkey instanceof String)) {
-				throw new IllegalArgumentException("Expect string key for operation: " + pref.getOp() + " as first parameter, found: " + hkey==null ? null : hkey.getClass().getSimpleName());				
+				throw new IllegalArgumentException(String.format("Expect string key for operation: %s as first parameter, found: %s", pref.getOp(), hkey==null ? null : hkey.getClass().getSimpleName()));				
 			}
 			((Map<String,Object>)value).put((String)hkey, hvalue);
 			return value;
@@ -303,7 +315,9 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 		if (!(pref instanceof ValuePreference)) {
 			return;
 		}
-		logger.debug("onNotification: " + pref);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("onNotification: %s", pref));			
+		}
 
 		PrincipalDetails principalx = notification.getPrincipal();
 		if (principalx==null || !StringUtils.hasText(principalx.getId())) {
@@ -312,10 +326,12 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 		try {
 			apply((ValuePreference)pref, principalx.getId());
 		} catch (RuntimeException e) {
-			logger.error("onNotification: " + e);
+			logger.error(String.format("onNotification: %s", e));
 			return;
 		}
-		logger.debug("onNotification: " + principalx.getName() + " " + pref);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("onNotification: %s %s", principalx.getName(), pref));			
+		}
 		eventPublisher.publishEvent(new PayloadApplicationEvent<Preference>(this, pref));
 	}
 
@@ -341,7 +357,7 @@ public class PreferencesManagerImpl extends ManagerBase implements PreferencesMa
 	public Cache getPreferencesCache() {
 		Cache cache = cacheManager.getCache(PreferencesManagerImpl.CACHE_PREFERENCES);
 		if (cache==null) {
-			logger.warn("getPreferencesCache: cache not found:" + PreferencesManagerImpl.CACHE_PREFERENCES);
+			logger.warn(String.format("getPreferencesCache: cache not found: %s", PreferencesManagerImpl.CACHE_PREFERENCES));
 		}
 		return cache;
 	}

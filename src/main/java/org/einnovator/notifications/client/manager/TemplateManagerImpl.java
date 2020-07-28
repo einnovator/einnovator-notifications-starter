@@ -257,7 +257,7 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 		}
 		Notification obj = (Notification)((PayloadApplicationEvent<?>)event).getPayload();
 		if (obj==null || obj.getSource()==null || obj.getSource().getDetails()==null || 
-			Template.class.getSimpleName().equalsIgnoreCase(obj.getSource().getType())) {
+			!Template.class.getSimpleName().equalsIgnoreCase(obj.getSource().getType())) {
 			return;
 		}
 		Template template= MappingUtils.fromMap(new Template(), obj.getSource().getDetails());

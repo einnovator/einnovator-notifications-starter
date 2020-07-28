@@ -22,6 +22,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -34,6 +35,7 @@ import org.springframework.web.servlet.theme.CookieThemeResolver;
 @Configuration
 @EnableConfigurationProperties(NotificationsClientConfiguration.class)
 @Import(AmqpConfig.class)
+@Profile("!sso_exclude")
 public class NotificationsClientConfig {
 	
 	@Autowired
@@ -112,5 +114,10 @@ public class NotificationsClientConfig {
 		if (enabled!=null && !Boolean.TRUE.equals(enabled)) {
 			config.setEnabled(false);
 		}
+		Boolean publish = env.getProperty(NotificationsUtil.NOTIFICATIONS_PUBLISH_ENABLED, Boolean.class);
+		if (publish!=null && !Boolean.TRUE.equals(publish)) {
+			config.setPublishEnabled(false);
+		}
+
 	}
 }

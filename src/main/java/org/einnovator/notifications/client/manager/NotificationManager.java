@@ -28,7 +28,7 @@ public interface NotificationManager extends NotificationListener {
 	
 	Long countNotifications(NotificationFilter filter);
 	
-	void deleteNotification(String id, RequestOptions options);
+	boolean deleteNotification(String id, RequestOptions options);
 	
 	Cache getNotificationCache();
 	Cache getNotificationCountCache();

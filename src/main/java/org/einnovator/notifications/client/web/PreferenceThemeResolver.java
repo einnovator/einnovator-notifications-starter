@@ -16,8 +16,7 @@ import org.springframework.web.servlet.ThemeResolver;
  * <p>Custom controllers can thus override the user's theme by calling
  * {@code setThemeName}, e.g. responding to a certain theme change request.
  *
- * @author Jorge Simao
- * @since 17.12.2018
+ * @author support@einnovator.org
  * @see #setThemeName
  */
 public class PreferenceThemeResolver implements ThemeResolver {

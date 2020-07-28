@@ -23,6 +23,7 @@ public class NotificationsUtil {
 	private final static Log logger = LogFactory.getLog(NotificationsUtil.class);
 
 	public static final String NOTIFICATIONS_ENABLED = "NOTIFICATIONS_ENABLED";
+	public static final String NOTIFICATIONS_PUBLISH_ENABLED = "NOTIFICATIONS_PUBLISH_ENABLED";
 	
 	/**
 	 * Setup notification from environment variables.
@@ -52,14 +53,17 @@ public class NotificationsUtil {
 			profiles.add(AmqpConfig.AMQP);
 		}
 		boolean notifications = false;
+		boolean publish = false;
 		if (notificationsEnabled!=null && notificationsEnabled.equalsIgnoreCase("true")) {
 			notifications = true;
+			publish = true;
 		}
-		if (!isEmpty(notificationsServer)) {
+		if (!isEmpty(notificationsServer) && notificationsServer.indexOf("***")<0) {
 			notifications = true;
+			publish = true;
 		}
 		if (amqp) {
-			notifications = true;			
+			publish = true;
 		}
 
 		if (notifications) {
@@ -68,6 +72,13 @@ public class NotificationsUtil {
 		} else {
 			System.setProperty(NOTIFICATIONS_ENABLED, "false");				
 			logger.info("setupFromEnv: Notifications disabled");
+		}
+		if (publish) {
+			System.setProperty(NOTIFICATIONS_PUBLISH_ENABLED, "true");	
+			logger.info("setupFromEnv: Event publish enabled");			
+		} else {
+			System.setProperty(NOTIFICATIONS_PUBLISH_ENABLED, "false");				
+			logger.info("setupFromEnv: Event publish disabled");
 		}
 
 		String sexclude = exclude.toString();
