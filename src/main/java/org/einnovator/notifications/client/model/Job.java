@@ -42,6 +42,12 @@ public class Job extends EntityBase {
 	
 	private Integer skipCount;
 
+	private Integer totalCount;
+
+	private Integer progress;
+
+	private Boolean dryrun;
+	
 	private Boolean test;
 
 	private Boolean async;
@@ -416,6 +422,60 @@ public class Job extends EntityBase {
 	}
 
 	/**
+	 * Get the value of property {@code totalCount}.
+	 *
+	 * @return the value of {@code totalCount}
+	 */
+	public Integer getTotalCount() {
+		return totalCount;
+	}
+
+	/**
+	 * Set the value of property {@code totalCount}.
+	 *
+	 * @param totalCount the value of {@code totalCount}
+	 */
+	public void setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	/**
+	 * Get the value of property {@code progress}.
+	 *
+	 * @return the value of {@code progress}
+	 */
+	public Integer getProgress() {
+		return progress;
+	}
+
+	/**
+	 * Set the value of property {@code progress}.
+	 *
+	 * @param progress the value of {@code progress}
+	 */
+	public void setProgress(Integer progress) {
+		this.progress = progress;
+	}
+
+	/**
+	 * Get the value of property {@code dryrun}.
+	 *
+	 * @return the value of {@code dryrun}
+	 */
+	public Boolean getDryrun() {
+		return dryrun;
+	}
+
+	/**
+	 * Set the value of property {@code dryrun}.
+	 *
+	 * @param dryrun the value of {@code dryrun}
+	 */
+	public void setDryrun(Boolean dryrun) {
+		this.dryrun = dryrun;
+	}
+
+	/**
 	 * Get the value of property {@code async}.
 	 *
 	 * @return the async
@@ -480,6 +540,9 @@ public class Job extends EntityBase {
 			.append("processCount", processCount)
 			.append("writeCount", writeCount)
 			.append("skipCount", skipCount)
+			.append("totalCount", totalCount)
+			.append("progress", progress)
+			.append("dryrun", dryrun)
 			.append("test", test)
 			.append("async", async)
 			.append("skip", skip)
