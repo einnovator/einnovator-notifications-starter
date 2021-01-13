@@ -52,7 +52,7 @@ public class JobStats extends ObjectBase {
 	/**
 	 * Set the value of property {@code total}.
 	 *
-	 * @param total the total to set
+	 * @param total the total
 	 */
 	public void setTotal(Long total) {
 		this.total = total;
@@ -71,7 +71,7 @@ public class JobStats extends ObjectBase {
 	/**
 	 * Set the value of property {@code counts}.
 	 *
-	 * @param counts the counts to set
+	 * @param counts the counts
 	 */
 	public void setCounts(Map<JobStatus, Long> counts) {
 		this.counts = counts;

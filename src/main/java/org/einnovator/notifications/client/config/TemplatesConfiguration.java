@@ -41,7 +41,7 @@ public class TemplatesConfiguration extends ObjectBase {
 	/**
 	 * Set the value of property {@code uri}.
 	 *
-	 * @param uri the uri to set
+	 * @param uri the uri
 	 */
 	public void setUri(String uri) {
 		this.uri = uri;
@@ -59,7 +59,7 @@ public class TemplatesConfiguration extends ObjectBase {
 	/**
 	 * Set the value of property {@code app}.
 	 *
-	 * @param app the app to set
+	 * @param app the app
 	 */
 	public void setApp(String app) {
 		this.app = app;
@@ -77,7 +77,7 @@ public class TemplatesConfiguration extends ObjectBase {
 	/**
 	 * Set the value of property {@code mail}.
 	 *
-	 * @param mail the mail to set
+	 * @param mail the mail
 	 */
 	public void setMail(String mail) {
 		this.mail = mail;
@@ -95,7 +95,7 @@ public class TemplatesConfiguration extends ObjectBase {
 	/**
 	 * Set the value of property {@code sms}.
 	 *
-	 * @param sms the sms to set
+	 * @param sms the sms
 	 */
 	public void setSms(String sms) {
 		this.sms = sms;
@@ -114,7 +114,7 @@ public class TemplatesConfiguration extends ObjectBase {
 	/**
 	 * Set the value of property {@code cache}.
 	 *
-	 * @param cache the cache to set
+	 * @param cache the cache
 	 */
 	public void setCache(Boolean cache) {
 		this.cache = cache;
@@ -132,7 +132,7 @@ public class TemplatesConfiguration extends ObjectBase {
 	/**
 	 * Set the value of property {@code expires}.
 	 *
-	 * @param expires the expires to set
+	 * @param expires the expires
 	 */
 	public void setExpires(Long expires) {
 		this.expires = expires;

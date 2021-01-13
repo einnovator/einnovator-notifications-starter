@@ -53,7 +53,7 @@ public class NotificationsRegistration extends ObjectBase {
 	/**
 	 * Set the value of property {@code auto}.
 	 *
-	 * @param auto the auto to set
+	 * @param auto the auto
 	 */
 	public void setAuto(boolean auto) {
 		this.auto = auto;
@@ -71,7 +71,7 @@ public class NotificationsRegistration extends ObjectBase {
 	/**
 	 * Set the value of property {@code application}.
 	 *
-	 * @param application the application to set
+	 * @param application the application
 	 */
 	public void setApplication(Application application) {
 		this.application = application;
@@ -89,7 +89,7 @@ public class NotificationsRegistration extends ObjectBase {
 	/**
 	 * Set the value of property {@code types}.
 	 *
-	 * @param types the types to set
+	 * @param types the types
 	 */
 	public void setTypes(List<NotificationType> types) {
 		this.types = types;
@@ -107,7 +107,7 @@ public class NotificationsRegistration extends ObjectBase {
 	/**
 	 * Set the value of property {@code templates}.
 	 *
-	 * @param templates the templates to set
+	 * @param templates the templates
 	 */
 	public void setTemplates(List<Template> templates) {
 		this.templates = templates;
@@ -125,7 +125,7 @@ public class NotificationsRegistration extends ObjectBase {
 	/**
 	 * Set the value of property {@code properties}.
 	 *
-	 * @param properties the properties to set
+	 * @param properties the properties
 	 */
 	public void setProperties(Map<String, Object> properties) {
 		this.properties = properties;

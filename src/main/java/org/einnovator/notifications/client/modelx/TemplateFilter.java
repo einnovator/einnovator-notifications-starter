@@ -71,7 +71,7 @@ public class TemplateFilter extends TemplateOptions {
 	/**
 	 * Set the value of property {@code strict}.
 	 *
-	 * @param strict the strict to set
+	 * @param strict the strict
 	 */
 	public void setStrict(Boolean strict) {
 		this.strict = strict;
@@ -90,7 +90,7 @@ public class TemplateFilter extends TemplateOptions {
 	/**
 	 * Set the value of property {@code medium}.
 	 *
-	 * @param medium the medium to set
+	 * @param medium the medium
 	 */
 	public void setMedium(Medium medium) {
 		this.medium = medium;
@@ -108,7 +108,7 @@ public class TemplateFilter extends TemplateOptions {
 	/**
 	 * Set the value of property {@code category}.
 	 *
-	 * @param category the category to set
+	 * @param category the category
 	 */
 	public void setCategory(TemplateCategory category) {
 		this.category = category;
@@ -127,7 +127,7 @@ public class TemplateFilter extends TemplateOptions {
 	/**
 	 * Set the value of property {@code contentType}.
 	 *
-	 * @param contentType the contentType to set
+	 * @param contentType the contentType
 	 */
 	public void setContentType(ContentType contentType) {
 		this.contentType = contentType;

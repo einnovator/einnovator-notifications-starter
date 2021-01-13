@@ -64,7 +64,7 @@ public class AmqpConfiguration extends ObjectBase {
 	/**
 	 * Set the value of property {@code enabled}.
 	 *
-	 * @param enabled the enabled to set
+	 * @param enabled the enabled
 	 */
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;

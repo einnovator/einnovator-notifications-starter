@@ -162,9 +162,9 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	}
 	
 	@Override
-	public URI createTemplate(Template template) {
+	public URI createTemplate(Template template, TemplateOptions options) {
 		try {
-			return notificationsClient.createTemplate(template, null);
+			return notificationsClient.createTemplate(template, options);
 		} catch (RuntimeException e) {
 			logger.error("createTemplate:" + e);
 			return null;
@@ -173,9 +173,9 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	
 
 	@Override
-	public Template updateTemplate(Template template) {
+	public Template updateTemplate(Template template, TemplateOptions options) {
 		try {
-			notificationsClient.updateTemplate(template, null);
+			notificationsClient.updateTemplate(template, options);
 			evictCaches(template.getUuid());
 			return template;
 		} catch (RuntimeException e) {
@@ -186,9 +186,9 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 	
 	@Override
 	@CacheEvict(value=CACHE_TEMPLATE, key="#id")
-	public boolean deleteTemplate(String id) {
+	public boolean deleteTemplate(String id, TemplateOptions options) {
 		try {
-			notificationsClient.deleteTemplate(id, null);
+			notificationsClient.deleteTemplate(id, options);
 			return true;
 		} catch (RuntimeException e) {
 			logger.error("deleteTemplate:" + e);

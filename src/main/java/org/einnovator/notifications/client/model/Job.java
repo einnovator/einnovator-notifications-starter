@@ -86,7 +86,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code medium}.
 	 *
-	 * @param medium the medium to set
+	 * @param medium the medium
 	 */
 	public void setMedium(Medium medium) {
 		this.medium = medium;
@@ -104,7 +104,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code env}.
 	 *
-	 * @param env the env to set
+	 * @param env the env
 	 */
 	public void setEnv(Map<String, Object> env) {
 		this.env = env;
@@ -123,7 +123,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code submitDate}.
 	 *
-	 * @param submitDate the {@code submitDate} to set
+	 * @param submitDate the {@code submitDate}
 	 */
 	public void setSubmitDate(Date submitDate) {
 		this.submitDate = submitDate;
@@ -143,7 +143,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code scheduledDate}.
 	 *
-	 * @param scheduledDate the {@code scheduledDate} to set
+	 * @param scheduledDate the {@code scheduledDate}
 	 */
 	public void setScheduledDate(Date scheduledDate) {
 		this.scheduledDate = scheduledDate;
@@ -161,7 +161,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code status}.
 	 *
-	 * @param status the {@code status} to set
+	 * @param status the {@code status}
 	 */
 	public void setStatus(JobStatus status) {
 		this.status = status;
@@ -179,7 +179,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code startDate}.
 	 *
-	 * @param startDate the {@code startDate} to set
+	 * @param startDate the {@code startDate}
 	 */
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
@@ -198,7 +198,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code completedDate}.
 	 *
-	 * @param completedDate the {@code completedDate} to set
+	 * @param completedDate the {@code completedDate}
 	 */
 	public void setCompletedDate(Date completedDate) {
 		this.completedDate = completedDate;
@@ -217,7 +217,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code error}.
 	 *
-	 * @param error the error to set
+	 * @param error the error
 	 */
 	public void setError(String error) {
 		this.error = error;
@@ -235,7 +235,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code readCount}.
 	 *
-	 * @param readCount the readCount to set
+	 * @param readCount the readCount
 	 */
 	public void setReadCount(Integer readCount) {
 		this.readCount = readCount;
@@ -253,7 +253,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code processCount}.
 	 *
-	 * @param processCount the processCount to set
+	 * @param processCount the processCount
 	 */
 	public void setProcessCount(Integer processCount) {
 		this.processCount = processCount;
@@ -271,7 +271,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code writeCount}.
 	 *
-	 * @param writeCount the writeCount to set
+	 * @param writeCount the writeCount
 	 */
 	public void setWriteCount(Integer writeCount) {
 		this.writeCount = writeCount;
@@ -289,7 +289,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code skipCount}.
 	 *
-	 * @param skipCount the skipCount to set
+	 * @param skipCount the skipCount
 	 */
 	public void setSkipCount(Integer skipCount) {
 		this.skipCount = skipCount;
@@ -307,7 +307,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code name}.
 	 *
-	 * @param name the name to set
+	 * @param name the name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -325,7 +325,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code templateName}.
 	 *
-	 * @param templateName the templateName to set
+	 * @param templateName the templateName
 	 */
 	public void setTemplateName(String templateName) {
 		this.templateName = templateName;
@@ -361,7 +361,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code test}.
 	 *
-	 * @param test the test to set
+	 * @param test the test
 	 */
 	public void setTest(Boolean test) {
 		this.test = test;
@@ -379,7 +379,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code skip}.
 	 *
-	 * @param skip the skip to set
+	 * @param skip the skip
 	 */
 	public void setSkip(Integer skip) {
 		this.skip = skip;
@@ -397,7 +397,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code max}.
 	 *
-	 * @param max the max to set
+	 * @param max the max
 	 */
 	public void setMax(Integer max) {
 		this.max = max;
@@ -487,7 +487,7 @@ public class Job extends EntityBase {
 	/**
 	 * Set the value of property {@code async}.
 	 *
-	 * @param async the async to set
+	 * @param async the async
 	 */
 	public void setAsync(Boolean async) {
 		this.async = async;

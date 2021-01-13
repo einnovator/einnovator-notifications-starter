@@ -27,11 +27,11 @@ public interface TemplateManager {
 
 	Template getLocalTemplate(String id, Medium medium);
 
-	URI createTemplate(Template user);
+	URI createTemplate(Template user, TemplateOptions options);
 	
-	Template updateTemplate(Template user);
+	Template updateTemplate(Template user, TemplateOptions options);
 
-	boolean deleteTemplate(String id);
+	boolean deleteTemplate(String id, TemplateOptions options);
 	
 	Page<Template> listTemplates(TemplateFilter filter, Pageable options);
 	

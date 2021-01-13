@@ -42,6 +42,7 @@ import org.einnovator.util.PageUtil;
 import org.einnovator.util.StringUtil;
 import org.einnovator.util.UriUtils;
 import org.einnovator.util.model.Application;
+import org.einnovator.util.model.EntityBase;
 import org.einnovator.util.script.EnvironmentVariableResolver;
 import org.einnovator.util.script.TextTemplates;
 import org.einnovator.util.security.ClientTokenProvider;
@@ -736,22 +737,36 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	
 	
 	/**
-	 * Update existing {@code NotificationType}
+	 * Update {@code NotificationType} with specified identifier.
 	 * 
 	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
 	 * 
+	 * @param id the identifier (id | uuid)
 	 * @param notificationType the {@code NotificationType}
 	 * @param options optional {@code RequestOptions}
-	 
 	 * @throws RestClientException if request fails
 	 */
-	public void updateNotificationType(NotificationType notificationType, RequestOptions options) {
-		URI uri = makeURI(NotificationsEndpoints.notificationType(notificationType.getId(), config));
+	public void updateNotificationType(String id, NotificationType notificationType, RequestOptions options) {
+		URI uri = makeURI(NotificationsEndpoints.notificationType(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<NotificationType> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(notificationType);
 		exchange(request, NotificationType.class, options);
 	}
-	
+
+	/**
+	 * Update {@code NotificationType}.
+	 * 
+	 * <p>ID is extracted from fields: UUID, ID.
+	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
+	 * 
+	 * @param notificationType the {@code NotificationType}
+	 * @param options optional {@code RequestOptions}
+	 * @throws RestClientException if request fails
+	 */
+	public void updateNotificationType(NotificationType notificationType, RequestOptions options) {
+		updateNotificationType(getId(notificationType), notificationType, options);
+	}
+
 	/**
 	 * Delete existing {@code NotificationType}
 	 * 
@@ -855,11 +870,11 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
 	 * 
 	 * @param template the {@code Template}
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code TemplateOptions}
 	 * @return the location {@code URI} for the created {@code Template}
 	 * @throws RestClientException if request fails
 	 */
-	public URI createTemplate(Template template, RequestOptions options) {
+	public URI createTemplate(Template template, TemplateOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.templates(config));
 		uri = processURI(uri, options);
 		RequestEntity<Template> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(template);
@@ -867,22 +882,35 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		return result.getHeaders().getLocation();
 	}
 	
-	
 	/**
-	 * Update existing {@code Template}
+	 * Update {@code Template} with specified identifier.
 	 * 
 	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
 	 * 
+	 * @param id the identifier (id | uuid)
 	 * @param template the {@code Template}
-	 * @param options optional {@code RequestOptions}
-	 
+	 * @param options optional {@code TemplateOptions}
 	 * @throws RestClientException if request fails
 	 */
-	public void updateTemplate(Template template, RequestOptions options) {
-		URI uri = makeURI(NotificationsEndpoints.template(template.getId(), config));
+	public void updateTemplate(String id, Template template, TemplateOptions options) {
+		URI uri = makeURI(NotificationsEndpoints.template(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Template> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(template);
 		exchange(request, Template.class, options);
+	}
+
+	/**
+	 * Update {@code Template}.
+	 * 
+	 * <p>ID is extracted from fields: UUID, ID.
+	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
+	 * 
+	 * @param template the {@code Template}
+	 * @param options optional {@code TemplateOptions}
+	 * @throws RestClientException if request fails
+	 */
+	public void updateTemplate(Template template, TemplateOptions options) {
+		updateTemplate(getId(template), template, options);
 	}
 	
 	/**
@@ -892,10 +920,10 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
 	 * 
 	 * @param id the {@code Template} identifier (UUID)
-	 * @param options optional {@code RequestOptions} 
+	 * @param options optional {@code TemplateOptions} 
 	 * @throws RestClientException if request fails
 	 */
-	public void deleteTemplate(String id, RequestOptions options) {
+	public void deleteTemplate(String id, TemplateOptions options) {
 		id = encodeId(id);
 		URI uri = makeURI(NotificationsEndpoints.template(id, config));
 		uri = processURI(uri, options);
@@ -952,12 +980,11 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
 	 * 
 	 * @param job the {@code Job}
-	 * @param options optional {@code RequestOptions}
-	 
+	 * @param options optional {@code JobOptions}
 	 * @return the location {@code URI} for the created {@code Job}
 	 * @throws RestClientException if request fails
 	 */
-	public URI createJob(Job job, RequestOptions options) {
+	public URI createJob(Job job, JobOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.jobs(config));
 		uri = processURI(uri, options);
 		RequestEntity<Job> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(job);
@@ -965,21 +992,35 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		return result.getHeaders().getLocation();
 	}
 	
-	
 	/**
-	 * Update existing {@code Job}
+	 * Update {@code Job} with specified identifier.
 	 * 
 	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
 	 * 
+	 * @param id the identifier (id | uuid)
 	 * @param job the {@code Job}
-	 * @param options optional {@code RequestOptions} 
+	 * @param options optional {@code JobOptions}
 	 * @throws RestClientException if request fails
 	 */
-	public void updateJob(Job job, RequestOptions options) {
-		URI uri = makeURI(NotificationsEndpoints.job(job.getId(), config));
+	public void updateJob(String id, Job job, JobOptions options) {
+		URI uri = makeURI(NotificationsEndpoints.job(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Job> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(job);
 		exchange(request, Job.class, options);
+	}
+
+	/**
+	 * Update {@code Job}.
+	 * 
+	 * <p>ID is extracted from fields: UUID, ID.
+	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
+	 * 
+	 * @param job the {@code Job}
+	 * @param options optional {@code JobOptions}
+	 * @throws RestClientException if request fails
+	 */
+	public void updateJob(Job job, JobOptions options) {
+		updateJob(getId(job), job, options);
 	}
 	
 	/**
@@ -989,10 +1030,10 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 * <p><b>Required Security Credentials</b>: Client or Global Admin Role.
 	 * 
 	 * @param id the {@code Job} identifier (UUID)
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code JobOptions}
 	 * @throws RestClientException if request fails
 	 */
-	public void deleteJob(String id, RequestOptions options) {
+	public void deleteJob(String id, JobOptions options) {
 		id = encodeId(id);
 		URI uri = makeURI(NotificationsEndpoints.job(id, config));
 		uri = processURI(uri, options);
@@ -1083,5 +1124,8 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	}
 	
 	
+	private static String getId(EntityBase obj) {
+		return EntityBase.getAnyId(obj);
+	}
 	
 }
