@@ -1,8 +1,8 @@
 package org.einnovator.notifications.client;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.einnovator.util.MappingUtils;
 import org.einnovator.notifications.client.model.Event;

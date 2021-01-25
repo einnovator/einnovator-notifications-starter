@@ -5,7 +5,7 @@ import java.util.List;
 import org.einnovator.notifications.client.model.Target;
 import org.einnovator.notifications.client.model.TargetParser;
 import org.einnovator.sso.client.model.Role;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TargetParserTests {
 

@@ -1,9 +1,9 @@
 package org.einnovator.notifications.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +27,11 @@ import org.einnovator.notifications.client.model.PriorityType;
 import org.einnovator.notifications.client.model.Source;
 import org.einnovator.notifications.client.model.SourceType;
 import org.einnovator.notifications.client.model.Target;
-import org.einnovator.notifications.client.model.TargetParser;
 import org.einnovator.notifications.client.modelx.NotificationFilter;
 import org.einnovator.sso.client.SsoTestHelper;
 import org.einnovator.util.model.Application;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -41,10 +40,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment=WebEnvironment.NONE, classes= {NotificationsClientConfig.class,NotificationsClientTests.TestConfig.class})
 @TestPropertySource(properties= {"notifications.uri=http://localhost:2011"})
 public class NotificationsClientTests extends SsoTestHelper {

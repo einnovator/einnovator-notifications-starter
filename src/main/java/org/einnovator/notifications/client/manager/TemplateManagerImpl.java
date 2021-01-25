@@ -63,7 +63,7 @@ public class TemplateManagerImpl extends ManagerBase implements TemplateManager 
 			TemplateFilter filter = new TemplateFilter();
 			filter.setQ(id);
 			filter.setApp(app);
-			Page<Template> page = listTemplates(filter, new PageRequest(0, 1));
+			Page<Template> page = listTemplates(filter, PageRequest.of(0, 1));
 			if (page==null || page.getContent()==null || page.getContent().isEmpty()) {
 				return null;
 			}
