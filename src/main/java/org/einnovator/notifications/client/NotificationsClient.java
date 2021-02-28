@@ -601,7 +601,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	public void deleteNotification(String id, RequestOptions options) {
 		URI uri = makeURI(NotificationsEndpoints.notification(id, config));
 		uri = processURI(uri, options);
-		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> request = RequestEntity.delete(uri).build();
 		exchange(request, Void.class, options);
 	}
 	
@@ -781,7 +781,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		id = encodeId(id);
 		URI uri = makeURI(NotificationsEndpoints.notificationType(id, config));
 		uri = processURI(uri, options);
-		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();		
+		RequestEntity<Void> request = RequestEntity.delete(uri).build();		
 		exchange(request, Void.class, options);
 	}
 	
@@ -927,7 +927,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		id = encodeId(id);
 		URI uri = makeURI(NotificationsEndpoints.template(id, config));
 		uri = processURI(uri, options);
-		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();		
+		RequestEntity<Void> request = RequestEntity.delete(uri).build();		
 		exchange(request, Void.class, options);
 	}
 	
@@ -1037,7 +1037,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		id = encodeId(id);
 		URI uri = makeURI(NotificationsEndpoints.job(id, config));
 		uri = processURI(uri, options);
-		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();		
+		RequestEntity<Void> request = RequestEntity.delete(uri).build();		
 		exchange(request, Void.class, options);
 	}
 	
@@ -1064,7 +1064,7 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 		try {
 			return exchange(restTemplate, request, responseType);			
 		} catch (RuntimeException e) {
-			if (options!=null && !options.isSingleton()) {
+			if (options!=null && !Boolean.TRUE.equals(options.getSingleton())) {
 				options.setResult(new Result<Object>(e));
 			}
 			throw e;
