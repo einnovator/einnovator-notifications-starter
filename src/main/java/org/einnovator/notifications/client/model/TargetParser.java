@@ -1,6 +1,7 @@
 package org.einnovator.notifications.client.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.util.StringUtils;
@@ -85,6 +86,13 @@ public class TargetParser {
 						targets.add(target);
 					}
 				}				
+			} else if (destination instanceof Collection) {
+				for (Object obj: (Collection<?>)destination) {
+					List<Target> targets2 = makeTargets(obj);
+					if (targets2!=null) {
+						targets.addAll(targets2);
+					}					
+				}
 			}
 		}
 		return targets;
