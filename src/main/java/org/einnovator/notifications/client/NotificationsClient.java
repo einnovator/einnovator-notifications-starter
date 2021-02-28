@@ -470,6 +470,9 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 */
 	@Override
 	public void publishEventHttp(Event event, RequestOptions options) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("publishEventHttp: %s", event));			
+		}
 		URI uri = makeURI(NotificationsEndpoints.event(config));
 		RequestEntity<Event> request = RequestEntity.post(uri).body(event);
 		exchange(request, Void.class, options);
@@ -494,6 +497,10 @@ public class NotificationsClient implements NotificationOperationsHttp, Notifica
 	 */
 	@Override
 	public void publishEventAmqp(Event event) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("publishEventAmqp: %s", event));			
+		}
+
 		Object eventData = MappingUtils.convert(event, LinkedHashMap.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("publishEventAmqp: %s", eventData));			
