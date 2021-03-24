@@ -9,6 +9,8 @@ import org.springframework.amqp.AmqpConnectException;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Binding.DestinationType;
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -25,7 +27,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
-
 
 @Configuration
 @Import(RabbitAutoConfiguration.class)
@@ -101,7 +102,10 @@ public class AmqpConfig {
 		return new Queue(config.getAmqp().getNotificationsQueue());
 	}
 	
-	
+	@Bean
+	public Exchange notificationsExchange() {
+		return new FanoutExchange(config.getAmqp().getNotificationsExchange(), true, false);
+	}
 	@Bean
 	public Binding notificationsBinding() {
 		return new Binding(config.getAmqp().getNotificationsQueue(), DestinationType.QUEUE, config.getAmqp().getNotificationsExchange(), "" /* routingKey*/, null);
